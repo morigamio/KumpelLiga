@@ -1,0 +1,10 @@
+Between — findByCommenceTimeBetween(start, end) — inclusive range
+Before — findByCommenceTimeBefore(instant) — strictly less than
+After — findByCommenceTimeAfter(instant) — strictly greater than
+LessThan / LessThanEqual — comparison, < / <=
+GreaterThan / GreaterThanEqual — comparison, > / >=
+Is / Equals — exact match
+IsNull / IsNotNull — null checks
+In / NotIn — membership in a collection
+And / Or — combine conditions
+OrderBy...Asc / Desc — sorting

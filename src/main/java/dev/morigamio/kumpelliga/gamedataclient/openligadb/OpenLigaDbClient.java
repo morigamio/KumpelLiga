@@ -1,0 +1,67 @@
+package dev.morigamio.kumpelliga.gamedataclient.openligadb;
+
+import dev.morigamio.kumpelliga.game.spi.GameData;
+import dev.morigamio.kumpelliga.game.spi.GameDataClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+@ConditionalOnProperty(name = "gamedata.provider", havingValue = "openLigaDb")
+public class OpenLigaDbClient implements GameDataClient {
+    private static final HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
+    private static final String URL = "https://api.openligadb.de/getmatchdata/bl1/2026";
+
+    public List<GameData> retrieveGameData() {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(URI.create(URL))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            List<OpenLigaDbEntry> entries = parseResponse(response);
+            return toGameData(entries);
+
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<GameData> toGameData(List<OpenLigaDbEntry> entries) {
+        List<GameData> gameData = new ArrayList<>();
+        for (OpenLigaDbEntry entry : entries) {
+
+            int pointsTeam1 = entry.matchResults().length != 0 ? entry.matchResults()[1].pointsTeam1() : 0;
+            int pointsTeam2 = entry.matchResults().length != 0 ? entry.matchResults()[1].pointsTeam2() : 0;
+
+            gameData.add(new GameData(
+                    entry.matchID(),
+                    entry.matchDateTime(),
+                    entry.team1().teamName(),
+                    entry.team2().teamName(),
+                    entry.matchIsFinished(),
+                    entry.group().groupOrderId(),
+                    pointsTeam1,
+                    pointsTeam2));
+        }
+        return gameData;
+    }
+
+    private List<OpenLigaDbEntry> parseResponse(HttpResponse<String> response) {
+        ObjectMapper jsonMapper = new ObjectMapper();
+        String body = response.body();
+        return jsonMapper.readValue(body, new TypeReference<>() {
+        });
+    }
+}

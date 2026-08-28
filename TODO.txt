@@ -1,0 +1,15 @@
+Bei E-Mails ist die übliche Empfehlung: nicht verraten, ob die Adresse schon registriert ist – zumindest wenn dir User Enumeration wichtig ist. Der Grund: E-Mail-Adressen sind sensibler als Usernames. Wenn ein Angreifer testen kann, ob max.mustermann@firma.de bei deinem Dienst registriert ist, verrät das etwas über die Person (peinlich bei Dating-Portalen o.ä.) und liefert Material für gezieltes Phishing oder Credential-Stuffing.
+Das Standardmuster sieht so aus:
+Bei der Registrierung antwortet der Server in beiden Fällen gleich, z.B. mit 200/202 und einer Nachricht wie "Wir haben dir eine E-Mail geschickt". Und dann:
+
+Ist die Adresse neu: E-Mail mit Bestätigungslink zur Aktivierung.
+Ist die Adresse schon registriert: E-Mail an den bestehenden Account – "Jemand hat versucht, sich mit deiner Adresse zu registrieren. Falls du das warst: Du hast bereits einen Account, hier geht's zum Login / Passwort-Reset."
+
+Der legitime Nutzer bekommt also in beiden Fällen eine hilfreiche E-Mail, aber der Angreifer sieht von außen keinen Unterschied in der HTTP-Response.
+Beim Passwort-Reset dasselbe Prinzip: Immer "Falls ein Account mit dieser Adresse existiert, haben wir eine E-Mail geschickt" – nie "Diese E-Mail ist nicht registriert".
+Beim Login ebenfalls: generisches "E-Mail oder Passwort falsch" statt "Diese E-Mail existiert nicht".
+Wichtige Fußnoten dazu:
+
+Es muss konsequent sein. Es bringt nichts, die Registrierung zu verschleiern, wenn der Passwort-Reset oder der Login die Info doch preisgibt. Auch Timing kann verraten: Wenn der Request bei existierender Adresse spürbar länger dauert (weil eine E-Mail verschickt wird), ist die Verschleierung hinfällig. Deshalb E-Mail-Versand asynchron machen und Antwortzeiten angleichen.
+Es kostet UX. Der ehrliche Nutzer, der vergessen hat, dass er schon einen Account hat, bekommt keinen direkten Hinweis im Formular, sondern muss erst in sein Postfach schauen. Viele große Dienste (Google, Amazon...) verzichten deshalb bewusst darauf und sagen offen "Account existiert bereits" – sie priorisieren UX und fangen Missbrauch stattdessen mit Rate-Limiting und Bot-Erkennung ab. Es ist also eine Abwägung, keine absolute Regel.
+Rate-Limiting brauchst du sowieso. Ohne Limit kann jemand deine Registrierung als Orakel für Millionen Adressen durchprobieren, egal wie die Response aussieht.
