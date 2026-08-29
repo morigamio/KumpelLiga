@@ -4,7 +4,6 @@ import dev.morigamio.kumpelliga.metadata.MetaData;
 import dev.morigamio.kumpelliga.metadata.MetaDataConstants;
 import dev.morigamio.kumpelliga.metadata.MetaDataRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -13,11 +12,14 @@ import java.util.Optional;
 
 @Repository
 public class OddsPersistence {
-    @Autowired
-    private OddsRepository oddsRepository;
 
-    @Autowired
-    private MetaDataRepository metaDataRepository;
+    private final OddsRepository oddsRepository;
+    private final MetaDataRepository metaDataRepository;
+
+    public OddsPersistence(OddsRepository oddsRepository, MetaDataRepository metaDataRepository) {
+        this.oddsRepository = oddsRepository;
+        this.metaDataRepository = metaDataRepository;
+    }
 
     @Transactional
     public void storeOdds(List<Odds> odds) {
@@ -32,7 +34,7 @@ public class OddsPersistence {
         return oddsRepository.findAll();
     }
 
-    public Optional<Odds> findById(Long id){
-        return oddsRepository.findById(id);
+    public Optional<Odds> findByGameId(Long gameId){
+        return oddsRepository.findByGameId(gameId);
     }
 }

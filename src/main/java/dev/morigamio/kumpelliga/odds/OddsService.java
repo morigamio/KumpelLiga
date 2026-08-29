@@ -36,7 +36,7 @@ public class OddsService {
     }
 
     public Optional<Odds> getOddsByGameId(Long gameId) {
-        return oddsPersistence.findById(gameId);
+        return oddsPersistence.findByGameId(gameId);
     }
 
     public void syncOdds() {
@@ -49,7 +49,7 @@ public class OddsService {
                     log.error("Can not find game with homeTeam: %s and awayTeam: %s".formatted(data.homeTeam(), data.awayTeam()));
                     continue;
                 }
-                Odds odd = oddsPersistence.findById(optGame.get().getId()).orElse(new Odds());
+                Odds odd = oddsPersistence.findByGameId(optGame.get().getId()).orElse(new Odds());
                 odd.setGame(optGame.get());
                 odd.setOddsHome(data.oddsHome());
                 odd.setOddsAway(data.oddsAway());
