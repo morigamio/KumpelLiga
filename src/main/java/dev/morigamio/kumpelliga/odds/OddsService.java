@@ -57,6 +57,7 @@ public class OddsService {
                 odds.add(odd);
             }
             oddsPersistence.storeOdds(odds);
+            log.debug("Odds synchronized successfully.");
         } catch (Exception e) {
             log.error("syncOdds: ", e);
         }
