@@ -1,5 +1,6 @@
 package dev.morigamio.kumpelliga.participant;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -7,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class ParticipantService {
     private final ParticipantRepository participantRepository;
@@ -21,14 +23,11 @@ public class ParticipantService {
 
     public void payOutWinnings(Participant participant, BigDecimal winnings) {
         participant.addPoints(winnings);
+        log.debug("Paid %s to %s.".formatted(winnings.toString(), participant.getName()));
     }
 
     public Optional<Participant> findById(long id) {
         return participantRepository.findById(id);
-    }
-
-    public List<Participant> findByLeagueId(Long leagueId) {
-        return participantRepository.findByLeagueId(leagueId);
     }
 
     public void removeParticipantById(long participantId) {

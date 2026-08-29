@@ -61,6 +61,7 @@ public class SettlementService {
                     betService.setBetPaid(bet);
                 }
             }
+            log.info("Winnings paid out successfully.");
         } catch (Exception e) {
             log.error("calculatePayout: ", e);
         }

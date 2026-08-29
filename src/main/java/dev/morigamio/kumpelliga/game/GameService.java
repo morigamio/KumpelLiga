@@ -51,7 +51,7 @@ public class GameService {
                 games.add(game);
             }
             gamePersistence.storeGames(games);
-            log.debug("Games synchronized successfully.");
+            log.info("Games synchronized successfully.");
         } catch (Exception e) {
             log.error("syncGames: ", e);
         }
