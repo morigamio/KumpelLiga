@@ -43,13 +43,18 @@ public class OddsService {
         try {
             List<OddsData> oddData = oddsDataClient.retrieveOdds();
             List<Odds> odds = new ArrayList<>();
-            for (OddsData odd : oddData) {
-                Optional<Game> optGame = gameService.getGameByTeamNames(odd.homeTeam(), odd.awayTeam());
+            for (OddsData data : oddData) {
+                Optional<Game> optGame = gameService.getGameByTeamNames(data.homeTeam(), data.awayTeam());
                 if (optGame.isEmpty()) {
-                    log.error("Can not find game with homeTeam: %s and awayTeam: %s".formatted(odd.homeTeam(), odd.awayTeam()));
+                    log.error("Can not find game with homeTeam: %s and awayTeam: %s".formatted(data.homeTeam(), data.awayTeam()));
                     continue;
                 }
-                odds.add(new Odds(null, optGame.get(), odd.oddsHome(), odd.oddsAway(), odd.oddsDraw()));
+                Odds odd = oddsPersistence.findById(optGame.get().getId()).orElse(new Odds());
+                odd.setGame(optGame.get());
+                odd.setOddsHome(data.oddsHome());
+                odd.setOddsAway(data.oddsAway());
+                odd.setOddsDraw(data.oddsDraw());
+                odds.add(odd);
             }
             oddsPersistence.storeOdds(odds);
         } catch (Exception e) {
