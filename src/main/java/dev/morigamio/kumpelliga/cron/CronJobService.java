@@ -18,7 +18,7 @@ public class CronJobService {
         this.settlementService = settlementService;
     }
 
-    @Scheduled(cron = "0 0 1 * * *")
+    @Scheduled(cron = "${sync.cron}")
     public void synchronizeData() {
         gameService.syncGames();
         oddsService.syncOdds();
