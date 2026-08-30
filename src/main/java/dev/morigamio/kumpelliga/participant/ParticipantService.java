@@ -23,6 +23,7 @@ public class ParticipantService {
 
     public void payOutWinnings(Participant participant, BigDecimal winnings) {
         participant.addPoints(winnings);
+        participantRepository.save(participant);
         log.debug("Paid %s to %s.".formatted(winnings.toString(), participant.getName()));
     }
 

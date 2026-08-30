@@ -17,11 +17,11 @@ public record ReadParticipantDTO(Long id, String name, String status, BigDecimal
 
     public static List<ReadParticipantDTO> from(Collection<Participant> participants) {
         return participants.stream()
-                .map(p -> new ReadParticipantDTO(
-                        p.getId(),
-                        p.getAccount().getName(),
-                        p.getStatus(),
-                        p.getBalance()
+                .map(participant -> new ReadParticipantDTO(
+                        participant.getId(),
+                        participant.getAccount().getName(),
+                        participant.getStatus(),
+                        participant.getBalance()
                 )).toList();
     }
 }
