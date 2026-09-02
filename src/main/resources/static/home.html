@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KumpelLiga – My leagues</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/header.css">
+<link rel="stylesheet" href="css/home.css">
+<script src="js/core.js"></script>
+<script src="js/shell.js"></script>
+<script src="js/header.js"></script>
+</head>
+<body>
+
+<kl-header></kl-header>
+
+<main class="wrap">
+
+  <div class="card">
+    <div class="hero">
+      <div class="big-avatar" id="acctAvatar">?</div>
+      <div class="who">
+        <p class="name" id="acctName">—</p>
+        <div class="sub" id="acctSub"></div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="n" id="statLeagues">–</div><div class="l">Leagues</div></div>
+      <div class="stat"><div class="n" id="statPoints">–</div><div class="l">Total points</div></div>
+      <div class="stat"><div class="n" id="statBest">–</div><div class="l">Best rank</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">
+      <h2>My leagues</h2>
+      <button class="link" onclick="loadLeagues()">↻ Refresh</button>
+    </div>
+    <div id="myLeagues"></div>
+  </div>
+
+  <div class="card">
+    <h2>Find a league</h2>
+    <div class="join-grid">
+      <div class="col">
+        <h3>Join a league</h3>
+        <div class="hint">Enter the league's name and password.</div>
+        <label>League name</label>
+        <input id="joinId" placeholder="e.g. Kumpel Bundesliga">
+        <label>Password</label>
+        <input id="joinPass" type="password" placeholder="league password">
+        <button class="block" onclick="joinLeague()">Join league</button>
+      </div>
+      <div class="col">
+        <h3>Create a league</h3>
+        <div class="hint">You'll be the admin and first member.</div>
+        <label>League name</label>
+        <input id="lgName" placeholder="Kumpel Bundesliga">
+        <label>Password</label>
+        <input id="lgPass" type="password" placeholder="choose a password">
+        <button class="ghost block" onclick="createLeague()">Create league</button>
+      </div>
+    </div>
+    <div id="homeMsg" class="msg"></div>
+  </div>
+
+</main>
+
+<script src="js/home.js"></script>
+</body>
+</html>
