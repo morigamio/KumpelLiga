@@ -24,9 +24,9 @@ function renderGameCard(g){
 
   div.innerHTML =
     '<div class="top">'+
-      '<span class="when">'+fmt(g.matchTime)+'</span>'+
+      '<span class="when">'+fmt(g.matchTime)+(finished?' · Finished':'')+'</span>'+
       '<span class="top-right">'+
-        '<span class="pill'+(finished?' gold':'')+'">'+(finished?'Finished':'Matchday '+g.gameDay)+'</span>'+
+        (finished?'':'<span class="pill">Matchday '+g.gameDay+'</span>')+
       '</span>'+
     '</div>'+
     '<div class="teams">'+
