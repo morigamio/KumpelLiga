@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KumpelLiga – League</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/header.css">
+<link rel="stylesheet" href="css/league.css">
+<script src="js/core.js"></script>
+<script src="js/shell.js"></script>
+<script src="js/header.js"></script>
+</head>
+<body>
+
+<kl-header></kl-header>
+
+<main class="wrap">
+  <button class="link" onclick="goHome()">← All leagues</button>
+
+  <div class="card">
+    <div class="league-head">
+      <div class="crest" id="lvCrest">L</div>
+      <div class="grow">
+        <h1 id="lvName">League</h1>
+        <div class="sub" id="lvSub"></div>
+      </div>
+      <div id="lvActions"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="slider-head">
+      <div class="day-label" id="dayLabel">Matchday</div>
+      <div class="nav">
+        <button onclick="slideBy(-1)" aria-label="Previous matchday">‹</button>
+        <button onclick="slideBy(1)" aria-label="Next matchday">›</button>
+      </div>
+    </div>
+    <div class="track" id="track"></div>
+    <div class="dots" id="dots"></div>
+    <div id="gamesMsg" class="msg"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><h2>Ranking</h2></div>
+    <div id="ranking"></div>
+  </div>
+</main>
+
+<script src="js/ranking.js"></script>
+<script src="js/games.js"></script>
+<script src="js/league.js"></script>
+</body>
+</html>

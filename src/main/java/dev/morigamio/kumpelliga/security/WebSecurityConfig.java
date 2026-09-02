@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(a ->
                         a.requestMatchers(HttpMethod.POST, "/account", "/session").permitAll())
                 .authorizeHttpRequests(a ->
-                        a.requestMatchers(HttpMethod.GET, "/", "/index.html", "/favicon.ico").permitAll())
+                        a.requestMatchers(HttpMethod.GET, "/", "/*.html", "/favicon.ico", "/css/**", "/js/**").permitAll())
                 .authorizeHttpRequests(a ->
                         a.requestMatchers(HttpMethod.GET, "/test/*", "/").permitAll())
                 .authorizeHttpRequests(a ->

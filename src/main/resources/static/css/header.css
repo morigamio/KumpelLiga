@@ -1,0 +1,10 @@
+/* <kl-header> — the sticky top bar on logged-in pages (js/header.js). */
+kl-header{display:block;position:sticky;top:0;z-index:20}
+header{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 22px;background:rgba(255,255,255,.82);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border)}
+header .brand-row{display:flex;align-items:center;gap:9px;font-weight:800;font-size:18px;letter-spacing:.4px}
+header .brand-row .logo{font-size:22px}
+header .user{display:flex;align-items:center;gap:12px}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;
+  display:grid;place-items:center;font-weight:800;font-size:15px}

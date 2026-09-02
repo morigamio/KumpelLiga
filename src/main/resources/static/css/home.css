@@ -1,0 +1,30 @@
+/* Home page (home.html): account hero, my leagues, join / create. */
+.hero{display:flex;align-items:center;gap:18px}
+.hero .big-avatar{width:64px;height:64px;border-radius:20px;background:linear-gradient(140deg,var(--accent),#255f42);
+  color:#fff;display:grid;place-items:center;font-weight:800;font-size:26px;box-shadow:var(--shadow)}
+.hero .who{flex:1}
+.hero .who .name{font-size:24px;font-weight:800;margin:0}
+.hero .who .sub{font-size:13.5px;color:var(--muted)}
+.stats{display:flex;gap:22px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px dashed var(--border-strong)}
+.stat .n{font-size:22px;font-weight:800}
+.stat .l{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+
+/* leagues list */
+.league-item{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--border);
+  border-radius:13px;margin-bottom:10px;cursor:pointer;transition:.15s ease;background:#fff}
+.league-item:hover{border-color:var(--accent);box-shadow:var(--shadow);transform:translateY(-1px)}
+.league-item .crest{width:42px;height:42px;border-radius:12px;background:var(--accent-soft);color:var(--accent);
+  display:grid;place-items:center;font-weight:800;font-size:17px;flex-shrink:0}
+.league-item .li-main{flex:1;min-width:0}
+.league-item .li-name{font-weight:800;font-size:16px}
+.league-item .li-sub{font-size:13px;color:var(--muted)}
+.league-item .li-bal{text-align:right}
+.league-item .li-bal .b{font-weight:800;font-size:16px;color:var(--accent)}
+.league-item .li-bal .bl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.chev{color:var(--muted);font-size:20px}
+
+.join-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media (max-width:620px){.join-grid{grid-template-columns:1fr}}
+.join-grid .col{border:1px solid var(--border);border-radius:13px;padding:16px}
+.join-grid h3{margin:0 0 2px;font-size:15px;font-weight:800}
+.join-grid .hint{font-size:12.5px;color:var(--muted);margin-bottom:4px}
