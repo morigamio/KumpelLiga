@@ -29,6 +29,7 @@ public class Bet {
     private String prediction;
     private float stake;
     private boolean isPaid;
+    private boolean isDouble;
 
     public Bet(Game game, Participant participant, String prediction) {
         this.game = game;

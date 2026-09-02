@@ -27,10 +27,7 @@ public class BetController {
 
     @GetMapping("/participants/{participantId}/bets")
     public ResponseEntity<List<ReadBetDTO>> getBetsByParticipant(@PathVariable String participantId, Principal principal){
-        // add query parameters: paid, game
-        // check if participant exists
         Participant participant = participantService.findById(Long.parseLong(participantId)).orElseThrow(() -> new ResourceNotFoundException(Participant.class, Long.parseLong(participantId)));
-        // check if user has that participant
         if (!principal.getName().equals(participant.getAccount().getName())){
             throw new NotResourceOwnerException(Participant.class, Long.parseLong(participantId), principal.getName());
         }
@@ -57,9 +54,26 @@ public class BetController {
                 Long.parseLong(betId),
                 data.prediction()
                 //data.stake()
-
         );
         return new ResponseEntity<>(ReadBetDTO.from(bet), HttpStatus.OK);
+    }
+
+    @PutMapping("/bets/{betId}/double")
+    public ResponseEntity<List<ReadBetDTO>> updateBetToDouble(@PathVariable String betId, Principal principal){
+        List<Bet> betsByParticipant = betService.updateBetToDouble(
+                principal.getName(),
+                Long.parseLong(betId)
+        );
+        return new ResponseEntity<>(betsByParticipant.stream().map(ReadBetDTO::from).toList(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/bets/{betId}/double")
+    public ResponseEntity<List<ReadBetDTO>> updateBetToSingle(@PathVariable String betId, Principal principal){
+        List<Bet> betsByParticipant = betService.updateBetToSingle(
+                principal.getName(),
+                Long.parseLong(betId)
+        );
+        return new ResponseEntity<>(betsByParticipant.stream().map(ReadBetDTO::from).toList(), HttpStatus.OK);
     }
 
     @DeleteMapping("/bets/{betId}")

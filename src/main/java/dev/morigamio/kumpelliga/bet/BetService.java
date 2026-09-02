@@ -8,10 +8,7 @@ import dev.morigamio.kumpelliga.participant.ParticipantService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BetService {
@@ -45,12 +42,9 @@ public class BetService {
         return bet;
     }
 
+    @Transactional
     public Bet updateBet(String name, Long betId, String prediction) {
-        Bet bet = betRepository.findById(betId).orElseThrow(() ->  new ResourceNotFoundException(Bet.class, betId));
-        String betOwner = bet.getParticipant().getAccount().getName();
-        if (!name.equals(betOwner)){
-            throw new NotResourceOwnerException(Bet.class, betId, betOwner);
-        }
+        Bet bet = validateBetOwner(name, betId);
 
         // update bet according to new values
         bet.setPrediction(prediction);
@@ -58,13 +52,32 @@ public class BetService {
         return bet;
     }
 
+    @Transactional
+    public List<Bet> updateBetToDouble(String name, Long betId){
+        Bet bet = validateBetOwner(name, betId);
+        int gameDay = bet.getGame().getGameDay();
+        Participant participant = bet.getParticipant();
+
+        List<Bet> gameDayBets = betRepository.findByParticipantAndGameDay(participant, gameDay);
+        gameDayBets.forEach(b -> b.setDouble(b.getId().equals(betId)));
+        return gameDayBets;
+    }
+
+    @Transactional
+    public List<Bet> updateBetToSingle(String name, Long betId){
+        Bet bet = validateBetOwner(name, betId);
+        int gameDay = bet.getGame().getGameDay();
+        Participant participant = bet.getParticipant();
+
+        List<Bet> gameDayBets = betRepository.findByParticipantAndGameDay(participant, gameDay);
+        gameDayBets.forEach(b -> b.setDouble(false));
+        return gameDayBets;
+    }
+
+    @Transactional
     public void deleteBet(String name, Long betId) {
-        Bet bet = betRepository.findById(betId).orElseThrow(() ->  new ResourceNotFoundException(Bet.class, betId));
-        String betOwner = bet.getParticipant().getAccount().getName();
-        if (!name.equals(betOwner)){
-            throw new NotResourceOwnerException(Bet.class, betId, betOwner);
-        }
-        betRepository.deleteById(betId);
+        Bet bet = validateBetOwner(name, betId);
+        betRepository.deleteById(bet.getId());
     }
 
     public Map<Long, List<Bet>> getUnpaidBetsByGameId() {
@@ -76,6 +89,7 @@ public class BetService {
         return unpaidBetsByGameId;
     }
 
+    @Transactional
     public void setBetPaid(Bet bet) {
         bet.setPaid(true);
         betRepository.save(bet);
@@ -85,7 +99,12 @@ public class BetService {
         return betRepository.findByParticipantId(participant.getId());
     }
 
-    public List<Bet> getBetsByParticipantAndGame(Participant participant, Game game) {
-        return betRepository.findByParticipantIdAndGameId(participant.getId(), game.getId());
+    private Bet validateBetOwner(String name, Long betId){
+        Bet bet = betRepository.findById(betId).orElseThrow(() ->  new ResourceNotFoundException(Bet.class, betId));
+        String betOwner = bet.getParticipant().getAccount().getName();
+        if (!name.equals(betOwner)){
+            throw new NotResourceOwnerException(Bet.class, betId, betOwner);
+        }
+        return bet;
     }
 }
