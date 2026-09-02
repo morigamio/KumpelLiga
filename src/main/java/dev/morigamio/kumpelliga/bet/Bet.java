@@ -21,7 +21,7 @@ public class Bet {
     private Long id;
 
     @ManyToOne
-    private Game game; // one bet out of many is for one game
+    private Game game;// one bet out of many is for one game
 
     @ManyToOne
     private Participant participant; // one bet out of many has only one owner

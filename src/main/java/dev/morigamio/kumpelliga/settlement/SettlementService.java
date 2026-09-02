@@ -8,6 +8,7 @@ import dev.morigamio.kumpelliga.game.GameService;
 import dev.morigamio.kumpelliga.odds.Odds;
 import dev.morigamio.kumpelliga.odds.OddsService;
 import dev.morigamio.kumpelliga.participant.ParticipantService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class SettlementService {
         this.gameService = gameService;
     }
 
+    @Transactional
     public void calculatePayout() {
         try {
             Map<Long, List<Bet>> betsByGameId = betService.getUnpaidBetsByGameId();

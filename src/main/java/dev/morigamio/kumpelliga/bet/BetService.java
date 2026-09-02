@@ -58,7 +58,7 @@ public class BetService {
         int gameDay = bet.getGame().getGameDay();
         Participant participant = bet.getParticipant();
 
-        List<Bet> gameDayBets = betRepository.findByParticipantAndGameDay(participant, gameDay);
+        List<Bet> gameDayBets = betRepository.findByParticipantAndGame_GameDay(participant, gameDay);
         gameDayBets.forEach(b -> b.setDouble(b.getId().equals(betId)));
         return gameDayBets;
     }
@@ -69,7 +69,7 @@ public class BetService {
         int gameDay = bet.getGame().getGameDay();
         Participant participant = bet.getParticipant();
 
-        List<Bet> gameDayBets = betRepository.findByParticipantAndGameDay(participant, gameDay);
+        List<Bet> gameDayBets = betRepository.findByParticipantAndGame_GameDay(participant, gameDay);
         gameDayBets.forEach(b -> b.setDouble(false));
         return gameDayBets;
     }
@@ -89,10 +89,8 @@ public class BetService {
         return unpaidBetsByGameId;
     }
 
-    @Transactional
     public void setBetPaid(Bet bet) {
         bet.setPaid(true);
-        betRepository.save(bet);
     }
 
     public List<Bet> getBetsByParticipant(Participant participant) {

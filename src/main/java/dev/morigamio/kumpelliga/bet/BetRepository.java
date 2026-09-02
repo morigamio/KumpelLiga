@@ -9,5 +9,5 @@ public interface BetRepository extends JpaRepository<Bet,Long> {
     boolean existsByParticipantIdAndGameId(Long participantId, Long gameId);
     List<Bet> findByIsPaidFalse();
     List<Bet> findByParticipantId(Long id);
-    List<Bet> findByParticipantAndGameDay(Participant participant, int gameDay);
+    List<Bet> findByParticipantAndGame_GameDay(Participant participant, int gameDay);
 }
