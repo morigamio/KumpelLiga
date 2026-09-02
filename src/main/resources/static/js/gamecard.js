@@ -12,9 +12,8 @@ function renderGameCard(g){
   const finished = g.isFinished;
   const locked = isLocked(g);
   const dbl = isDoubleBet(existing);
-  const resultClass = finished && existing
-    ? (existing.prediction === g.winner ? ' bet-correct' : ' bet-wrong')
-    : '';
+  const won = finished && existing && existing.prediction === g.winner;
+  const resultClass = !finished ? '' : !existing ? ' no-bet' : won ? ' bet-correct' : ' bet-wrong';
   const div = document.createElement('div');
   div.className = 'game' + (locked ? ' locked' : '') + (dbl ? ' double' : '') + resultClass;
   div.dataset.gameId = g.id;
@@ -44,14 +43,20 @@ function renderGameCard(g){
     b.textContent = '2x';
     if (!existing){ b.disabled = true; b.title = 'Place a bet first to double it'; }
     else {
-      b.title = dbl ? 'Double bet active — tap to make it a normal bet' : 'Double the points of this bet';
+      b.title = dbl ? 'Double bet — tap to reset' : 'Double this bet';
       b.onclick = () => onDoubleClick(g, div);
     }
     topRight.prepend(b);
-  } else if (dbl){
+  } else if (dbl && !(finished && won)){
     const s = document.createElement('span');
     s.className = 'dbl on badge'; s.textContent = '2x';
     topRight.prepend(s);
+  }
+  if (finished && existing){
+    const r = document.createElement('span');
+    r.className = 'stamp ' + (won && dbl ? 'won-double' : won ? 'won' : 'lost');
+    r.textContent = won && dbl ? 'Double win' : won ? 'Won' : 'Lost';
+    topRight.prepend(r);
   }
 
   if (!hasOdds(g)){
@@ -69,7 +74,7 @@ function renderGameCard(g){
   const odds = document.createElement('div'); odds.className='odds';
   outcomes.forEach(o=>{
     const b = document.createElement('button');
-    b.className = 'opt' + (existing && existing.prediction===o.pred ? ' chosen' : '');
+    b.className = 'opt' + (existing && existing.prediction===o.pred ? ' chosen' : '') + (finished && g.winner===o.pred ? ' winner' : '');
     b.innerHTML = '<span class="k">'+escapeHtml(o.label)+'</span><span class="v">'+o.val.toFixed(2)+'</span>';
     if (locked) b.disabled = true;
     else b.onclick = () => onBetClick(g, o.pred, div);
@@ -100,6 +105,7 @@ function rerenderAllCards(){
     const g = byId[card.dataset.gameId];
     if (g) card.replaceWith(renderGameCard(g));
   });
+  syncDayUi();   // card heights may have changed
 }
 
 async function onBetClick(g, prediction, card){
@@ -127,6 +133,7 @@ async function onBetClick(g, prediction, card){
 
   // re-render just this card in place
   card.replaceWith(renderGameCard(g));
+  syncDayUi();
   refreshRanking();
 }
 

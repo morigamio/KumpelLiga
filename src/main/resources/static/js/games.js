@@ -48,6 +48,8 @@ function defaultDayIndex(games, days){
 }
 
 function syncDayUi(){
+  const track = $('track'), slide = track.children[cur.dayIndex];
+  if (slide) track.style.height = slide.offsetHeight + 'px';   // row is as tall as the tallest slide otherwise
   $('dayLabel').textContent = 'Matchday ' + cur.days[cur.dayIndex];
   [...$('dots').children].forEach((d,i)=> d.classList.toggle('active', i===cur.dayIndex));
 }
@@ -58,3 +60,4 @@ function scrollToDay(i){
   syncDayUi();
 }
 function slideBy(d){ scrollToDay(cur.dayIndex + d); }
+window.addEventListener('resize', ()=>{ if (cur && cur.days.length) syncDayUi(); });
