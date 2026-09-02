@@ -51,8 +51,6 @@ button.dbl.on:hover:not(:disabled){transform:rotate(-2deg) scale(1.12);border-co
 .game.bet-wrong .score{background:#c0392b;color:#fff}
 .game.bet-wrong .odds .opt.chosen{background:#d98274;border-color:#d98274;color:#fff}
 .game.bet-wrong .odds .opt.chosen .k{color:#fff;opacity:.9}
-.game.locked .odds .opt.winner:not(.chosen){border:1.5px dashed #4fae7b;background:#e6f5ec}
-.game.locked .odds .opt.winner:not(.chosen) .v{color:#1f6a44}
 
 .game.double.bet-correct{border-color:#f0c24a;box-shadow:0 0 0 1.5px #f0c24a,0 0 0 4px #ffe9a3,0 12px 30px rgba(240,194,74,.38);
   background:linear-gradient(180deg,#ffeaa6 0%,#d9f1e2 55%,#eef8f2 100%)}
@@ -61,8 +59,6 @@ button.dbl.on:hover:not(:disabled){transform:rotate(-2deg) scale(1.12);border-co
 /* finished game without a bet: same treatment in grey */
 .game.no-bet{border-color:#ddd8ce;background:linear-gradient(180deg,#f3f1ec 0%,#f9f8f5 100%);box-shadow:0 0 0 1.5px #ddd8ce,0 0 0 4px #efece5,0 8px 22px rgba(60,50,30,.05)}
 .game.no-bet .score{background:#c9c4b8;color:#fff}
-.game.no-bet .odds .opt.winner{border:1.5px dashed #c9c4b8;background:#f5f3ef}
-.game.no-bet .odds .opt.winner .v{color:#8a8577}
 .game.no-bet .teams,.game.no-bet .odds,.game.no-bet .bet-note{opacity:.6}
 
 /* result stamp: like someone confirmed the result with a rubber stamp */

@@ -74,7 +74,7 @@ function renderGameCard(g){
   const odds = document.createElement('div'); odds.className='odds';
   outcomes.forEach(o=>{
     const b = document.createElement('button');
-    b.className = 'opt' + (existing && existing.prediction===o.pred ? ' chosen' : '') + (finished && g.winner===o.pred ? ' winner' : '');
+    b.className = 'opt' + (existing && existing.prediction===o.pred ? ' chosen' : '');
     b.innerHTML = '<span class="k">'+escapeHtml(o.label)+'</span><span class="v">'+o.val.toFixed(2)+'</span>';
     if (locked) b.disabled = true;
     else b.onclick = () => onBetClick(g, o.pred, div);
