@@ -38,8 +38,6 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(a ->
                         a.requestMatchers(HttpMethod.GET, "/", "/*.html", "/favicon.ico", "/css/**", "/js/**").permitAll())
                 .authorizeHttpRequests(a ->
-                        a.requestMatchers(HttpMethod.GET, "/test/*", "/").permitAll())
-                .authorizeHttpRequests(a ->
                         a.anyRequest().authenticated());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
