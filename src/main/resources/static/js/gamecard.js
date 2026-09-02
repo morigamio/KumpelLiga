@@ -25,9 +25,7 @@ function renderGameCard(g){
   div.innerHTML =
     '<div class="top">'+
       '<span class="when">'+fmt(g.matchTime)+(finished?' · Finished':'')+'</span>'+
-      '<span class="top-right">'+
-        (finished?'':'<span class="pill">Matchday '+g.gameDay+'</span>')+
-      '</span>'+
+      '<span class="top-right"></span>'+
     '</div>'+
     '<div class="teams">'+
       '<span class="team home">'+escapeHtml(g.homeTeam)+'</span>'+
@@ -85,8 +83,8 @@ function renderGameCard(g){
   const note = document.createElement('div'); note.className='bet-note';
   const dblTxt = dbl ? ' · 2x points' : '';
   if (locked && !existing) note.textContent = 'Betting closed.';
-  else if (locked && existing) { note.className='bet-note you'; note.textContent='Your pick: '+labelFor(g, existing.prediction)+dblTxt+' (locked)'; }
-  else if (existing) { note.className='bet-note you'; note.textContent='Your bet: '+labelFor(g, existing.prediction)+dblTxt+' — tap it again to remove, or pick another to change.'; }
+  else if (locked && existing) note.textContent = 'Your pick: '+labelFor(g, existing.prediction)+dblTxt;
+  else if (existing) { note.textContent='Your bet: '+labelFor(g, existing.prediction)+dblTxt+' — tap it again to remove, or pick another to change.'; }
   else note.textContent = 'Tap an outcome to place your bet.';
   div.appendChild(note);
 
