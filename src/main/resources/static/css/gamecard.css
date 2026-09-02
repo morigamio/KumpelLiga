@@ -1,0 +1,49 @@
+/* Game card (gamecard.js): card, odds buttons, bet note and the 2x double-bet toggle. */
+.game{border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:12px;background:#fff}
+.game.locked{background:var(--bg2)}
+.game.bet-correct{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),var(--shadow)}
+.game.bet-wrong{border-color:var(--danger);box-shadow:0 0 0 1px var(--danger),var(--shadow)}
+.game .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.game .when{font-size:12.5px;color:var(--muted);font-weight:700}
+.game .teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-bottom:6px}
+.game .team{font-weight:800;font-size:15.5px}
+.game .team.home{text-align:right}
+.game .team.away{text-align:left}
+.game .vs{font-size:12px;color:var(--muted);font-weight:800}
+.game .score{font-size:20px;font-weight:800;padding:2px 12px;background:var(--accent-soft);border-radius:10px;color:var(--accent)}
+.odds{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:12px}
+.odds .opt{background:#fff;border:1.5px solid var(--border-strong);color:var(--text);border-radius:12px;
+  padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:700}
+.odds .opt:hover:not(:disabled){border-color:var(--accent)}
+.odds .opt .k{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:800;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.odds .opt .v{font-size:17px;font-weight:800}
+.odds .opt.chosen{background:var(--accent);border-color:var(--accent);color:#fff}
+.odds .opt.chosen .k{color:#fff;opacity:.9}
+.bet-note{font-size:12.5px;color:var(--muted);margin-top:9px;font-weight:600;min-height:16px}
+.bet-note.you{color:var(--accent)}
+.bet-note.err{color:var(--danger)}
+.no-odds{font-size:12.5px;color:var(--muted);margin-top:10px;font-weight:600}
+
+/* double bet — a friendly little sticker, not a serious control */
+.game .top-right{display:flex;align-items:center;gap:8px}
+.dbl{font:inherit;font-size:12px;font-weight:800;line-height:1;padding:5px 10px;border-radius:999px;
+  border:2px dashed var(--border-strong);background:#fff;color:var(--muted);cursor:pointer;
+  transform:rotate(-4deg);transition:transform .18s cubic-bezier(.34,1.56,.64,1),border-color .15s,color .15s}
+button.dbl:hover:not(:disabled){border-color:#e8b93f;color:#b47f14;background:#fff9e6;filter:none;transform:rotate(-8deg) scale(1.12)}
+button.dbl:active:not(:disabled){transform:rotate(-8deg) scale(.95)}
+button.dbl:disabled{opacity:.35;transform:rotate(-4deg)}
+.dbl.on{color:#7a5300;border:2px solid #f0c24a;
+  background:linear-gradient(120deg,#ffd75e 0%,#fff1b3 35%,#ffcd3c 55%,#fff1b3 75%,#ffd75e 100%);
+  background-size:250% 100%;animation:dbl-shine 2.6s linear infinite,dbl-pop .5s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 3px 0 #dea72c,0 4px 10px rgba(222,167,44,.35);transform:rotate(-6deg);
+  text-shadow:0 1px 0 rgba(255,255,255,.8)}
+.dbl.on::before{content:"✨";font-size:11px;margin-right:4px}
+.dbl.badge{cursor:default;animation:dbl-shine 2.6s linear infinite}
+button.dbl.on:hover:not(:disabled){transform:rotate(-2deg) scale(1.12);border-color:#f0c24a;color:#7a5300;background-color:#ffd75e}
+@keyframes dbl-shine{0%{background-position:0% 50%}100%{background-position:250% 50%}}
+@keyframes dbl-pop{0%{transform:rotate(-6deg) scale(.6)}60%{transform:rotate(-6deg) scale(1.25)}100%{transform:rotate(-6deg) scale(1)}}
+.game.double{border-color:#f0c24a;box-shadow:0 0 0 1px #f0c24a,0 8px 22px rgba(240,194,74,.22);
+  background:linear-gradient(180deg,#fffaea 0%,#fff 55%)}
+.game.double.bet-correct{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 8px 22px rgba(240,194,74,.22)}
+.game.double.bet-wrong{border-color:var(--danger);box-shadow:0 0 0 1px var(--danger),var(--shadow)}

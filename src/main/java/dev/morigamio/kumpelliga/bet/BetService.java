@@ -80,7 +80,7 @@ public class BetService {
         betRepository.deleteById(bet.getId());
     }
 
-    public Map<Long, List<Bet>> getUnpaidBetsByGameId() {
+    public Map<Long, List<Bet>> getUnpaidBetsByGameIds() {
         Map<Long, List<Bet>> unpaidBetsByGameId = new HashMap<>();
         List<Bet> bets = betRepository.findByIsPaidFalse();
         for (Bet bet : bets) {

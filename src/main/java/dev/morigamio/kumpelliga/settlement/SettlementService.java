@@ -33,7 +33,7 @@ public class SettlementService {
     @Transactional
     public void calculatePayout() {
         try {
-            Map<Long, List<Bet>> betsByGameId = betService.getUnpaidBetsByGameId();
+            Map<Long, List<Bet>> betsByGameId = betService.getUnpaidBetsByGameIds();
 
             for (Map.Entry<Long, List<Bet>> entry : betsByGameId.entrySet()) {
                 Game game = gameService.getGameById(entry.getKey())
@@ -45,21 +45,8 @@ public class SettlementService {
                         .orElseThrow();
 
                 for (Bet bet : entry.getValue()) {
-                    String prediction = bet.getPrediction();
-                    String winner = bet.getGame().getWinner();
-                    if (winner.equals(prediction)) {
-                        double winnings;
-                        switch (prediction) {
-                            case GameConstants.HOME_TEAM -> winnings = odds.getOddsHome();
-                            case GameConstants.AWAY_TEAM -> winnings = odds.getOddsAway();
-                            case GameConstants.DRAW -> winnings = odds.getOddsDraw();
-                            default -> {
-                                log.error("Prediction by participant %s does not match a valid outcome, %s".formatted(bet.getParticipant().getName(), prediction));
-                                winnings = 0;
-                            }
-                        }
-                        participantService.payOutWinnings(bet.getParticipant(), BigDecimal.valueOf(winnings));
-                    }
+                    double winnings = calculateWinnings(bet, odds);
+                    participantService.payOutWinnings(bet.getParticipant(), BigDecimal.valueOf(winnings));
                     betService.setBetPaid(bet);
                 }
             }
@@ -67,5 +54,22 @@ public class SettlementService {
         } catch (Exception e) {
             log.error("calculatePayout: ", e);
         }
+    }
+
+    private double calculateWinnings(Bet bet, Odds odds) {
+        String prediction = bet.getPrediction();
+        String winner = bet.getGame().getWinner();
+        boolean isDouble = bet.isDouble();
+        double winnings = 0;
+        if (winner.equals(prediction)) {
+            switch (prediction) {
+                case GameConstants.HOME_TEAM -> winnings = odds.getOddsHome();
+                case GameConstants.AWAY_TEAM -> winnings = odds.getOddsAway();
+                case GameConstants.DRAW -> winnings = odds.getOddsDraw();
+                default ->
+                        log.error("Prediction by participant %s does not match a valid outcome, %s".formatted(bet.getParticipant().getName(), prediction));
+            }
+        }
+        return isDouble ? winnings * 2 : winnings;
     }
 }
