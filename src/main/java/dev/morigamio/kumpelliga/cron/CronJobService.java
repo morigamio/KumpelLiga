@@ -18,11 +18,18 @@ public class CronJobService {
         this.settlementService = settlementService;
     }
 
-    @Scheduled(cron = "${sync.cron}")
-    public void synchronizeData() {
+    @Scheduled(cron = "${sync.cron.games}")
+    public void synchronizeGameData() {
         gameService.syncGames();
-        oddsService.syncOdds();
-        settlementService.calculatePayout();
+    }
 
+    @Scheduled(cron = "${sync.cron.odds}")
+    public void synchronizeOddsData() {
+        oddsService.syncOdds();
+    }
+
+    @Scheduled(cron = "${sync.cron.payout}")
+    public void calculatePayout() {
+        settlementService.calculatePayout();
     }
 }
