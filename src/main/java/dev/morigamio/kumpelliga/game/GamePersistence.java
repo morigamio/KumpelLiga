@@ -32,8 +32,6 @@ public class GamePersistence {
         for (Game game : games) {
             gameRepository.save(game);
         }
-        MetaData timeStamp = new MetaData(MetaDataConstants.GAME_DATA_TIMESTAMP, LocalDateTime.now().toString());
-        metaDataRepository.save(timeStamp);
     }
 
     public List<Game> findAll() {
