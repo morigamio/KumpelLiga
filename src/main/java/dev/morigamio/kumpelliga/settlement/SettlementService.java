@@ -49,8 +49,8 @@ public class SettlementService {
                     participantService.payOutWinnings(bet.getParticipant(), BigDecimal.valueOf(winnings));
                     betService.setBetPaid(bet);
                 }
+            log.info("Winnings paid out for game %s vs. %s".formatted(game.getHomeTeam(), game.getAwayTeam()));
             }
-            log.info("Winnings paid out successfully.");
         } catch (Exception e) {
             log.error("calculatePayout: ", e);
         }
