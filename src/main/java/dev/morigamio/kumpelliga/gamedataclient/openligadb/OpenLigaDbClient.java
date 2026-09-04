@@ -21,14 +21,14 @@ import java.util.List;
 @ConditionalOnProperty(name = "gamedata.provider", havingValue = "openLigaDb")
 public class OpenLigaDbClient implements GameDataClient {
     private static final HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
-    private static final String URL = "https://api.openligadb.de/getmatchdata/bl1/2026";
+    private static final String GAME_DATA_URL = "https://api.openligadb.de/getmatchdata/bl1/2026";
     private static final String TIME_STAMP_URL = "https://api.openligadb.de/getlastchangedate/bl1/2026/%d";
 
     public List<GameData> retrieveGameData() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .GET()
-                    .uri(URI.create(URL))
+                    .uri(URI.create(GAME_DATA_URL))
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -37,6 +37,23 @@ public class OpenLigaDbClient implements GameDataClient {
 
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<GameData> retrieveGameData(int gameDay) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(URI.create(GAME_DATA_URL + "/" + gameDay))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            List<OpenLigaDbEntry> entries = parseResponse(response);
+            return toGameData(entries);
+
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException("retrieveGameData", e);
         }
     }
 
