@@ -1,4 +1,4 @@
-package dev.morigamio.kumpelliga.metadata;
+package dev.morigamio.kumpelliga.game;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -6,13 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MetaData {
-
+@Getter
+public class GameDay {
     @Id
-    private String key;
-    private String value;
+    private int gameDay;
+    private LocalDateTime updateTimeStamp;
 }
