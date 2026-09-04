@@ -81,6 +81,7 @@ public class OpenLigaDbClient implements GameDataClient {
             gameData.add(new GameData(
                     entry.matchID(),
                     entry.matchDateTime(),
+                    entry.lastUpdateDateTime(),
                     entry.team1().teamName(),
                     entry.team2().teamName(),
                     entry.matchIsFinished(),
