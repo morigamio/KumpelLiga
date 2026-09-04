@@ -8,6 +8,6 @@ public record OpenLigaDbEntry(Long matchID,
                               Group group,
                               Team team1,
                               Team team2,
-                              MatchResult[] matchResults,
+                              Goal[] goals,
                               boolean matchIsFinished) {
 }
