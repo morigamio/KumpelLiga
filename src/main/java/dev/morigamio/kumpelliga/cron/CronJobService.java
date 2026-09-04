@@ -18,19 +18,20 @@ public class CronJobService {
         this.settlementService = settlementService;
     }
 
-    @Scheduled(cron = "${sync.cron.games}")
-    public void synchronizeGameData() {
-        gameService.syncGames();
     @Scheduled(cron = "${sync.cron.liveTracking}")
+    public void syncResultsAndCalculate() {
+        List<GameDay> gameDays = gameService.getAllGameDays();
+        for (GameDay gameDay : gameDays) {
+            boolean gameDataUpToDate = gameService.isGameDataUpToDate(gameDay.getGameDay());
+            if (!gameDataUpToDate) {
+                gameService.syncGamesByGameDay(gameDay.getGameDay());
+                settlementService.calculatePayout();
+            }
+        }
     }
 
     @Scheduled(cron = "${sync.cron.odds}")
     public void synchronizeOddsData() {
         oddsService.syncOdds();
-    }
-
-    @Scheduled(cron = "${sync.cron.payout}")
-    public void calculatePayout() {
-        settlementService.calculatePayout();
     }
 }
