@@ -21,6 +21,7 @@ public class CronJobService {
     @Scheduled(cron = "${sync.cron.games}")
     public void synchronizeGameData() {
         gameService.syncGames();
+    @Scheduled(cron = "${sync.cron.liveTracking}")
     }
 
     @Scheduled(cron = "${sync.cron.odds}")
