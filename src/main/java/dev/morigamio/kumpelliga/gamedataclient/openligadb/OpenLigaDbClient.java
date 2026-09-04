@@ -13,6 +13,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
 public class OpenLigaDbClient implements GameDataClient {
     private static final HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
     private static final String URL = "https://api.openligadb.de/getmatchdata/bl1/2026";
+    private static final String TIME_STAMP_URL = "https://api.openligadb.de/getlastchangedate/bl1/2026/%d";
 
     public List<GameData> retrieveGameData() {
         try {
@@ -35,6 +37,21 @@ public class OpenLigaDbClient implements GameDataClient {
 
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public LocalDateTime retrieveUpdateTimeStamp(int gameDay) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(URI.create(TIME_STAMP_URL.formatted(gameDay)))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return LocalDateTime.parse(response.body().replace("\"", ""));
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException("retrieveUpdateTimeStamp", e);
         }
     }
 
