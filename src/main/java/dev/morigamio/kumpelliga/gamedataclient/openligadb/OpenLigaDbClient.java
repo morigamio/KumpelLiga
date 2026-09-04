@@ -36,7 +36,7 @@ public class OpenLigaDbClient implements GameDataClient {
             return toGameData(entries);
 
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("retrieveGameData", e);
         }
     }
 
