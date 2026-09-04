@@ -50,7 +50,7 @@ public class GamePersistence {
         return gameDayRepository.findById(id);
     }
 
-    public void storeGameDay(int id, GameDay gameDay) {
+    public void storeGameDay(GameDay gameDay) {
         gameDayRepository.save(gameDay);
     }
 }
