@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public record OpenLigaDbEntry(Long matchID,
                               LocalDateTime matchDateTime,
+                              LocalDateTime lastUpdateDateTime,
                               Group group,
                               Team team1,
                               Team team2,
