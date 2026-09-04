@@ -19,11 +19,13 @@ import java.util.Optional;
 @Repository
 public class GamePersistence {
 
-    @Autowired
-    GameRepository gameRepository;
+    private final GameRepository gameRepository;
+    private final GameDayRepository gameDayRepository;
 
-    @Autowired
-    MetaDataRepository metaDataRepository;
+    public GamePersistence(GameRepository gameRepository, GameDayRepository gameDayRepository) {
+        this.gameRepository = gameRepository;
+        this.gameDayRepository = gameDayRepository;
+    }
 
     @Transactional
     public void storeGames(List<Game> games) {
