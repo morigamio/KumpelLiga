@@ -76,7 +76,7 @@ public class OpenLigaDbClient implements GameDataClient {
         List<GameData> gameData = new ArrayList<>();
         for (OpenLigaDbEntry entry : entries) {
 
-            int [] currentScore = determineCurrentScore(entry.matchResults());
+            int[] currentScore = determineCurrentScore(entry.matchResults());
 
             gameData.add(new GameData(
                     entry.matchID(),
@@ -92,14 +92,14 @@ public class OpenLigaDbClient implements GameDataClient {
         return gameData;
     }
 
-    private int[] determineCurrentScore(MatchResult[] matchResults){
+    private int[] determineCurrentScore(MatchResult[] matchResults) {
         int noPeriods = matchResults.length;
 
-        if (noPeriods == 0){
-            return new int[]{0,0};
+        if (noPeriods == 0) {
+            return new int[]{0, 0};
         }
-        int pointsTeam1 = matchResults[noPeriods-1].pointsTeam1();
-        int pointsTeam2 = matchResults[noPeriods-1].pointsTeam2();
+        int pointsTeam1 = matchResults[noPeriods - 1].pointsTeam1();
+        int pointsTeam2 = matchResults[noPeriods - 1].pointsTeam2();
         return new int[]{pointsTeam1, pointsTeam2};
     }
 
