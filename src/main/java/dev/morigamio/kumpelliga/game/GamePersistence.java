@@ -1,10 +1,6 @@
 package dev.morigamio.kumpelliga.game;
 
-import dev.morigamio.kumpelliga.metadata.MetaData;
-import dev.morigamio.kumpelliga.metadata.MetaDataConstants;
-import dev.morigamio.kumpelliga.metadata.MetaDataRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -44,5 +40,17 @@ public class GamePersistence {
 
     public Optional<Game> findByHomeTeamAndAwayTeam(String homeTeam, String awayTeam){
         return gameRepository.findByHomeTeamAndAwayTeam(homeTeam, awayTeam);
+    }
+
+    public List<GameDay> findAllGameDays(){
+        return gameDayRepository.findAll();
+    }
+
+    public Optional<GameDay> findGameDay(int id){
+        return gameDayRepository.findById(id);
+    }
+
+    public void storeGameDay(int id, GameDay gameDay) {
+        gameDayRepository.save(gameDay);
     }
 }
