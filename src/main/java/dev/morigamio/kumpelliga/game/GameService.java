@@ -26,6 +26,10 @@ public class GameService {
         return gamePersistence.findAll();
     }
 
+    public List<Game> getGamesByGameDay(int gameDay) {
+        return gamePersistence.findByGameDay(gameDay);
+    }
+
     public Optional<Game> getGameById(Long gameId) {
         return gamePersistence.findById(gameId);
     }

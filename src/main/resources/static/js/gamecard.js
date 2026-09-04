@@ -18,7 +18,8 @@ function renderGameCard(g){
   div.className = 'game' + (locked ? ' locked' : '') + (dbl ? ' double' : '') + resultClass;
   div.dataset.gameId = g.id;
 
-  const scoreOrVs = finished
+  // score once the game has kicked off (live or finished), "vs" before
+  const scoreOrVs = locked
     ? '<span class="score">'+g.goalsHomeTeam+' : '+g.goalsAwayTeam+'</span>'
     : '<span class="vs">vs</span>';
 

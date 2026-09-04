@@ -41,6 +41,50 @@ async function initLeague(){
 
   if (rankRes.ok) renderRanking(rankRes.data);
   else $('ranking').innerHTML = '<div class="empty">Could not load ranking.</div>';
+
+  startLivePolling();
+}
+
+/* ---------------- live polling ----------------
+   While a game is in progress, re-fetch only that matchday every LIVE_POLL_MS (keep in step with sync.cron.liveTracking) and patch the
+   changed cards in place (scroll position and bets stay untouched). Paused in hidden tabs. */
+const LIVE_POLL_MS = 120000;   // matches sync.cron.liveTracking (every 2 min)
+let liveTimer = null;
+
+function isLive(g){ return isLocked(g) && !g.isFinished; }
+function liveGameDay(){
+  const g = (cur.games||[]).find(isLive);
+  return g ? g.gameDay : null;
+}
+
+function startLivePolling(){
+  if (liveTimer) return;
+  liveTimer = setInterval(refreshLive, LIVE_POLL_MS);
+}
+
+async function refreshLive(){
+  if (document.hidden || !cur) return;
+  const day = liveGameDay();
+  if (day == null) return;
+
+  const r = await api('GET','/games?gameDay='+day);
+  if (!r.ok || !Array.isArray(r.data)) return;
+
+  let changed = false;
+  for (const fresh of r.data){
+    const i = cur.games.findIndex(g => g.id === fresh.id);
+    if (i < 0) continue;
+    const old = cur.games[i];
+    const card = document.querySelector('.game[data-game-id="'+fresh.id+'"]');
+    const scoreChanged = old.goalsHomeTeam !== fresh.goalsHomeTeam || old.goalsAwayTeam !== fresh.goalsAwayTeam ||
+                         old.isFinished !== fresh.isFinished;
+    const kickedOff = card && isLocked(fresh) && !card.classList.contains('locked');  // rendered before kickoff
+    if (!scoreChanged && !kickedOff) continue;
+    cur.games[i] = fresh;
+    if (card) card.replaceWith(renderGameCard(fresh));
+    changed = true;
+  }
+  if (changed){ syncDayUi(); refreshRanking(); }
 }
 
 function renderLeagueActions(league, myParticipant, iAmAdmin){

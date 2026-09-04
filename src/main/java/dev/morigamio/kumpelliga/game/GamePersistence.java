@@ -3,7 +3,6 @@ package dev.morigamio.kumpelliga.game;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +31,10 @@ public class GamePersistence {
 
     public List<Game> findAll() {
         return gameRepository.findAll();
+    }
+
+    public List<Game> findByGameDay(int gameDay) {
+        return gameRepository.findByGameDay(gameDay);
     }
 
     public Optional<Game> findById(Long id){

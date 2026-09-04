@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -24,9 +25,10 @@ public class GameController {
     @Autowired
     OddsService oddsService;
 
+    /** All games, or only those of one matchday when ?gameDay=N is given (used for live polling). */
     @GetMapping("/games")
-    public ResponseEntity<List<GameDTO>> getGames() {
-        List<Game> games = gameService.getGames();
+    public ResponseEntity<List<GameDTO>> getGames(@RequestParam(required = false) Integer gameDay) {
+        List<Game> games = gameDay == null ? gameService.getGames() : gameService.getGamesByGameDay(gameDay);
         Map<Long, Odds> oddsByGameIds = oddsService.getOddsByGameIds();
         List<GameDTO> result = new ArrayList<>();
 
