@@ -76,6 +76,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Game is not part of the current week's gameday.");
     }
 
+    @ExceptionHandler(DoubleBetAlreadyUsedException.class)
+    public ResponseEntity<String> handleDoubleBetAlreadyUsed() {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Double bet was already used by this participant for this gameday.");
+    }
+
     @ExceptionHandler(LeagueAlreadyExistsException.class)
     public ResponseEntity<String> handleLeagueAlreadyExists(LeagueAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -90,6 +95,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleUnexpected(Exception e) {
         log.error("Unexpected error", e); // full stack trace in logs
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong on our side, I am sorry ...");
     }
 }

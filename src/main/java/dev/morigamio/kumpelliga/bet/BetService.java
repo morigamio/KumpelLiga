@@ -34,7 +34,7 @@ public class BetService {
 
         // check for a bet from this participant for this game
         boolean alreadyExists = betRepository.existsByParticipantIdAndGameId(participant.getId(), gameId);
-        if(alreadyExists) throw new BetAlreadyExistsException();
+        if (alreadyExists) throw new BetAlreadyExistsException();
 
         // store bet in db table
         Bet bet = new Bet(game, participant, prediction);
@@ -53,23 +53,31 @@ public class BetService {
     }
 
     @Transactional
-    public List<Bet> updateBetToDouble(String name, Long betId){
+    public List<Bet> updateBetToDouble(String name, Long betId) {
         Bet bet = validateBetOwner(name, betId);
         int gameDay = bet.getGame().getGameDay();
         Participant participant = bet.getParticipant();
 
         List<Bet> gameDayBets = betRepository.findByParticipantAndGame_GameDay(participant, gameDay);
+
+        // was there a double bet for finished game already -> no double bet left for this gameday
+        if (isDoubleAlreadyUsed(gameDayBets)) throw new DoubleBetAlreadyUsedException();
+
         gameDayBets.forEach(b -> b.setDouble(b.getId().equals(betId)));
         return gameDayBets;
     }
 
     @Transactional
-    public List<Bet> updateBetToSingle(String name, Long betId){
+    public List<Bet> updateBetToSingle(String name, Long betId) {
         Bet bet = validateBetOwner(name, betId);
         int gameDay = bet.getGame().getGameDay();
         Participant participant = bet.getParticipant();
 
         List<Bet> gameDayBets = betRepository.findByParticipantAndGame_GameDay(participant, gameDay);
+
+        // if the double bet was already used, there is no modification possible for other bets, since it would mess with the logic for updating to doubles
+        if (isDoubleAlreadyUsed(gameDayBets)) throw new DoubleBetAlreadyUsedException();
+
         gameDayBets.forEach(b -> b.setDouble(false));
         return gameDayBets;
     }
@@ -97,12 +105,17 @@ public class BetService {
         return betRepository.findByParticipantId(participant.getId());
     }
 
-    private Bet validateBetOwner(String name, Long betId){
-        Bet bet = betRepository.findById(betId).orElseThrow(() ->  new ResourceNotFoundException(Bet.class, betId));
+    private Bet validateBetOwner(String name, Long betId) {
+        Bet bet = betRepository.findById(betId).orElseThrow(() -> new ResourceNotFoundException(Bet.class, betId));
         String betOwner = bet.getParticipant().getAccount().getName();
-        if (!name.equals(betOwner)){
+        if (!name.equals(betOwner)) {
             throw new NotResourceOwnerException(Bet.class, betId, betOwner);
         }
         return bet;
+    }
+
+    private boolean isDoubleAlreadyUsed(List<Bet> gameDayBets) {
+        return gameDayBets.stream()
+                .anyMatch(b -> b.isDouble() && b.getGame().isFinished());
     }
 }
