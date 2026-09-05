@@ -8,6 +8,8 @@ import dev.morigamio.kumpelliga.participant.ParticipantService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -116,6 +118,6 @@ public class BetService {
 
     private boolean isDoubleAlreadyUsed(List<Bet> gameDayBets) {
         return gameDayBets.stream()
-                .anyMatch(b -> b.isDouble() && b.getGame().isFinished());
+                .anyMatch(b -> b.isDouble() && b.getGame().getMatchTime().isBefore(LocalDateTime.now(ZoneId.of("Europe/Berlin"))));
     }
 }

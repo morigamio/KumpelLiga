@@ -149,7 +149,12 @@ async function onDoubleClick(g, card){
   if (!r.ok){
     card.replaceWith(renderGameCard(g));
     const n = document.querySelector('.game[data-game-id="'+g.id+'"] .bet-note');
-    if (n){ n.className='bet-note err'; n.textContent = r.text || 'Could not change double bet.'; }
+    if (n){
+      n.className='bet-note err';
+      n.textContent = r.status === 409
+        ? "Don't get greedy — you already used your double bet this gameday."
+        : (r.text || 'Could not change double bet.');
+    }
     return;
   }
   if (Array.isArray(r.data)){
