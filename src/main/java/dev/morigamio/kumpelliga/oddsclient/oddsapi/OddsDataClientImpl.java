@@ -15,8 +15,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,46 +29,33 @@ public class OddsDataClientImpl implements OddsDataClient {
     private static final String URL = "https://api.the-odds-api.com/v4/sports/soccer_germany_bundesliga/odds/?apiKey=%s&regions=eu&markets=h2h&oddsFormat=decimal";
 
     private final static Map<String, String> map = new HashMap<>();
+
     static {
-        map.put("VfB Stuttgart","VfB Stuttgart");
-        map.put("Bayern Munich","FC Bayern München");
-        map.put("Borussia Monchengladbach","Borussia Mönchengladbach");
-        map.put("RB Leipzig","RB Leipzig");
-        map.put("SC Paderborn","SC Paderborn 07");
-        map.put("FSV Mainz 05","1. FSV Mainz 05");
-        map.put("Eintracht Frankfurt","Eintracht Frankfurt");
-        map.put("Union Berlin","1. FC Union Berlin");
-        map.put("TSG Hoffenheim","TSG Hoffenheim");
-        map.put("1. FC Köln","1. FC Köln");
-        map.put("Bayer Leverkusen","Bayer 04 Leverkusen");
-        map.put("Elversberg","SV 07 Elversberg");
-        map.put("Hamburger SV","Hamburger SV");
-        map.put("Borussia Dortmund","Borussia Dortmund");
-        map.put("Werder Bremen","SV Werder Bremen");
-        map.put("SC Freiburg","SC Freiburg");
-        map.put("FC Schalke 04","FC Schalke 04");
-        map.put("Augsburg","FC Augsburg");
+        map.put("VfB Stuttgart", "VfB Stuttgart");
+        map.put("Bayern Munich", "FC Bayern München");
+        map.put("Borussia Monchengladbach", "Borussia Mönchengladbach");
+        map.put("RB Leipzig", "RB Leipzig");
+        map.put("SC Paderborn", "SC Paderborn 07");
+        map.put("FSV Mainz 05", "1. FSV Mainz 05");
+        map.put("Eintracht Frankfurt", "Eintracht Frankfurt");
+        map.put("Union Berlin", "1. FC Union Berlin");
+        map.put("TSG Hoffenheim", "TSG Hoffenheim");
+        map.put("1. FC Köln", "1. FC Köln");
+        map.put("Bayer Leverkusen", "Bayer 04 Leverkusen");
+        map.put("Elversberg", "SV 07 Elversberg");
+        map.put("Hamburger SV", "Hamburger SV");
+        map.put("Borussia Dortmund", "Borussia Dortmund");
+        map.put("Werder Bremen", "SV Werder Bremen");
+        map.put("SC Freiburg", "SC Freiburg");
+        map.put("FC Schalke 04", "FC Schalke 04");
+        map.put("Augsburg", "FC Augsburg");
     }
 
     @Value("${api.key}")
     private String apiKey;
 
-    public HttpResponse<String> retrieveOdds3(){
-        try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .GET()
-                    .uri(URI.create(URL.formatted(apiKey)))
-                    .build();
-
-            return client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
-    public List<OddsData> retrieveOdds(){
+    public List<OddsData> retrieveOdds() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .GET()
@@ -93,7 +78,7 @@ public class OddsDataClientImpl implements OddsDataClient {
         });
     }
 
-    private List<OddsData> toGameOdds(List<OddsApiEntry> entries){
+    private List<OddsData> toGameOdds(List<OddsApiEntry> entries) {
         List<OddsData> oddData = new ArrayList<>();
         for (OddsApiEntry entry : entries) {
             Odds avgOdds = avgOdds(entry);
@@ -102,8 +87,8 @@ public class OddsDataClientImpl implements OddsDataClient {
                     map.get(entry.awayTeam()),
                     avgOdds.home(),
                     avgOdds.away(),
-                    avgOdds.draw(),
-                    LocalDateTime.ofInstant(entry.matchTime(), ZoneId.of("Europe/Berlin"))));
+                    avgOdds.draw()
+            ));
         }
         return oddData;
     }
