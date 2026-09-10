@@ -58,7 +58,7 @@ public class Participant {
     }
 
     public BigDecimal avgWinRate() {
-        int noBets = bets.size();
+        long noBets = bets.stream().filter(Bet::isPaid).count();
         if (noBets != 0) return balance.divide(BigDecimal.valueOf(bets.size()), 2, RoundingMode.HALF_UP);
         return BigDecimal.valueOf(0);
     }
