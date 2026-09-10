@@ -26,9 +26,9 @@ public class BetController {
     }
 
     @GetMapping("/participants/{participantId}/bets")
-    public ResponseEntity<List<ReadBetDTO>> getBetsByParticipant(@PathVariable String participantId, Principal principal){
+    public ResponseEntity<List<ReadBetDTO>> getBetsByParticipant(@PathVariable String participantId, Principal principal) {
         Participant participant = participantService.findById(Long.parseLong(participantId)).orElseThrow(() -> new ResourceNotFoundException(Participant.class, Long.parseLong(participantId)));
-        if (!principal.getName().equals(participant.getAccount().getName())){
+        if (!principal.getName().equals(participant.getAccount().getName())) {
             throw new NotResourceOwnerException(Participant.class, Long.parseLong(participantId), principal.getName());
         }
         List<Bet> betsByParticipant = betService.getBetsByParticipant(participant);
@@ -48,7 +48,7 @@ public class BetController {
     }
 
     @PutMapping("/bets/{betId}")
-    public ResponseEntity<ReadBetDTO> updateBet(@RequestBody UpdateBetDTO data, @PathVariable String betId, Principal principal){
+    public ResponseEntity<ReadBetDTO> updateBet(@RequestBody UpdateBetDTO data, @PathVariable String betId, Principal principal) {
         Bet bet = betService.updateBet(
                 principal.getName(),
                 Long.parseLong(betId),
@@ -59,7 +59,7 @@ public class BetController {
     }
 
     @PutMapping("/bets/{betId}/double")
-    public ResponseEntity<List<ReadBetDTO>> updateBetToDouble(@PathVariable String betId, Principal principal){
+    public ResponseEntity<List<ReadBetDTO>> updateBetToDouble(@PathVariable String betId, Principal principal) {
         List<Bet> betsByParticipant = betService.updateBetToDouble(
                 principal.getName(),
                 Long.parseLong(betId)
@@ -68,7 +68,7 @@ public class BetController {
     }
 
     @DeleteMapping("/bets/{betId}/double")
-    public ResponseEntity<List<ReadBetDTO>> updateBetToSingle(@PathVariable String betId, Principal principal){
+    public ResponseEntity<List<ReadBetDTO>> updateBetToSingle(@PathVariable String betId, Principal principal) {
         List<Bet> betsByParticipant = betService.updateBetToSingle(
                 principal.getName(),
                 Long.parseLong(betId)

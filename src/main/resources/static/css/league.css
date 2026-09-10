@@ -8,6 +8,23 @@
   background:var(--accent-soft);color:var(--accent);text-transform:uppercase;letter-spacing:.5px}
 .pill.gold{background:#faf1dc;color:var(--gold)}
 
+/* league settings: gear button + dropdown menu */
+.settings{position:relative}
+.settings .gear{padding:8px;display:grid;place-items:center;color:var(--muted)}
+.settings .gear svg{transition:transform .25s ease}
+.settings .gear:hover svg,.settings .gear.open svg{transform:rotate(45deg)}
+.settings .gear.open{background:var(--border);color:var(--text)}
+.settings .menu{position:absolute;right:0;top:calc(100% + 8px);min-width:200px;background:var(--card);
+  border:1px solid var(--border);border-radius:13px;box-shadow:var(--shadow-lg);padding:6px;z-index:20}
+.settings .menu-item{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
+  padding:10px 12px;border-radius:9px;font-size:14px;font-weight:700;text-align:left;background:none;color:var(--text)}
+.settings button.menu-item:hover{background:var(--bg2);filter:none}
+.settings .menu-item.disabled{color:var(--muted);cursor:default;flex-direction:column;align-items:flex-start;gap:1px}
+.settings .menu-item .soon{font-size:11px;font-weight:600;color:var(--muted);opacity:.7}
+.settings .menu-item.danger{color:var(--danger)}
+.settings button.menu-item.danger:hover{background:var(--danger-soft)}
+.settings .menu-sep{height:1px;background:var(--border);margin:6px 4px}
+
 /* slider */
 .slider-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .slider-head .nav{display:flex;gap:8px}
@@ -22,13 +39,25 @@
 .dot{width:8px;height:8px;border-radius:50%;background:var(--border-strong);cursor:pointer;transition:.15s;border:none;padding:0}
 .dot.active{background:var(--accent);width:22px;border-radius:5px}
 
-/* ranking */
+/* statistics: view switcher (<kl-statistics>) */
+.stat-bar{display:flex;gap:6px}
+.stat-bar button{padding:7px 9px;display:grid;place-items:center;color:var(--muted)}
+.stat-bar button.active{background:var(--accent-soft);color:var(--accent)}
+.stat-bar button svg{display:block}
+
+/* ranking (<kl-ranking>) */
 table.rank{width:100%;border-collapse:collapse}
 table.rank th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);
   font-weight:800;padding:8px 10px;border-bottom:1.5px solid var(--border)}
 table.rank th.r{text-align:right}
 table.rank td{padding:11px 10px;border-bottom:1px solid var(--border);font-weight:600}
 table.rank td.r{text-align:right;font-weight:800}
+/* stat columns hug the right edge: as narrow as their content, member column takes the rest */
+table.rank th.r,table.rank td.r{width:1%;white-space:nowrap;padding-left:18px;padding-right:18px}
+table.rank th:first-child,table.rank td:first-child{width:1%;white-space:nowrap}
+/* alternate shading on value columns so they stay distinguishable as more are added */
+table.rank td.r:nth-child(odd),table.rank th.r:nth-child(odd){background:var(--bg2)}
+table.rank tr.me td.r:nth-child(odd){background:rgba(0,0,0,.035)}
 table.rank tr.me{background:var(--accent-soft)}
 .rk{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:var(--bg2);
   font-weight:800;font-size:13px}

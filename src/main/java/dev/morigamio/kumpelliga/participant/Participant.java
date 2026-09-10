@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class Participant {
 
     private BigDecimal balance;
     private String status;
+    private BigDecimal highestWin;
 
     @OneToMany(mappedBy = "participant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bet> bets; // each participant can have many bets
@@ -47,9 +49,17 @@ public class Participant {
         this.balance = BigDecimal.valueOf(0);
         this.status = status.getLabel();
         this.bets = new ArrayList<>();
+        this.highestWin = BigDecimal.valueOf(0);
     }
 
     public void addPoints(BigDecimal winnings) {
+        this.highestWin = highestWin.max(winnings);
         this.balance = this.balance.add(winnings);
+    }
+
+    public BigDecimal avgWinRate() {
+        int noBets = bets.size();
+        if (noBets != 0) return balance.divide(BigDecimal.valueOf(bets.size()), 2, RoundingMode.HALF_UP);
+        return BigDecimal.valueOf(0);
     }
 }

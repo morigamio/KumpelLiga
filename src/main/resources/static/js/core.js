@@ -27,8 +27,7 @@ function fmt(iso){
   return d.toLocaleString(undefined,{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
 }
 function fmtPts(v){
-  const n = Number(v||0);
-  return Number.isInteger(n) ? String(n) : n.toFixed(2);
+  return Number(v||0).toFixed(2);
 }
 function escapeHtml(s){
   return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

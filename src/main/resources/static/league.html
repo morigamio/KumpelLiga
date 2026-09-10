@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="css/header.css">
 <link rel="stylesheet" href="css/league.css">
 <link rel="stylesheet" href="css/gamecard.css">
+<link rel="stylesheet" href="css/plot.css">
 <link rel="stylesheet" href="css/footer.css">
 <script src="js/core.js"></script>
 <script src="js/footer.js"></script>
@@ -22,7 +23,7 @@
 <kl-header></kl-header>
 
 <main class="wrap">
-  <button class="link" onclick="goHome()">← All leagues</button>
+  <button class="link" onclick="goHome()">← Home</button>
 
   <div class="card">
     <div class="league-head">
@@ -33,6 +34,10 @@
       </div>
       <div id="lvActions"></div>
     </div>
+  </div>
+
+  <div class="card">
+    <kl-statistics></kl-statistics>
   </div>
 
   <div class="card">
@@ -47,14 +52,11 @@
     <div class="dots" id="dots"></div>
     <div id="gamesMsg" class="msg"></div>
   </div>
-
-  <div class="card">
-    <div class="section-title"><h2>Ranking</h2></div>
-    <div id="ranking"></div>
-  </div>
 </main>
 
 <script src="js/ranking.js"></script>
+<script src="js/plot.js"></script>
+<script src="js/statistics.js"></script>
 <script src="js/gamecard.js"></script>
 <script src="js/games.js"></script>
 <script src="js/league.js"></script>

@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class BetService {
@@ -99,10 +102,6 @@ public class BetService {
         return unpaidBetsByGameId;
     }
 
-    public void setBetPaid(Bet bet) {
-        bet.setPaid(true);
-    }
-
     public List<Bet> getBetsByParticipant(Participant participant) {
         return betRepository.findByParticipantId(participant.getId());
     }
@@ -119,5 +118,9 @@ public class BetService {
     private boolean isDoubleAlreadyUsed(List<Bet> gameDayBets) {
         return gameDayBets.stream()
                 .anyMatch(b -> b.isDouble() && b.getGame().getMatchTime().isBefore(LocalDateTime.now(ZoneId.of("Europe/Berlin"))));
+    }
+
+    public List<Bet> getPaidBetsByLeagueId(long leagueId) {
+        return betRepository.findByParticipant_League_IdAndIsPaidTrue(leagueId);
     }
 }

@@ -30,13 +30,10 @@
 button.dbl:hover:not(:disabled){border-color:#e8b93f;color:#b47f14;background:#fff9e6;filter:none;transform:rotate(-8deg) scale(1.12)}
 button.dbl:active:not(:disabled){transform:rotate(-8deg) scale(.95)}
 button.dbl:disabled{opacity:.35;transform:rotate(-4deg)}
-.dbl.on{color:#7a5300;border:2px solid #f0c24a;
-  background:linear-gradient(120deg,#ffd75e 0%,#fff1b3 35%,#ffcd3c 55%,#fff1b3 75%,#ffd75e 100%);
-  background-size:250% 100%;animation:dbl-shine 2.6s linear infinite,dbl-pop .5s cubic-bezier(.34,1.56,.64,1);
-  box-shadow:0 3px 0 #dea72c,0 4px 10px rgba(222,167,44,.35);transform:rotate(-6deg);
-  text-shadow:0 1px 0 rgba(255,255,255,.8)}
-.dbl.badge{cursor:default;animation:dbl-shine 2.6s linear infinite}
-button.dbl.on:hover:not(:disabled){transform:rotate(-2deg) scale(1.12);border-color:#f0c24a;color:#7a5300;background-color:#ffd75e}
+.dbl.on{color:#7a5300;border:2px solid #dea72c;background:#ffe27a;transform:rotate(-6deg);
+  animation:dbl-pop .5s cubic-bezier(.34,1.56,.64,1)}
+.dbl.badge{cursor:default}
+button.dbl.on:hover:not(:disabled){transform:rotate(-2deg) scale(1.12);border-color:#dea72c;color:#7a5300}
 @keyframes dbl-shine{0%{background-position:0% 50%}100%{background-position:250% 50%}}
 @keyframes dbl-pop{0%{transform:rotate(-6deg) scale(.6)}60%{transform:rotate(-6deg) scale(1.25)}100%{transform:rotate(-6deg) scale(1)}}
 .game.double{border-color:#f0c24a;box-shadow:0 0 0 1px #f0c24a,0 8px 22px rgba(240,194,74,.22);

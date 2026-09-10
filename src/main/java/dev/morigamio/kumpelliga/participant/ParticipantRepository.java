@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
     Optional<Participant> findByNameAndLeagueId(String name, Long leagueId);
 
-    List<Participant> findByLeagueId(Long leagueId);
-
     List<Participant> findRankingByLeagueId(long leagueId, Sort criteria);
+
+    boolean existsByNameAndLeagueId(String name, long leagueId);
 }

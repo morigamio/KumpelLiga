@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +20,12 @@ public class ParticipantService {
         return participantRepository.findByNameAndLeagueId(name,leagueId);
     }
 
-    public void payOutWinnings(Participant participant, BigDecimal winnings) {
-        participant.addPoints(winnings);
-        participantRepository.save(participant);
-        log.debug("Paid %s to %s.".formatted(winnings.toString(), participant.getName()));
+    public boolean existsByNameAndLeagueId(String name, long leagueId){
+        return participantRepository.existsByNameAndLeagueId(name, leagueId);
     }
 
-    public Optional<Participant> findById(long id) {
-        return participantRepository.findById(id);
+    public Optional<Participant> findById(long participantId) {
+        return participantRepository.findById(participantId);
     }
 
     public void removeParticipantById(long participantId) {

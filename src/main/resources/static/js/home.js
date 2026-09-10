@@ -6,7 +6,6 @@ async function initHome(){
   const initial = (ME||'?').charAt(0).toUpperCase();
   $('acctAvatar').textContent = initial;
   $('acctName').textContent = ME || '—';
-  $('acctSub').textContent = acct.ok ? ('Account #' + acct.data.id) : '';
   await loadLeagues();
 }
 
@@ -28,8 +27,6 @@ async function loadLeagues(){
 
 function renderAcctStats(mine){
   $('statLeagues').textContent = mine.length;
-  const totalPts = mine.reduce((s,x)=> s + Number(x.myParticipant.balance||0), 0);
-  $('statPoints').textContent = mine.length ? Math.round(totalPts) : '–';
   $('statBest').textContent = '–'; // filled after ranks resolve
   if (!mine.length) return;
   // resolve best rank across leagues (uses ranking endpoint)
@@ -59,9 +56,8 @@ function renderMyLeagues(mine){
     el.innerHTML =
       '<div class="crest">'+escapeHtml((league.name||'?').charAt(0).toUpperCase())+'</div>'+
       '<div class="li-main">'+
-        '<div class="li-name">'+escapeHtml(league.name)+'</div>'+
+        '<div class="li-name">'+escapeHtml(league.name)+(league.admin === ME ? ' <span class="mine">(your league)</span>' : '')+'</div>'+
         '<div class="li-sub">'+members+' member'+(members===1?'':'s')+
-          ' · admin '+escapeHtml(league.admin)+
           (myParticipant.status && myParticipant.status.toUpperCase()!=='APPROVED'
              ? ' · <b>'+escapeHtml(myParticipant.status)+'</b>' : '')+
         '</div>'+

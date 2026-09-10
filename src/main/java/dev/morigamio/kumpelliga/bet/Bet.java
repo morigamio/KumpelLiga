@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -30,6 +32,7 @@ public class Bet {
     private float stake;
     private boolean isPaid;
     private boolean isDouble;
+    private BigDecimal winnings;
 
     public Bet(Game game, Participant participant, String prediction) {
         this.game = game;
