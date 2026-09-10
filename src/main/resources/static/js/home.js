@@ -27,18 +27,6 @@ async function loadLeagues(){
 
 function renderAcctStats(mine){
   $('statLeagues').textContent = mine.length;
-  $('statBest').textContent = '–'; // filled after ranks resolve
-  if (!mine.length) return;
-  // resolve best rank across leagues (uses ranking endpoint)
-  Promise.all(mine.map(x => api('GET','/leagues/'+x.league.id+'/ranking'))).then(res=>{
-    let best = Infinity;
-    res.forEach(r=>{
-      if (!r.ok) return;
-      const idx = r.data.findIndex(p => p.name === ME);
-      if (idx >= 0) best = Math.min(best, idx+1);
-    });
-    $('statBest').textContent = best === Infinity ? '–' : '#'+best;
-  });
 }
 
 function renderMyLeagues(mine){
