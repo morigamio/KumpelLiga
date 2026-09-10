@@ -60,9 +60,9 @@ button.dbl.on:hover:not(:disabled){transform:rotate(-2deg) scale(1.12);border-co
 /* result stamp: like someone confirmed the result with a rubber stamp */
 .stamp{font-size:10.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;line-height:1;padding:4px 7px 4px 8px;
   border:2px solid currentColor;border-radius:5px;transform:rotate(-7deg);opacity:.8;white-space:nowrap;
-  mix-blend-mode:multiply;animation:stamp-in .35s cubic-bezier(.2,1.4,.5,1)}
+  animation:stamp-in .35s cubic-bezier(.2,1.4,.5,1)}   /* no blend mode: each one forces its own compositing layer */
 .stamp.won{color:#2f7d55}
 .stamp.lost{color:#c0392b}
 .stamp.won-double{color:#7a5300;border-color:#dea72c;background:linear-gradient(120deg,#ffd75e,#fff1b3,#ffd75e);
-  background-size:250% 100%;animation:stamp-in .35s cubic-bezier(.2,1.4,.5,1),dbl-shine 2.4s linear infinite;opacity:1}
+  animation:stamp-in .35s cubic-bezier(.2,1.4,.5,1);opacity:1}   /* static: an infinite shine repaints forever */
 @keyframes stamp-in{0%{transform:rotate(-7deg) scale(1.6);opacity:0}100%{transform:rotate(-7deg) scale(1);opacity:.8}}

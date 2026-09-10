@@ -34,7 +34,7 @@
 .track{display:flex;align-items:flex-start;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;gap:0;transition:height .25s ease;
   scroll-behavior:smooth;-webkit-overflow-scrolling:touch;margin:0 -6px}
 .track::-webkit-scrollbar{height:0}
-.slide{flex:0 0 100%;scroll-snap-align:center;padding:6px 6px 0}
+.slide{flex:0 0 100%;scroll-snap-align:center;padding:6px 6px 0;contain:layout paint}   /* lets the browser skip painting off-screen gamedays */
 .dots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:14px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--border-strong);cursor:pointer;transition:.15s;border:none;padding:0}
 .dot.active{background:var(--accent);width:22px;border-radius:5px}

@@ -13,12 +13,12 @@ function renderSlider(games){
   cur.days = days;
   cur.dayIndex = defaultDayIndex(games, days);
 
+  // one empty slide per gameday; cards are only built for the visible gameday and its neighbours (fillSlides)
   const track = $('track'); track.innerHTML='';
   days.forEach(day=>{
     const slide = document.createElement('div');
     slide.className='slide';
-    const dayGames = games.filter(g=>g.gameDay===day);
-    dayGames.forEach(g => slide.appendChild(renderGameCard(g)));
+    slide.dataset.day = day;
     track.appendChild(slide);
   });
 
@@ -47,7 +47,25 @@ function defaultDayIndex(games, days){
   return Math.max(0, days.indexOf(day));
 }
 
+/* Keeps the DOM small: cards exist only for the current gameday ± SLIDE_REACH, the rest stays empty.
+   Cards are rebuilt from cur.games / cur.betsByGame when their gameday comes back into reach. */
+const SLIDE_REACH = 1;
+function fillSlides(){
+  const slides = $('track').children;
+  for (let i = 0; i < slides.length; i++){
+    const slide = slides[i], near = Math.abs(i - cur.dayIndex) <= SLIDE_REACH;
+    if (near && !slide.dataset.filled){
+      const day = Number(slide.dataset.day);
+      cur.games.filter(g => g.gameDay === day).forEach(g => slide.appendChild(renderGameCard(g)));
+      slide.dataset.filled = '1';
+    } else if (!near && slide.dataset.filled){
+      slide.innerHTML = ''; delete slide.dataset.filled;
+    }
+  }
+}
+
 function syncDayUi(){
+  fillSlides();
   const track = $('track'), slide = track.children[cur.dayIndex];
   if (slide) track.style.height = slide.offsetHeight + 'px';   // row is as tall as the tallest slide otherwise
   $('dayLabel').textContent = 'Matchday ' + cur.days[cur.dayIndex];

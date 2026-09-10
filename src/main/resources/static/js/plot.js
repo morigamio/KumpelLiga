@@ -1,7 +1,7 @@
 /* <kl-plot>: statistics view that draws one line per member over the season.
    Scope = resolution of the x-axis (per gameday or per game), metric = what the line shows.
-   Loads games and the league's paid bets itself (GET /games, GET /leagues/{id}/bets) so it does not
-   depend on load order; refreshRanking() (statistics.js) calls reload() after bets or live changes.
+   Reads the games from cur (league.js) and fetches the league's paid bets (GET /leagues/{id}/bets).
+   <kl-statistics>.reloadPlot() triggers load() once league.js has the games, and after bets or live changes.
    Reads ME (shell.js). Styles: css/plot.css */
 
 const PLOT_SCOPES = {
@@ -57,17 +57,19 @@ customElements.define('kl-plot', class extends HTMLElement {
   }
 
   /* ---------------- data ---------------- */
+  /* Games come from league.js (cur.games, already sorted by gameday and kickoff); only the bets are fetched.
+     Before league.js has loaded, cur is empty and the spinner stays until reloadPlot() is called. */
   async load(){
-    const leagueId = new URLSearchParams(location.search).get('id');
-    const [gamesRes, betsRes] = await Promise.all([ api('GET','/games'), api('GET','/leagues/'+leagueId+'/bets') ]);
-    if (!gamesRes.ok || !betsRes.ok){
+    if (typeof cur === 'undefined' || !cur || !cur.league) return;
+    if (!cur.games.length){ this.querySelector('.plot-area').innerHTML = '<div class="empty">No games available yet.</div>'; return; }
+    const betsRes = await api('GET','/leagues/'+cur.league.id+'/bets');
+    if (!betsRes.ok){
       this.querySelector('.plot-area').innerHTML = '<div class="empty">Could not load plot data.</div>'; return;
     }
-    this.games = (gamesRes.data||[]).slice().sort((a,b)=> (a.gameDay-b.gameDay) || (new Date(a.matchTime)-new Date(b.matchTime)));
+    this.games = cur.games;
     this.bets = betsRes.data||[];
     this.compute(); this.draw();
   }
-  reload(){ return this.load(); }
 
   /* Builds this.xs and this.series for the current scope and metric. */
   compute(){

@@ -50,9 +50,10 @@ customElements.define('kl-statistics', class extends HTMLElement {
     if (el) el.render(list);
   }
 
-  setRankingError(text){
-    const el = this.querySelector('kl-ranking');
-    if (el) el.innerHTML = '<div class="empty">'+escapeHtml(text)+'</div>';
+  /* (re)loads the plot if it is the visible view; no-op otherwise */
+  reloadPlot(){
+    const plot = this.querySelector('kl-plot');
+    if (plot) plot.load();
   }
 });
 
@@ -62,6 +63,5 @@ async function refreshRanking(){
   if (!stats || !cur) return;
   const r = await api('GET','/leagues/'+cur.league.id+'/ranking');
   if (r.ok) stats.setRanking(r.data);
-  const plot = stats.querySelector('kl-plot');
-  if (plot) plot.reload();
+  stats.reloadPlot();
 }

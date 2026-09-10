@@ -25,11 +25,14 @@ async function initLeague(){
   $('lvSub').innerHTML = (league.participants||[]).length+' members · admin '+escapeHtml(league.admin);
   renderLeagueActions(league, myParticipant, iAmAdmin);
 
-  // parallel: games, my bets, ranking
-  const [gamesRes, betsRes, rankRes] = await Promise.all([
+  // ranking straight from the league response: same participant data, just sorted by balance
+  const stats = document.querySelector('kl-statistics');
+  stats.setRanking((league.participants||[]).slice().sort((a,b)=> Number(b.balance||0) - Number(a.balance||0)));
+
+  // parallel: games, my bets
+  const [gamesRes, betsRes] = await Promise.all([
     api('GET','/games'),
-    myParticipant ? api('GET','/participants/'+myParticipant.id+'/bets') : Promise.resolve({ok:true,data:[]}),
-    api('GET','/leagues/'+leagueId+'/ranking')
+    myParticipant ? api('GET','/participants/'+myParticipant.id+'/bets') : Promise.resolve({ok:true,data:[]})
   ]);
 
   if (betsRes.ok && Array.isArray(betsRes.data)){
@@ -38,10 +41,7 @@ async function initLeague(){
   if (gamesRes.ok) renderSlider(gamesRes.data);
   else { $('gamesMsg').className='msg err'; $('gamesMsg').textContent='Could not load games.'; }
 
-  const stats = document.querySelector('kl-statistics');
-  if (rankRes.ok) stats.setRanking(rankRes.data);
-  else stats.setRankingError('Could not load ranking.');
-
+  stats.reloadPlot();   // the plot reads cur.games, so it can only load now
   startLivePolling();
 }
 
