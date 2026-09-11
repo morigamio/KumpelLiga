@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <clipPath id="disc"><circle cx="256" cy="256" r="240"/></clipPath>
+    <path id="armAcrossL" d="M 196 262 C 240 236, 300 232, 352 246 C 380 254, 402 266, 416 282"/>
+    <path id="armAcrossR" d="M 316 280 C 270 262, 210 260, 160 268 C 132 274, 110 286, 96 302"/>
+    <path id="armOutL" d="M 150 260 C 112 286, 90 330, 82 384"/>
+    <path id="armOutR" d="M 362 260 C 400 286, 422 330, 430 384"/>
+  </defs>
+  <circle cx="256" cy="256" r="240" fill="#2f7d55"/>
+  <g clip-path="url(#disc)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <use href="#armOutL" stroke="#faf8f5" stroke-width="28"/>
+    <use href="#armOutR" stroke="#faf8f5" stroke-width="28"/>
+    <use href="#armAcrossR" stroke="#2f7d55" stroke-width="42"/>
+    <use href="#armAcrossR" stroke="#faf8f5" stroke-width="28"/>
+    <use href="#armAcrossL" stroke="#2f7d55" stroke-width="42"/>
+    <use href="#armAcrossL" stroke="#faf8f5" stroke-width="28"/>
+  </g>
+  <!-- left buddy -->
+  <g transform="rotate(-6 172 190)">
+    <ellipse cx="172" cy="190" rx="62" ry="76" fill="#2f7d55"/>
+    <ellipse cx="172" cy="190" rx="56" ry="70" fill="#faf8f5"/>
+    <g fill="none" stroke="#2f7d55" stroke-width="9" stroke-linecap="round">
+      <path d="M 143 178 q 14 -15 28 0"/>
+      <path d="M 178 176 q 14 -15 28 0"/>
+    </g>
+    <path d="M 158 212 q 16 -6 32 0 q -2 26 -16 26 q -14 0 -16 -26 z" fill="#2f7d55"/>
+  </g>
+  <!-- right buddy -->
+  <g transform="rotate(6 340 190)">
+    <ellipse cx="340" cy="190" rx="62" ry="76" fill="#2f7d55"/>
+    <ellipse cx="340" cy="190" rx="56" ry="70" fill="#faf8f5"/>
+    <g fill="none" stroke="#2f7d55" stroke-width="9" stroke-linecap="round">
+      <path d="M 306 176 q 14 -15 28 0"/>
+      <path d="M 342 178 q 14 -15 28 0"/>
+    </g>
+    <path d="M 318 214 q 22 -9 44 0 q -2 30 -22 30 q -20 0 -22 -30 z" fill="#2f7d55"/>
+  </g>
+</svg>
