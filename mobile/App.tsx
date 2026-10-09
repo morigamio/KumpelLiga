@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 28,
     borderBottomRightRadius: 10,
     borderBottomLeftRadius: 30,
+    backgroundColor: '#fffdf8',
   },
   buttonText: {
     fontFamily: 'Caveat_700Bold',
