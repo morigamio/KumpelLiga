@@ -1,55 +1,129 @@
-import {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {useCallback, useEffect, useState} from 'react';
+import {Alert, RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {router} from 'expo-router';
 import PaperLines from '../components/PaperLines';
+import LeagueCard from '../components/LeagueCard';
+import LeagueSheet, {SheetMode} from '../components/LeagueSheet';
+import LogoutButton from '../components/LogoutButton';
+import SketchButton from '../components/SketchButton';
 import {getMyName} from '../api/account';
 import {getMyLeagues, League} from '../api/leagues';
-import {NotLoggedInError} from '../api/client';
+import {deleteToken, NotLoggedInError} from '../api/client';
 
 const HomeScreen = () => {
   const [myName, setMyName] = useState('');
   const [leagues, setLeagues] = useState<League[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
+  const [sheet, setSheet] = useState<SheetMode | null>(null);
 
-  // Runs once when Home opens: load my name and my leagues from the server.
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const name = await getMyName();
-        setMyName(name);
-        setLeagues(await getMyLeagues(name));
-      } catch (e) {
-        if (e instanceof NotLoggedInError) {
-          router.replace('/');
-          return;
-        }
-        setError('Deine Ligen konnten nicht geladen werden.');
+  // Loads my name and my leagues from the server.
+  const load = useCallback(async () => {
+    try {
+      const name = await getMyName();
+      setMyName(name);
+      setLeagues(await getMyLeagues(name));
+      setError('');
+    } catch (e) {
+      if (e instanceof NotLoggedInError) {
+        router.replace('/');
+        return;
       }
-    };
-    load();
+      setError('Deine Ligen konnten nicht geladen werden.');
+    } finally {
+      setLoaded(true);
+    }
   }, []);
 
+  // Runs once when Home opens.
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  // Pull-to-refresh: drag the list down to reload.
+  const refresh = async () => {
+    setRefreshing(true);
+    await load();
+    setRefreshing(false);
+  };
+
+  const sheetDone = () => {
+    setSheet(null);
+    load();
+  };
+
+  // Logging out is client-side only: forget the token and go back to login.
+  const logout = () => {
+    Alert.alert(myName, 'Möchtest du dich abmelden?', [
+      {text: 'Abbrechen', style: 'cancel'},
+      {
+        text: 'Abmelden',
+        style: 'destructive',
+        onPress: async () => {
+          await deleteToken();
+          router.replace('/');
+        },
+      },
+    ]);
+  };
+
   return (
-    <View style={styles.paper}>
-      <PaperLines />
-      <Text style={styles.title}>{myName ? `Hallo, ${myName}!` : 'Hallo!'}</Text>
-      <Text style={styles.heading}>Meine Ligen ({leagues.length})</Text>
-      {leagues.map(league => (
-        <Text key={league.id} style={styles.text}>{league.name}</Text>
-      ))}
-      {error !== '' && <Text style={styles.error}>{error}</Text>}
+    <View style={styles.screen}>
+      <ScrollView
+        contentContainerStyle={styles.paper}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} colors={['#2f6f4f']} />}>
+        <PaperLines />
+
+        <View style={styles.header}>
+          <Text style={styles.title} numberOfLines={1}>{myName ? `Hallo, ${myName}!` : 'Hallo!'}</Text>
+          <LogoutButton onPress={logout} />
+        </View>
+
+        <Text style={styles.heading}>
+          Meine Ligen <Text style={styles.count}>({leagues.length})</Text>
+        </Text>
+
+        {leagues.map((league, index) => (
+          <LeagueCard key={league.id} league={league} myName={myName} index={index} />
+        ))}
+
+        {loaded && leagues.length === 0 && error === '' && (
+          <Text style={styles.empty}>Du bist noch in keiner Liga. Tritt einer bei oder gründe eine!</Text>
+        )}
+        {error !== '' && <Text style={styles.error}>{error}</Text>}
+
+        <View style={styles.spacer} />
+
+        <SketchButton title="Liga beitreten" onPress={() => setSheet('join')} />
+        <SketchButton title="Liga gründen" variant="secondary" onPress={() => setSheet('create')} />
+      </ScrollView>
+
+      {sheet && <LeagueSheet mode={sheet} onClose={() => setSheet(null)} onDone={sheetDone} />}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  paper: {
+  screen: {
     flex: 1,
     backgroundColor: '#fffad9',
+  },
+  paper: {
+    flexGrow: 1,
     paddingTop: 72,
+    paddingBottom: 40,
     paddingHorizontal: 24,
   },
+  header: {
+    height: 72,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
   title: {
+    flex: 1,
     fontFamily: 'Caveat_700Bold',
     fontSize: 44,
     color: '#26262b',
@@ -60,17 +134,25 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: '#26262b',
   },
-  text: {
-    marginTop: 8,
+  count: {
+    fontSize: 26,
+    color: '#2b4fb3',
+  },
+  empty: {
+    marginTop: 14,
     fontFamily: 'Nunito_400Regular',
-    fontSize: 17,
-    color: '#26262b',
+    fontSize: 15,
+    color: '#5a5850',
   },
   error: {
     marginTop: 14,
     fontFamily: 'Caveat_700Bold',
     fontSize: 22,
     color: '#b8322a',
+  },
+  spacer: {
+    flex: 1,
+    minHeight: 24,
   },
 });
 
