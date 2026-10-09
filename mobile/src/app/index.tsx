@@ -11,13 +11,13 @@ import {
 import {useFonts} from 'expo-font';
 import {Caveat_500Medium, Caveat_700Bold} from '@expo-google-fonts/caveat';
 import {Nunito_400Regular, Nunito_700Bold} from '@expo-google-fonts/nunito';
-import BuddiesDoodle from './components/BuddiesDoodle';
-import {login, register, saveToken} from './api/auth';
+import BuddiesDoodle from '../../components/BuddiesDoodle';
+import {login, register, saveToken} from '../../api/auth';
 
 const LINE_SPACING = 36;
 const LINE_COUNT = 40;
 
-const App = () => {
+const LoginScreen = () => {
   const [fontsLoaded] = useFonts({
     Caveat_500Medium,
     Caveat_700Bold,
@@ -214,4 +214,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default LoginScreen;
