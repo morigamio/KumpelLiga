@@ -1,6 +1,7 @@
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
 import {League} from '../api/leagues';
+import BuddyIcon from './BuddyIcon';
 
 type Props = {
   league: League;
@@ -35,9 +36,10 @@ const LeagueCard = ({league, myName, index}: Props) => {
       <View style={styles.crest}>
         <Text style={styles.crestLetter}>{league.name.charAt(0).toUpperCase()}</Text>
       </View>
-      <View style={styles.info}>
-        <Text style={styles.name} numberOfLines={1}>{league.name}</Text>
-        <Text style={styles.members}>{members} Kumpels und Kumpelinen</Text>
+      <Text style={styles.name} numberOfLines={1}>{league.name}</Text>
+      <View style={styles.members}>
+        <BuddyIcon size={18} />
+        <Text style={styles.membersCount}>{members}</Text>
       </View>
       <Svg width={14} height={22} viewBox="0 0 14 22" fill="none">
         <Path
@@ -87,18 +89,20 @@ const styles = StyleSheet.create({
     fontSize: 26,
     color: '#2f6f4f',
   },
-  info: {
-    flex: 1,
-  },
   name: {
+    flex: 1,
     fontFamily: 'Nunito_700Bold',
     fontSize: 17,
     color: '#26262b',
   },
   members: {
-    marginTop: 4,
-    fontFamily: 'Nunito_400Regular',
-    fontSize: 13,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  membersCount: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 14,
     color: '#5a5850',
   },
 });
