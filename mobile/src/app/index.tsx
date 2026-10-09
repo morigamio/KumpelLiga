@@ -11,7 +11,8 @@ import {
 import {router} from 'expo-router';
 import BuddiesDoodle from '../components/BuddiesDoodle';
 import PaperLines from '../components/PaperLines';
-import {login, register, saveToken} from '../api/auth';
+import {login, register} from '../api/auth';
+import {saveToken} from '../api/client';
 
 const LoginScreen = () => {
   const [name, setName] = useState('');

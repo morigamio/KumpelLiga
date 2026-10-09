@@ -1,7 +1,4 @@
-import * as SecureStore from 'expo-secure-store';
-
-const BASE_URL = 'https://kumpelliga.com';
-const TOKEN_KEY = 'kl_token';
+import {BASE_URL} from './client';
 
 // Logs in and returns the JWT. Throws an Error with a German message the UI can show.
 export const login = async (name: string, password: string): Promise<string> => {
@@ -32,5 +29,3 @@ export const register = async (name: string, password: string): Promise<void> =>
     throw new Error('Registrieren hat nicht geklappt. Versuch es später nochmal.');
   }
 };
-
-export const saveToken = (token: string) => SecureStore.setItemAsync(TOKEN_KEY, token);
