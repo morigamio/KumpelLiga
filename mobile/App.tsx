@@ -2,6 +2,7 @@ import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 import {useFonts} from 'expo-font';
 import {Caveat_500Medium, Caveat_700Bold} from '@expo-google-fonts/caveat';
 import {Nunito_400Regular, Nunito_700Bold} from '@expo-google-fonts/nunito';
+import BuddiesDoodle from './components/BuddiesDoodle';
 
 const LINE_SPACING = 36;
 const LINE_COUNT = 40;
@@ -24,10 +25,12 @@ const App = () => {
         <View key={i} style={[styles.line, {top: (i + 1) * LINE_SPACING - 1}]} />
       ))}
 
+      <BuddiesDoodle/>
+
       <Text style={styles.title}>
         Kumpel<Text style={styles.titleAccent}>Liga</Text>
       </Text>
-      <Text style={styles.slogan}>Wette mit Spaß, nicht mit Geld.</Text>
+      <Text style={styles.slogan}>Für Kumpels und Kumpelinen.</Text>
 
       <View style={styles.field}>
         <Text style={styles.label}>Benutzername</Text>
