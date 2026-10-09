@@ -5,7 +5,7 @@ const INK = '#26262b';
 // Two doodled buddies above the KumpelLiga title.
 const BuddiesDoodle = () => {
   return (
-    <Svg width={210} height={172} viewBox="35 15 165 135" style={{alignSelf: 'center'}} fill="none" strokeLinecap="round" strokeLinejoin="round">
+    <Svg width={172} height={141} viewBox="35 15 165 135" style={{alignSelf: 'center'}} fill="none" strokeLinecap="round" strokeLinejoin="round">
       <G stroke={INK} strokeWidth={3.5}>
         <Path d="M75 22 C 98 21, 107 45, 105 62 C 103 84, 90 99, 74 98 C 55 97, 44 80, 45 60 C 46 40, 56 23, 77 23" />
         <Path d="M148 20 C 171 19, 180 43, 178 60 C 176 82, 163 97, 147 96 C 128 95, 117 78, 118 58 C 119 38, 129 21, 150 21" />
