@@ -1,16 +1,10 @@
 import {useState} from 'react';
-import {
-  KeyboardAvoidingView,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import {KeyboardAvoidingView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {router} from 'expo-router';
 import BuddiesDoodle from '../components/BuddiesDoodle';
 import PaperLines from '../components/PaperLines';
+import SketchField from '../components/SketchField';
+import SketchButton from '../components/SketchButton';
 import {login, register} from '../api/auth';
 import {saveToken} from '../api/client';
 
@@ -55,43 +49,15 @@ const LoginScreen = () => {
         </Text>
         <Text style={styles.slogan}>Für Kumpels und Kumpelinen.</Text>
 
-        <View style={styles.field}>
-          <Text style={styles.label}>Benutzername</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="dein Name"
-            autoCapitalize="none"
-            value={name}
-            onChangeText={setName}
-          />
-        </View>
-        <View style={styles.field}>
-          <Text style={styles.label}>Passwort</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="••••••••"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
-        </View>
+        <SketchField label="Benutzername" placeholder="dein Name" value={name} onChangeText={setName} />
+        <SketchField label="Passwort" placeholder="••••••••" secure value={password} onChangeText={setPassword} />
 
         {error !== '' && <Text style={styles.error}>{error}</Text>}
 
         <View style={styles.spacer} />
 
-        <Pressable
-          style={[styles.button, styles.primaryButton, busy && styles.buttonBusy]}
-          disabled={busy}
-          onPress={() => submit('login')}>
-          <Text style={[styles.buttonText, styles.primaryButtonText]}>{busy ? 'Moment…' : 'Anmelden'}</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.button, styles.secondaryButton, busy && styles.buttonBusy]}
-          disabled={busy}
-          onPress={() => submit('register')}>
-          <Text style={styles.buttonText}>Registrieren</Text>
-        </Pressable>
+        <SketchButton title={busy ? 'Moment…' : 'Anmelden'} disabled={busy} onPress={() => submit('login')} />
+        <SketchButton title="Registrieren" variant="secondary" disabled={busy} onPress={() => submit('register')} />
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -124,29 +90,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
   },
-  field: {
-    marginTop: 24,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    backgroundColor: '#fffdf8',
-    borderWidth: 2,
-    borderColor: '#26262b',
-    borderTopLeftRadius: 18,
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 14,
-  },
-  label: {
-    fontFamily: 'Caveat_700Bold',
-    fontSize: 24,
-    color: '#26262b',
-  },
-  input: {
-    height: 46,
-    fontFamily: 'Nunito_400Regular',
-    fontSize: 17,
-    color: '#26262b',
-  },
   error: {
     marginTop: 14,
     fontFamily: 'Caveat_700Bold',
@@ -156,39 +99,6 @@ const styles = StyleSheet.create({
   },
   spacer: {
     flex: 1,
-  },
-  button: {
-    height: 58,
-    marginTop: 14,
-    borderWidth: 2.5,
-    borderColor: '#26262b',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonBusy: {
-    opacity: 0.5,
-  },
-  primaryButton: {
-    backgroundColor: '#2f6f4f',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 26,
-    borderBottomLeftRadius: 10,
-  },
-  secondaryButton: {
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 28,
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 30,
-    backgroundColor: '#fffdf8',
-  },
-  buttonText: {
-    fontFamily: 'Caveat_700Bold',
-    fontSize: 30,
-    color: '#26262b',
-  },
-  primaryButtonText: {
-    color: '#fffaf0',
   },
 });
 
