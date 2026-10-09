@@ -27,6 +27,8 @@ const HomeScreen = () => {
       setError('');
     } catch (e) {
       if (e instanceof NotLoggedInError) {
+        // Forget the invalid token first, otherwise the login screen would auto-login straight back here.
+        await deleteToken();
         router.replace('/');
         return;
       }
