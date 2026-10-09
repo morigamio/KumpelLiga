@@ -8,23 +8,12 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import {useFonts} from 'expo-font';
 import {router} from 'expo-router';
-import {Caveat_500Medium, Caveat_700Bold} from '@expo-google-fonts/caveat';
-import {Nunito_400Regular, Nunito_700Bold} from '@expo-google-fonts/nunito';
 import BuddiesDoodle from '../components/BuddiesDoodle';
+import PaperLines from '../components/PaperLines';
 import {login, register, saveToken} from '../api/auth';
 
-const LINE_SPACING = 36;
-const LINE_COUNT = 40;
-
 const LoginScreen = () => {
-  const [fontsLoaded] = useFonts({
-    Caveat_500Medium,
-    Caveat_700Bold,
-    Nunito_400Regular,
-    Nunito_700Bold,
-  });
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -51,18 +40,12 @@ const LoginScreen = () => {
     }
   };
 
-  if (!fontsLoaded) {
-    return null;
-  }
-
   return (
     <KeyboardAvoidingView
       style={styles.screen}
       behavior="padding">
       <ScrollView contentContainerStyle={styles.paper} keyboardShouldPersistTaps="handled">
-        {Array.from({length: LINE_COUNT}, (_, i) => (
-          <View key={i} style={[styles.line, {top: (i + 1) * LINE_SPACING - 1}]} />
-        ))}
+        <PaperLines />
 
         <BuddiesDoodle/>
 
@@ -123,13 +106,6 @@ const styles = StyleSheet.create({
     paddingTop: 72,
     paddingBottom: 40,
     paddingHorizontal: 32,
-  },
-  line: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 1,
-    backgroundColor: '#e4e2da',
   },
   title: {
     fontFamily: 'Caveat_700Bold',

@@ -1,9 +1,11 @@
 import {StyleSheet, Text, View} from 'react-native';
+import PaperLines from '../components/PaperLines';
 
 // Placeholder until the real Home screen (Meine Ligen) is built.
 const HomeScreen = () => {
   return (
     <View style={styles.paper}>
+      <PaperLines />
       <Text style={styles.title}>Hallo!</Text>
       <Text style={styles.text}>Hier kommen bald deine Ligen hin.</Text>
     </View>
