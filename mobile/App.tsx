@@ -99,7 +99,7 @@ const App = () => {
           style={[styles.button, styles.primaryButton, busy && styles.buttonBusy]}
           disabled={busy}
           onPress={() => submit('login')}>
-          <Text style={[styles.buttonText, styles.primaryButtonText]}>Anmelden</Text>
+          <Text style={[styles.buttonText, styles.primaryButtonText]}>{busy ? 'Moment…' : 'Anmelden'}</Text>
         </Pressable>
         <Pressable
           style={[styles.button, styles.secondaryButton, busy && styles.buttonBusy]}
