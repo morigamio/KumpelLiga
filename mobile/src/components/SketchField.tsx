@@ -1,18 +1,16 @@
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, TextInput, View} from 'react-native';
 
 type Props = {
-  label?: string;
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
   secure?: boolean;
 };
 
-// A text input (optionally with a label above it) in a hand-drawn box, like the league cards.
-const SketchField = ({label, value, onChangeText, placeholder, secure = false}: Props) => {
+// A text input in a hand-drawn box, like the league cards.
+const SketchField = ({value, onChangeText, placeholder, secure = false}: Props) => {
   return (
     <View style={styles.field}>
-      {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         style={[styles.input, value === '' && styles.placeholder]}
         placeholder={placeholder}
@@ -37,11 +35,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 12,
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 14,
-  },
-  label: {
-    fontFamily: 'Caveat_700Bold',
-    fontSize: 24,
-    color: '#26262b',
   },
   input: {
     height: 46,

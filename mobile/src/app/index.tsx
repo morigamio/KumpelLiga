@@ -68,8 +68,8 @@ const LoginScreen = () => {
         </Text>
         <Text style={styles.slogan}>Für Kumpels und Kumpelinen.</Text>
 
-        <SketchField label="Benutzername" placeholder="dein Name" value={name} onChangeText={setName} />
-        <SketchField label="Passwort" placeholder="••••••••" secure value={password} onChangeText={setPassword} />
+        <SketchField placeholder="Benutzername" value={name} onChangeText={setName} />
+        <SketchField placeholder="Passwort" secure value={password} onChangeText={setPassword} />
 
         {error !== '' && <Text style={styles.error}>{error}</Text>}
 
