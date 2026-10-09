@@ -1,8 +1,10 @@
+import {useState} from 'react';
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 import {useFonts} from 'expo-font';
 import {Caveat_500Medium, Caveat_700Bold} from '@expo-google-fonts/caveat';
 import {Nunito_400Regular, Nunito_700Bold} from '@expo-google-fonts/nunito';
 import BuddiesDoodle from './components/BuddiesDoodle';
+import {login, register, saveToken} from './api/auth';
 
 const LINE_SPACING = 36;
 const LINE_COUNT = 40;
@@ -14,6 +16,31 @@ const App = () => {
     Nunito_400Regular,
     Nunito_700Bold,
   });
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const submit = async (mode: 'login' | 'register') => {
+    if (!name.trim() || !password) {
+      setError('Bitte Benutzername und Passwort eingeben.');
+      return;
+    }
+    setError('');
+    setBusy(true);
+    try {
+      if (mode === 'register') {
+        await register(name.trim(), password);
+      }
+      const token = await login(name.trim(), password);
+      await saveToken(token);
+      setError('Angemeldet! (Home kommt im nächsten Schritt)');
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Da ist etwas schiefgelaufen.');
+    } finally {
+      setBusy(false);
+    }
+  };
 
   if (!fontsLoaded) {
     return null;
@@ -34,19 +61,39 @@ const App = () => {
 
       <View style={styles.field}>
         <Text style={styles.label}>Benutzername</Text>
-        <TextInput style={styles.input} placeholder="dein Name" autoCapitalize="none" />
+        <TextInput
+          style={styles.input}
+          placeholder="dein Name"
+          autoCapitalize="none"
+          value={name}
+          onChangeText={setName}
+        />
       </View>
       <View style={styles.field}>
         <Text style={styles.label}>Passwort</Text>
-        <TextInput style={styles.input} placeholder="••••••••" secureTextEntry />
+        <TextInput
+          style={styles.input}
+          placeholder="••••••••"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
       </View>
+
+      {error !== '' && <Text style={styles.error}>{error}</Text>}
 
       <View style={styles.spacer} />
 
-      <Pressable style={[styles.button, styles.primaryButton]}>
+      <Pressable
+        style={[styles.button, styles.primaryButton, busy && styles.buttonBusy]}
+        disabled={busy}
+        onPress={() => submit('login')}>
         <Text style={[styles.buttonText, styles.primaryButtonText]}>Anmelden</Text>
       </Pressable>
-      <Pressable style={[styles.button, styles.secondaryButton]}>
+      <Pressable
+        style={[styles.button, styles.secondaryButton, busy && styles.buttonBusy]}
+        disabled={busy}
+        onPress={() => submit('register')}>
         <Text style={styles.buttonText}>Registrieren</Text>
       </Pressable>
     </View>
@@ -107,6 +154,13 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#26262b',
   },
+  error: {
+    marginTop: 14,
+    fontFamily: 'Caveat_700Bold',
+    fontSize: 22,
+    color: '#b8322a',
+    textAlign: 'center',
+  },
   spacer: {
     flex: 1,
   },
@@ -117,6 +171,9 @@ const styles = StyleSheet.create({
     borderColor: '#26262b',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonBusy: {
+    opacity: 0.5,
   },
   primaryButton: {
     backgroundColor: '#2f6f4f',
