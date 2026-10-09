@@ -1,5 +1,13 @@
 import {useState} from 'react';
-import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import {useFonts} from 'expo-font';
 import {Caveat_500Medium, Caveat_700Bold} from '@expo-google-fonts/caveat';
 import {Nunito_400Regular, Nunito_700Bold} from '@expo-google-fonts/nunito';
@@ -47,63 +55,70 @@ const App = () => {
   }
 
   return (
-    <View style={styles.paper}>
-      {Array.from({length: LINE_COUNT}, (_, i) => (
-        <View key={i} style={[styles.line, {top: (i + 1) * LINE_SPACING - 1}]} />
-      ))}
+    <KeyboardAvoidingView
+      style={styles.screen}
+      behavior="padding">
+      <ScrollView contentContainerStyle={styles.paper} keyboardShouldPersistTaps="handled">
+        {Array.from({length: LINE_COUNT}, (_, i) => (
+          <View key={i} style={[styles.line, {top: (i + 1) * LINE_SPACING - 1}]} />
+        ))}
 
-      <BuddiesDoodle/>
+        <BuddiesDoodle/>
 
-      <Text style={styles.title}>
-        Kumpel<Text style={styles.titleAccent}>Liga</Text>
-      </Text>
-      <Text style={styles.slogan}>Für Kumpels und Kumpelinen.</Text>
+        <Text style={styles.title}>
+          Kumpel<Text style={styles.titleAccent}>Liga</Text>
+        </Text>
+        <Text style={styles.slogan}>Für Kumpels und Kumpelinen.</Text>
 
-      <View style={styles.field}>
-        <Text style={styles.label}>Benutzername</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="dein Name"
-          autoCapitalize="none"
-          value={name}
-          onChangeText={setName}
-        />
-      </View>
-      <View style={styles.field}>
-        <Text style={styles.label}>Passwort</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="••••••••"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
-      </View>
+        <View style={styles.field}>
+          <Text style={styles.label}>Benutzername</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="dein Name"
+            autoCapitalize="none"
+            value={name}
+            onChangeText={setName}
+          />
+        </View>
+        <View style={styles.field}>
+          <Text style={styles.label}>Passwort</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="••••••••"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+        </View>
 
-      {error !== '' && <Text style={styles.error}>{error}</Text>}
+        {error !== '' && <Text style={styles.error}>{error}</Text>}
 
-      <View style={styles.spacer} />
+        <View style={styles.spacer} />
 
-      <Pressable
-        style={[styles.button, styles.primaryButton, busy && styles.buttonBusy]}
-        disabled={busy}
-        onPress={() => submit('login')}>
-        <Text style={[styles.buttonText, styles.primaryButtonText]}>Anmelden</Text>
-      </Pressable>
-      <Pressable
-        style={[styles.button, styles.secondaryButton, busy && styles.buttonBusy]}
-        disabled={busy}
-        onPress={() => submit('register')}>
-        <Text style={styles.buttonText}>Registrieren</Text>
-      </Pressable>
-    </View>
+        <Pressable
+          style={[styles.button, styles.primaryButton, busy && styles.buttonBusy]}
+          disabled={busy}
+          onPress={() => submit('login')}>
+          <Text style={[styles.buttonText, styles.primaryButtonText]}>Anmelden</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.secondaryButton, busy && styles.buttonBusy]}
+          disabled={busy}
+          onPress={() => submit('register')}>
+          <Text style={styles.buttonText}>Registrieren</Text>
+        </Pressable>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  paper: {
+  screen: {
     flex: 1,
     backgroundColor: '#fffad9',
+  },
+  paper: {
+    flexGrow: 1,
     paddingTop: 72,
     paddingBottom: 40,
     paddingHorizontal: 32,
