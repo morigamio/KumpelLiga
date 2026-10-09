@@ -1,20 +1,20 @@
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 
 type Props = {
-  label: string;
+  label?: string;
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
   secure?: boolean;
 };
 
-// A labelled text input in a hand-drawn box, like the league cards.
+// A text input (optionally with a label above it) in a hand-drawn box, like the league cards.
 const SketchField = ({label, value, onChangeText, placeholder, secure = false}: Props) => {
   return (
     <View style={styles.field}>
-      <Text style={styles.label}>{label}</Text>
+      {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
-        style={styles.input}
+        style={[styles.input, value === '' && styles.placeholder]}
         placeholder={placeholder}
         autoCapitalize="none"
         secureTextEntry={secure}
@@ -48,6 +48,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     fontSize: 17,
     color: '#26262b',
+  },
+  // While the field is empty, the placeholder shows in handwriting. React Native has no separate
+  // placeholder font, so we switch the whole input's font as long as nothing is typed.
+  placeholder: {
+    fontFamily: 'Caveat_700Bold',
+    fontSize: 22,
   },
 });
 
