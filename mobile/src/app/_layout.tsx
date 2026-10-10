@@ -17,7 +17,16 @@ const RootLayout = () => {
     return null;
   }
 
-  return <Stack screenOptions={{headerShown: false, contentStyle: {backgroundColor: '#fffad9'}}} />;
+  // No transition animation: every slide/fade variant flashed white or made Home jiggle on Android.
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: {backgroundColor: '#fffad9'},
+        animation: 'none',
+      }}
+    />
+  );
 };
 
 export default RootLayout;
