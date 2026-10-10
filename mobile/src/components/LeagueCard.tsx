@@ -7,6 +7,7 @@ type Props = {
   league: League;
   myName: string;
   index: number;
+  onPress: () => void;
 };
 
 // Slightly different corners per card, so the list looks hand-drawn rather than copy-pasted.
@@ -16,12 +17,12 @@ const WOBBLES = [
   {borderTopLeftRadius: 20, borderTopRightRadius: 14, borderBottomRightRadius: 18, borderBottomLeftRadius: 12},
 ];
 
-const LeagueCard = ({league, myName, index}: Props) => {
+const LeagueCard = ({league, myName, index, onPress}: Props) => {
   const isMine = league.admin === myName;
   const members = league.participants.length;
 
   return (
-    <Pressable style={[styles.card, WOBBLES[index % WOBBLES.length]]}>
+    <Pressable style={[styles.card, WOBBLES[index % WOBBLES.length]]} onPress={onPress}>
       {isMine && (
         <Svg style={styles.crown} width={30} height={20} viewBox="0 0 30 20" fill="none">
           <Path
