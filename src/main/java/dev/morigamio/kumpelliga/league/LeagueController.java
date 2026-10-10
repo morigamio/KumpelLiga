@@ -45,6 +45,11 @@ public class LeagueController {
         return new ResponseEntity<>(leagueService.getLeaguesByName(name).stream().map(ReadLeagueDTO::from).toList(), HttpStatus.OK);
     }
 
+    @GetMapping("/account/leagues")
+    public ResponseEntity<List<ReadLeagueDTO>> getLeaguesToName(Principal principal) {
+        return new ResponseEntity<>(leagueService.getLeaguesByAccountName(principal.getName()).stream().map(ReadLeagueDTO::from).toList(), HttpStatus.OK);
+    }
+
     @GetMapping("/leagues/{leagueId}")
     public ResponseEntity<ReadLeagueDTO> getLeagueById(@PathVariable String leagueId) {
         League league = leagueService.getLeagueByLeagueId(Long.parseLong(leagueId)).orElseThrow(() -> new ResourceNotFoundException(League.class, Long.parseLong(leagueId)));

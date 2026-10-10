@@ -45,6 +45,10 @@ public class LeagueService {
         return leagueRepository.findByNameContainingIgnoreCase(leagueName);
     }
 
+    public List<League> getLeaguesByAccountName(String accountName) {
+        return leagueRepository.findByParticipantsAccountName(accountName);
+    }
+
     public Optional<League> getLeagueByLeagueId(long leagueId) {
         return leagueRepository.findById(leagueId);
     }
