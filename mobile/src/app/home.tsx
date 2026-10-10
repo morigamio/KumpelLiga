@@ -23,7 +23,7 @@ const HomeScreen = () => {
     try {
       const name = await getMyName();
       setMyName(name);
-      setLeagues(await getMyLeagues(name));
+      setLeagues(await getMyLeagues());
       setError('');
     } catch (e) {
       if (e instanceof NotLoggedInError) {
