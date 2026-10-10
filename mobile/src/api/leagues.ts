@@ -16,12 +16,10 @@ export type League = {
   participants: Participant[];
 };
 
-// The server has no "my leagues" endpoint, so like the web version we load all leagues
-// and keep the ones where one of the participants is me.
-export const getMyLeagues = async (myName: string): Promise<League[]> => {
-  const leagues = await getJson<League[]>('/leagues');
-  return leagues.filter(league => league.participants.some(p => p.name === myName));
-};
+// The server knows who I am from the token and returns only the leagues I take part in.
+export const getMyLeagues = (): Promise<League[]> => getJson<League[]>('/account/leagues');
+
+export const getLeague = (id: string): Promise<League> => getJson<League>(`/leagues/${id}`);
 
 // League names are unique, so we look the league up by name and then join it by id (like the web version).
 export const joinLeague = async (name: string, password: string): Promise<void> => {
