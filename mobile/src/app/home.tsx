@@ -87,7 +87,13 @@ const HomeScreen = () => {
         </Text>
 
         {leagues.map((league, index) => (
-          <LeagueCard key={league.id} league={league} myName={myName} index={index} />
+          <LeagueCard
+            key={league.id}
+            league={league}
+            myName={myName}
+            index={index}
+            onPress={() => router.push({pathname: '/league', params: {id: league.id}})}
+          />
         ))}
 
         {loaded && leagues.length === 0 && error === '' && (
