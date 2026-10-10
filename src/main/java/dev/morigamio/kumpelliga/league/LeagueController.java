@@ -38,7 +38,7 @@ public class LeagueController {
     }
 
     @GetMapping("/leagues")
-    public ResponseEntity<List<ReadLeagueDTO>> getLeaguesByName(@RequestParam(required = false) String name) {
+    public ResponseEntity<List<ReadLeagueDTO>> getLeagues(@RequestParam(required = false) String name) {
         if (name == null || name.isBlank()) {
             return new ResponseEntity<>(leagueService.getAllLeagues().stream().map(ReadLeagueDTO::from).toList(), HttpStatus.OK);
         }
