@@ -39,7 +39,7 @@ const LeagueCard = ({league, myName, index, onPress}: Props) => {
       </View>
       <Text style={styles.name} numberOfLines={1}>{league.name}</Text>
       <View style={styles.members}>
-        <BuddyIcon size={18} />
+        <BuddyIcon size={24} />
         <Text style={styles.membersCount}>{members}</Text>
       </View>
       <Svg width={14} height={22} viewBox="0 0 14 22" fill="none">
