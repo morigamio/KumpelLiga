@@ -5,7 +5,7 @@ import SketchArrow from './sub/SketchArrow';
 // Placeholder until real games are passed in.
 const GAMES = [1, 2, 3];
 
-// One gameday (Spieltag): a switcher row to step between gamedays, then its games as cards.
+// One Gameday: a switcher row to step between gamedays, then all games to that gameday as card components.
 const Gameday = () => {
   return (
     <View style={styles.gameday}>
