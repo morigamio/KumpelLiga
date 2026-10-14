@@ -1,5 +1,6 @@
 package dev.morigamio.kumpelliga.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -47,8 +48,11 @@ public class JwtUtils {
         try {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
+        } catch (ExpiredJwtException e) {
+            // expired tokens are normal (user just has to log in again), so no warning for them
+            log.debug("JWT expired: {}", e.getMessage());
         } catch (Exception e) {
-            log.error("JWT validation error: {}", e.getMessage());
+            log.warn("JWT validation error: {}", e.getMessage());
         }
         return false;
     }
