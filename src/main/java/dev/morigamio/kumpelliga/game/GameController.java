@@ -19,13 +19,17 @@ import java.util.Optional;
 @RestController
 public class GameController {
 
-    @Autowired
     GameService gameService;
-
-    @Autowired
     OddsService oddsService;
 
-    /** All games, or only those of one matchday when ?gameDay=N is given (used for live polling). */
+    public GameController(GameService gameService, OddsService oddsService) {
+        this.gameService = gameService;
+        this.oddsService = oddsService;
+    }
+
+    /**
+     * All games, or only those of one matchday when ?gameDay=N is given (used for live polling).
+     */
     @GetMapping("/games")
     public ResponseEntity<List<GameDTO>> getGames(@RequestParam(required = false) Integer gameDay) {
         List<Game> games = gameDay == null ? gameService.getGames() : gameService.getGamesByGameDay(gameDay);
@@ -48,7 +52,7 @@ public class GameController {
         Game game = gameService.getGameById(Long.parseLong(gameId)).orElseThrow(() -> new ResourceNotFoundException(Game.class, Long.parseLong(gameId)));
         Optional<Odds> oddsByGameId = oddsService.getOddsByGameId(game.getId());
         return oddsByGameId.map(
-                odds -> new ResponseEntity<>(GameDTO.from(game, odds), HttpStatus.OK))
+                        odds -> new ResponseEntity<>(GameDTO.from(game, odds), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(GameDTO.from(game), HttpStatus.OK));
     }
 
