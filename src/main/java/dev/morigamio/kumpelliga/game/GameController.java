@@ -51,4 +51,9 @@ public class GameController {
                 odds -> new ResponseEntity<>(GameDTO.from(game, odds), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(GameDTO.from(game), HttpStatus.OK));
     }
+
+    @GetMapping("/gamedays/current")
+    public ResponseEntity<Integer> getCurrentGameDay() {
+        return new ResponseEntity<>(gameService.getCurrentGameDay(), HttpStatus.OK);
+    }
 }

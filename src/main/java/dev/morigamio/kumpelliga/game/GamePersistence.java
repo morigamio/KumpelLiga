@@ -45,8 +45,16 @@ public class GamePersistence {
         return gameRepository.findByHomeTeamAndAwayTeam(homeTeam, awayTeam);
     }
 
+    public Optional<Game> findFirstUnfinishedGame(){
+        return gameRepository.findFirstByIsFinishedFalseOrderByMatchTimeAsc();
+    }
+
     public List<GameDay> findAllGameDays(){
         return gameDayRepository.findAll();
+    }
+
+    public long countGameDays(){
+        return gameDayRepository.count();
     }
 
     public Optional<GameDay> findGameDay(int id){

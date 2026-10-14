@@ -122,6 +122,13 @@ public class GameService {
         return gamePersistence.findAllGameDays();
     }
 
+    /** The gameday of the earliest unfinished game; once the season is over, the last gameday. */
+    public int getCurrentGameDay() {
+        return gamePersistence.findFirstUnfinishedGame()
+                .map(Game::getGameDay)
+                .orElseGet(() -> (int) gamePersistence.countGameDays());
+    }
+
     private String determineWinner(int goalsHomeTeam, int goalsAwayTeam) {
         if (goalsHomeTeam == goalsAwayTeam) {
             return GameConstants.DRAW;

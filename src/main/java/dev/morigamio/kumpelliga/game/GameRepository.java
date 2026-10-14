@@ -11,4 +11,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     Optional<Game> findByHomeTeamAndAwayTeam(String homeTeam, String awayTeam);
 
     List<Game> findByGameDay(int gameDay);
+
+    Optional<Game> findFirstByIsFinishedFalseOrderByMatchTimeAsc();
 }
