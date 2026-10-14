@@ -60,4 +60,9 @@ public class GameController {
     public ResponseEntity<Integer> getCurrentGameDay() {
         return new ResponseEntity<>(gameService.getCurrentGameDay(), HttpStatus.OK);
     }
+
+    @GetMapping("/gamedays/count")
+    public ResponseEntity<Integer> getGameDayCount() {
+        return new ResponseEntity<>(gameService.getGameDayCount(), HttpStatus.OK);
+    }
 }

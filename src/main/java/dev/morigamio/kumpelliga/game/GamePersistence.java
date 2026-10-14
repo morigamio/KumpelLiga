@@ -53,8 +53,8 @@ public class GamePersistence {
         return gameDayRepository.findAll();
     }
 
-    public long countGameDays(){
-        return gameDayRepository.count();
+    public int countGameDays(){
+        return (int) gameDayRepository.count();
     }
 
     public Optional<GameDay> findGameDay(int id){

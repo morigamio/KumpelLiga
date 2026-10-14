@@ -126,7 +126,11 @@ public class GameService {
     public int getCurrentGameDay() {
         return gamePersistence.findFirstUnfinishedGame()
                 .map(Game::getGameDay)
-                .orElseGet(() -> (int) gamePersistence.countGameDays());
+                .orElseGet(this::getGameDayCount);
+    }
+
+    public int getGameDayCount() {
+        return gamePersistence.countGameDays();
     }
 
     private String determineWinner(int goalsHomeTeam, int goalsAwayTeam) {
