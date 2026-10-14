@@ -4,17 +4,27 @@ import Svg, {Ellipse} from 'react-native-svg';
 import {router, useLocalSearchParams} from 'expo-router';
 import PaperLines from '../components/sub/PaperLines';
 import SketchFrame from '../components/sub/SketchFrame';
+import Gameday from '../components/Gameday';
 import {getLeague, League} from '../api/leagues';
+import {getCurrentGameday, getGamedayCount} from '../api/games';
 
 const LeagueScreen = () => {
   const {id} = useLocalSearchParams<{id: string}>();
   const [league, setLeague] = useState<League | null>(null);
   const [activeTab, setActiveTab] = useState('Spiele');
+  const [gameday, setGameday] = useState<number | null>(null);
+  const [gamedayCount, setGamedayCount] = useState<number | null>(null);
 
   // Loads the league once when the screen opens (and again if the id changes).
   useEffect(() => {
     getLeague(id).then(setLeague).catch(() => setLeague(null));
   }, [id]);
+
+  // The Spiele tab starts at the current gameday.
+  useEffect(() => {
+    getCurrentGameday().then(setGameday).catch(() => setGameday(null));
+    getGamedayCount().then(setGamedayCount).catch(() => setGamedayCount(null));
+  }, []);
 
   const changeView = (view: string) => {
     setActiveTab(view);
@@ -53,7 +63,7 @@ const LeagueScreen = () => {
         <Pressable style={styles.tab} onPress={() => changeView('Verlauf')}>{activeTab === 'Verlauf' && <SketchFrame />}<Text style={tabTextStyle('Verlauf')}>Verlauf</Text></Pressable>
       </View>
 
-      <Text style={styles.placeholder}>{activeTab}</Text>
+      {activeTab === 'Spiele' ? <Gameday gameday={gameday} gamedayCount={gamedayCount} onChange={setGameday} /> : <Text style={styles.placeholder}>{activeTab}</Text>}
     </View>
   );
 };

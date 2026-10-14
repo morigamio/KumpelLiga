@@ -1,27 +1,30 @@
 import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
-import GameCard from './GameCard';
 import SketchArrow from './sub/SketchArrow';
 
-// Placeholder until real games are passed in.
-const GAMES = [1, 2, 3];
+type Props = {
+  gameday: number | null;
+  gamedayCount: number | null;
+  onChange: (gameday: number) => void;
+};
 
 // One Gameday: a switcher row to step between gamedays, then all games to that gameday as card components.
-const Gameday = () => {
+const Gameday = ({gameday, gamedayCount, onChange}: Props) => {
+  const canGoBack = gameday !== null && gameday > 1;
+  const canGoForward = gameday !== null && gamedayCount !== null && gameday < gamedayCount;
+
   return (
     <View style={styles.gameday}>
       <View style={styles.switcher}>
-        <Pressable style={styles.arrow}>
+        <Pressable style={[styles.arrow, !canGoBack && styles.disabled]} disabled={!canGoBack} onPress={() => onChange(gameday! - 1)}>
           <SketchArrow direction="left" />
         </Pressable>
-        <Text style={styles.title}>1. Spieltag</Text>
-        <Pressable style={styles.arrow}>
+        <Text style={styles.title}>{gameday ? `${gameday}. Spieltag` : 'Lädt…'}</Text>
+        <Pressable style={[styles.arrow, !canGoForward && styles.disabled]} disabled={!canGoForward} onPress={() => onChange(gameday! + 1)}>
           <SketchArrow direction="right" />
         </Pressable>
       </View>
 
-      <ScrollView contentContainerStyle={styles.games}>
-        {GAMES.map(game => <GameCard key={game} />)}
-      </ScrollView>
+      <ScrollView contentContainerStyle={styles.games} />
     </View>
   );
 };
@@ -42,6 +45,9 @@ const styles = StyleSheet.create({
     height: 44,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  disabled: {
+    opacity: 0.25,
   },
   title: {
     flex: 1,
