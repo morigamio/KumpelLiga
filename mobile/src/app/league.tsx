@@ -2,8 +2,8 @@ import {useEffect, useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import Svg, {Ellipse} from 'react-native-svg';
 import {router, useLocalSearchParams} from 'expo-router';
-import PaperLines from '../components/PaperLines';
-import SketchFrame from '../components/SketchFrame';
+import PaperLines from '../components/sub/PaperLines';
+import SketchFrame from '../components/sub/SketchFrame';
 import {getLeague, League} from '../api/leagues';
 
 const LeagueScreen = () => {

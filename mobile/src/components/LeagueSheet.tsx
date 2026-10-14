@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {KeyboardAvoidingView, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
-import SketchField from './SketchField';
-import SketchButton from './SketchButton';
+import SketchField from './sub/SketchField';
+import SketchButton from './sub/SketchButton';
 import {createLeague, joinLeague} from '../api/leagues';
 
 export type SheetMode = 'join' | 'create';

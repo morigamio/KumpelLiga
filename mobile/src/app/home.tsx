@@ -1,11 +1,11 @@
 import {useCallback, useEffect, useState} from 'react';
 import {Alert, RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {router} from 'expo-router';
-import PaperLines from '../components/PaperLines';
+import PaperLines from '../components/sub/PaperLines';
 import LeagueCard from '../components/LeagueCard';
 import LeagueSheet, {SheetMode} from '../components/LeagueSheet';
 import LogoutButton from '../components/LogoutButton';
-import SketchButton from '../components/SketchButton';
+import SketchButton from '../components/sub/SketchButton';
 import {getMyName} from '../api/account';
 import {getMyLeagues, League} from '../api/leagues';
 import {deleteToken, NotLoggedInError} from '../api/client';

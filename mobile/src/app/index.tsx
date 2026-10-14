@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react';
 import {KeyboardAvoidingView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {router} from 'expo-router';
-import BuddiesDoodle from '../components/BuddiesDoodle';
-import PaperLines from '../components/PaperLines';
-import SketchField from '../components/SketchField';
-import SketchButton from '../components/SketchButton';
+import BuddiesDoodle from '../components/sub/BuddiesDoodle';
+import PaperLines from '../components/sub/PaperLines';
+import SketchField from '../components/sub/SketchField';
+import SketchButton from '../components/sub/SketchButton';
 import {login, register} from '../api/auth';
 import {getToken, saveToken} from '../api/client';
 

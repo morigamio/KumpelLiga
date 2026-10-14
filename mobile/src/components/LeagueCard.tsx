@@ -1,7 +1,8 @@
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
 import {League} from '../api/leagues';
-import BuddyIcon from './BuddyIcon';
+import BuddyIcon from './sub/BuddyIcon';
+import SketchArrow from './sub/SketchArrow';
 
 type Props = {
   league: League;
@@ -42,15 +43,7 @@ const LeagueCard = ({league, myName, index, onPress}: Props) => {
         <BuddyIcon size={24} />
         <Text style={styles.membersCount}>{members}</Text>
       </View>
-      <Svg width={14} height={22} viewBox="0 0 14 22" fill="none">
-        <Path
-          d="M3 3 C 7 7, 10 9, 11 11 C 9 14, 6 16, 3 19"
-          stroke="#26262b"
-          strokeWidth={2.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </Svg>
+      <SketchArrow direction="right" />
     </Pressable>
   );
 };
