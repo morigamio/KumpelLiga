@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
 import Svg, {Ellipse} from 'react-native-svg';
 import {router, useLocalSearchParams} from 'expo-router';
 import PaperLines from '../components/sub/PaperLines';
@@ -7,6 +7,7 @@ import SketchFrame from '../components/sub/SketchFrame';
 import Gameday from '../components/Gameday';
 import {getLeague, League} from '../api/leagues';
 import {Game, getCurrentGameday, getGamedayCount, getGamesByGameday} from '../api/games';
+import {Bet, changeBet, deleteBet, getMyBets, placeBet, Prediction} from '../api/bets';
 
 const LeagueScreen = () => {
   const {id} = useLocalSearchParams<{id: string}>();
@@ -16,10 +17,19 @@ const LeagueScreen = () => {
   const [gamedayCount, setGamedayCount] = useState<number | null>(null);
   // Every gameday loaded so far, so stepping back with the arrows needs no new request.
   const [gamesByGameday, setGamesByGameday] = useState<Record<number, Game[]>>({});
+  // My bets in this league, keyed by game id, so every card finds its own bet directly.
+  const [myBetsByGame, setMyBetsByGame] = useState<Record<number, Bet>>({});
 
   // Loads the league once when the screen opens (and again if the id changes).
   useEffect(() => {
     getLeague(id).then(setLeague).catch(() => setLeague(null));
+  }, [id]);
+
+  // Loads all my bets of this league once; later changes come back from the bet requests themselves.
+  useEffect(() => {
+    getMyBets(id)
+      .then(bets => setMyBetsByGame(Object.fromEntries(bets.map(bet => [bet.gameId, bet]))))
+      .catch(() => setMyBetsByGame({}));
   }, [id]);
 
   // The Spiele tab starts at the current gameday.
@@ -37,6 +47,28 @@ const LeagueScreen = () => {
       .then(games => setGamesByGameday(loaded => ({...loaded, [gameday]: games})))
       .catch(() => {});
   }, [gameday]);
+
+  // Tapping an odds box: no bet yet → place it, a different pick → change it, the same pick again → remove it.
+  const pick = async (game: Game, prediction: Prediction) => {
+    const existing = myBetsByGame[game.id];
+    try {
+      if (!existing) {
+        const bet = await placeBet(id, game.id, prediction);
+        setMyBetsByGame(bets => ({...bets, [game.id]: bet}));
+      } else if (existing.prediction === prediction) {
+        await deleteBet(existing.id);
+        setMyBetsByGame(bets => {
+          const {[game.id]: removed, ...rest} = bets;
+          return rest;
+        });
+      } else {
+        const bet = await changeBet(existing.id, prediction);
+        setMyBetsByGame(bets => ({...bets, [game.id]: bet}));
+      }
+    } catch {
+      Alert.alert('Das hat nicht geklappt', 'Dein Tipp konnte nicht gespeichert werden. Versuch es nochmal.');
+    }
+  };
 
   const changeView = (view: string) => {
     setActiveTab(view);
@@ -75,7 +107,7 @@ const LeagueScreen = () => {
         <Pressable style={styles.tab} onPress={() => changeView('Verlauf')}>{activeTab === 'Verlauf' && <SketchFrame />}<Text style={tabTextStyle('Verlauf')}>Verlauf</Text></Pressable>
       </View>
 
-      {activeTab === 'Spiele' ? <Gameday gameday={gameday} gamedayCount={gamedayCount} games={gameday !== null ? gamesByGameday[gameday] ?? null : null} onChange={setGameday} /> : <Text style={styles.placeholder}>{activeTab}</Text>}
+      {activeTab === 'Spiele' ? <Gameday gameday={gameday} gamedayCount={gamedayCount} games={gameday !== null ? gamesByGameday[gameday] ?? null : null} myBetsByGame={myBetsByGame} onPick={pick} onChange={setGameday} /> : <Text style={styles.placeholder}>{activeTab}</Text>}
     </View>
   );
 };

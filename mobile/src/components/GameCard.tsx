@@ -1,10 +1,15 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {useState} from 'react';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
 import {Game} from '../api/games';
+import {Bet, Prediction} from '../api/bets';
 
 type Props = {
   game: Game;
   index: number;
+  // My bet on this game, if I placed one.
+  bet: Bet | undefined;
+  onPick: (game: Game, prediction: Prediction) => Promise<void>;
 };
 
 // Slightly different corners per card, like the league cards on Home.
@@ -27,16 +32,27 @@ const formatKickoff = (matchTime: string) => {
 const formatOdds = (odds: number) => odds.toFixed(2).replace('.', ',');
 
 // One game: kickoff, both teams with "vs" or the score, and the three odds.
-const GameCard = ({game, index}: Props) => {
+const GameCard = ({game, index, bet, onPick}: Props) => {
+  // True while a bet request is running, so a second tap can't send a second request.
+  const [busy, setBusy] = useState(false);
   const hasStarted = new Date(game.matchTime).getTime() <= Date.now();
   const isLive = hasStarted && !game.isFinished;
   const hasOdds = game.oddsHome > 0 || game.oddsDraw > 0 || game.oddsAway > 0;
 
-  const outcomes = [
-    {key: 'home', odds: game.oddsHome},
-    {key: 'draw', odds: game.oddsDraw},
-    {key: 'away', odds: game.oddsAway},
+  const outcomes: {prediction: Prediction; odds: number}[] = [
+    {prediction: 'homeTeam', odds: game.oddsHome},
+    {prediction: 'draw', odds: game.oddsDraw},
+    {prediction: 'awayTeam', odds: game.oddsAway},
   ];
+
+  const pick = async (prediction: Prediction) => {
+    setBusy(true);
+    try {
+      await onPick(game, prediction);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   return (
     <View style={[styles.card, WOBBLES[index % WOBBLES.length], game.isFinished && styles.finished]}>
@@ -63,12 +79,16 @@ const GameCard = ({game, index}: Props) => {
         <Text style={[styles.team, styles.away]} numberOfLines={2}>{game.awayTeam}</Text>
       </View>
 
-      {hasOdds ? (
-        <View style={styles.odds}>
+      {/* Once the game is over there is nothing left to bet on. */}
+      {game.isFinished ? null : hasOdds ? (
+        <View style={[styles.odds, hasStarted && styles.oddsClosed]}>
           {outcomes.map(outcome => (
-            <View key={outcome.key} style={styles.option}>
+            // Betting closes at kickoff.
+            <Pressable key={outcome.prediction} style={styles.option} disabled={hasStarted || busy} onPress={() => pick(outcome.prediction)}>
+              {/* My pick gets a light green highlighter patch behind the odds, as in the design sheet. */}
+              {bet?.prediction === outcome.prediction && <View style={styles.highlighter} />}
               <Text style={styles.optionOdds}>{formatOdds(outcome.odds)}</Text>
-            </View>
+            </Pressable>
           ))}
         </View>
       ) : (
@@ -105,6 +125,8 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   live: {
+    // Wider than the word needs, same Android Caveat clipping as the score.
+    minWidth: 40,
     fontFamily: 'Caveat_700Bold',
     fontSize: 18,
     color: '#b8322a',
@@ -151,12 +173,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
     borderWidth: 1.5,
     borderColor: '#26262b',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 6,
     borderBottomRightRadius: 9,
     borderBottomLeftRadius: 7,
+  },
+  // Betting is closed once the game has started: the odds stay visible, but fade back.
+  oddsClosed: {
+    opacity: 0.5,
+  },
+  highlighter: {
+    position: 'absolute',
+    left: 5,
+    right: 4,
+    top: 7,
+    bottom: 6,
+    backgroundColor: 'rgba(186, 224, 140, 0.75)',
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 3,
+    borderBottomLeftRadius: 8,
+    transform: [{rotate: '-2deg'}],
   },
   optionOdds: {
     fontFamily: 'Nunito_700Bold',

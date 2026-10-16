@@ -2,17 +2,20 @@ import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 import SketchArrow from './sub/SketchArrow';
 import GameCard from './GameCard';
 import {Game} from '../api/games';
+import {Bet, Prediction} from '../api/bets';
 
 type Props = {
   gameday: number | null;
   gamedayCount: number | null;
   // null while the games of this gameday are still loading.
   games: Game[] | null;
+  myBetsByGame: Record<number, Bet>;
+  onPick: (game: Game, prediction: Prediction) => Promise<void>;
   onChange: (gameday: number) => void;
 };
 
 // One Gameday: a switcher row to step between gamedays, then all games to that gameday as card components.
-const Gameday = ({gameday, gamedayCount, games, onChange}: Props) => {
+const Gameday = ({gameday, gamedayCount, games, myBetsByGame, onPick, onChange}: Props) => {
   const canGoBack = gameday !== null && gameday > 1;
   const canGoForward = gameday !== null && gamedayCount !== null && gameday < gamedayCount;
 
@@ -31,7 +34,7 @@ const Gameday = ({gameday, gamedayCount, games, onChange}: Props) => {
       <ScrollView contentContainerStyle={styles.games}>
         {games === null
           ? <Text style={styles.loading}>Lädt…</Text>
-          : games.map((game, index) => <GameCard key={game.id} game={game} index={index} />)}
+          : games.map((game, index) => <GameCard key={game.id} game={game} index={index} bet={myBetsByGame[game.id]} onPick={onPick} />)}
       </ScrollView>
     </View>
   );
