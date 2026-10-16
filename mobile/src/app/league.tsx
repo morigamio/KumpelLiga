@@ -107,7 +107,16 @@ const LeagueScreen = () => {
         <Pressable style={styles.tab} onPress={() => changeView('Verlauf')}>{activeTab === 'Verlauf' && <SketchFrame />}<Text style={tabTextStyle('Verlauf')}>Verlauf</Text></Pressable>
       </View>
 
-      {activeTab === 'Spiele' ? <Gameday gameday={gameday} gamedayCount={gamedayCount} games={gameday !== null ? gamesByGameday[gameday] ?? null : null} myBetsByGame={myBetsByGame} onPick={pick} onChange={setGameday} /> : <Text style={styles.placeholder}>{activeTab}</Text>}
+      {activeTab !== 'Spiele' ? (
+        <Text style={styles.placeholder}>{activeTab}</Text>
+      ) : gameday === null || gamedayCount === null ? (
+        // Without gameday and gameday count there is nothing to switch between: one centered hint instead of the whole tab.
+        <View style={styles.loading}>
+          <Text style={styles.loadingText}>Lade Spieldaten…</Text>
+        </View>
+      ) : (
+        <Gameday gameday={gameday} gamedayCount={gamedayCount} games={gamesByGameday[gameday] ?? null} myBetsByGame={myBetsByGame} onPick={pick} onChange={setGameday} />
+      )}
     </View>
   );
 };
@@ -192,6 +201,19 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: '#26262b',
+  },
+  // Positioned against the whole screen: the hint sits at about a third of the page height.
+  loading: {
+    position: 'absolute',
+    top: '33%',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontFamily: 'Caveat_700Bold',
+    fontSize: 24,
+    color: '#5a5850',
   },
   placeholder: {
     marginTop: 20,

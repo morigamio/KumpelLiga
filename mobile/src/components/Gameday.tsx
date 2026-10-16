@@ -5,8 +5,8 @@ import {Game} from '../api/games';
 import {Bet, Prediction} from '../api/bets';
 
 type Props = {
-  gameday: number | null;
-  gamedayCount: number | null;
+  gameday: number;
+  gamedayCount: number;
   // null while the games of this gameday are still loading.
   games: Game[] | null;
   myBetsByGame: Record<number, Bet>;
@@ -16,17 +16,17 @@ type Props = {
 
 // One Gameday: a switcher row to step between gamedays, then all games to that gameday as card components.
 const Gameday = ({gameday, gamedayCount, games, myBetsByGame, onPick, onChange}: Props) => {
-  const canGoBack = gameday !== null && gameday > 1;
-  const canGoForward = gameday !== null && gamedayCount !== null && gameday < gamedayCount;
+  const canGoBack = gameday > 1;
+  const canGoForward = gameday < gamedayCount;
 
   return (
     <View style={styles.gameday}>
       <View style={styles.switcher}>
-        <Pressable style={[styles.arrow, !canGoBack && styles.disabled]} disabled={!canGoBack} onPress={() => onChange(gameday! - 1)}>
+        <Pressable style={[styles.arrow, !canGoBack && styles.disabled]} disabled={!canGoBack} onPress={() => onChange(gameday - 1)}>
           <SketchArrow direction="left" />
         </Pressable>
-        <Text style={styles.title}>{gameday ? `${gameday}. Spieltag` : 'Lädt…'}</Text>
-        <Pressable style={[styles.arrow, !canGoForward && styles.disabled]} disabled={!canGoForward} onPress={() => onChange(gameday! + 1)}>
+        <Text style={styles.title}>{gameday}. Spieltag</Text>
+        <Pressable style={[styles.arrow, !canGoForward && styles.disabled]} disabled={!canGoForward} onPress={() => onChange(gameday + 1)}>
           <SketchArrow direction="right" />
         </Pressable>
       </View>
