@@ -86,6 +86,14 @@ public class LeagueController {
         return new ResponseEntity<>(paidBetsByLeagueId.stream().map(ReadBetDTO::from).toList(), HttpStatus.OK);
     }
 
+    @GetMapping("/leagues/{leagueId}/bets/mine")
+    public ResponseEntity<List<ReadBetDTO>> getMyBetsByLeagueId(@PathVariable String leagueId, Principal principal) {
+        // the participant name equals the account name, so the token alone tells us whose bets these are
+        Participant participant = participantService.findByNameAndLeagueId(principal.getName(), Long.parseLong(leagueId)).orElseThrow(NotParticipantException::new);
+        List<Bet> myBets = betService.getBetsByParticipant(participant);
+        return new ResponseEntity<>(myBets.stream().map(ReadBetDTO::from).toList(), HttpStatus.OK);
+    }
+
     @PostMapping("/leagues/{leagueId}/participants")
     public ResponseEntity<ReadParticipantDTO> joinLeagueById(@PathVariable String leagueId, @RequestBody JoinLeagueDTO data, Principal principal) {
         if (leagueService.getLeagueByLeagueId(Long.parseLong(leagueId)).isEmpty())
