@@ -156,8 +156,6 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   live: {
-    // Wider than the word needs, same Android Caveat clipping as the score.
-    minWidth: 40,
     fontSize: 18,
     color: '#b8322a',
   },
@@ -189,9 +187,6 @@ const styles = StyleSheet.create({
     color: '#9a978d',
   },
   score: {
-    // Wider than the digits need and centered: Android measures Caveat too narrow and cuts off its right edge.
-    minWidth: 72,
-    textAlign: 'center',
     fontSize: 30,
     color: '#26262b',
   },

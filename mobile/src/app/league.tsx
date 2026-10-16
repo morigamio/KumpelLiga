@@ -185,10 +185,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabText: {
-    // The text box spans the whole tab: sized to the word alone, Android measures Caveat too narrow
-    // and cuts off its right edge.
-    alignSelf: 'stretch',
-    textAlign: 'center',
     fontSize: 25,
     color: '#9a978d',
   },
