@@ -6,7 +6,7 @@ import PaperLines from '../components/sub/PaperLines';
 import SketchFrame from '../components/sub/SketchFrame';
 import Gameday from '../components/Gameday';
 import {getLeague, League} from '../api/leagues';
-import {getCurrentGameday, getGamedayCount} from '../api/games';
+import {Game, getCurrentGameday, getGamedayCount, getGamesByGameday} from '../api/games';
 
 const LeagueScreen = () => {
   const {id} = useLocalSearchParams<{id: string}>();
@@ -14,6 +14,8 @@ const LeagueScreen = () => {
   const [activeTab, setActiveTab] = useState('Spiele');
   const [gameday, setGameday] = useState<number | null>(null);
   const [gamedayCount, setGamedayCount] = useState<number | null>(null);
+  // Every gameday loaded so far, so stepping back with the arrows needs no new request.
+  const [gamesByGameday, setGamesByGameday] = useState<Record<number, Game[]>>({});
 
   // Loads the league once when the screen opens (and again if the id changes).
   useEffect(() => {
@@ -25,6 +27,16 @@ const LeagueScreen = () => {
     getCurrentGameday().then(setGameday).catch(() => setGameday(null));
     getGamedayCount().then(setGamedayCount).catch(() => setGamedayCount(null));
   }, []);
+
+  // Loads the games of the shown gameday, unless they were loaded before.
+  useEffect(() => {
+    if (gameday === null || gamesByGameday[gameday]) {
+      return;
+    }
+    getGamesByGameday(gameday)
+      .then(games => setGamesByGameday(loaded => ({...loaded, [gameday]: games})))
+      .catch(() => {});
+  }, [gameday]);
 
   const changeView = (view: string) => {
     setActiveTab(view);
@@ -63,7 +75,7 @@ const LeagueScreen = () => {
         <Pressable style={styles.tab} onPress={() => changeView('Verlauf')}>{activeTab === 'Verlauf' && <SketchFrame />}<Text style={tabTextStyle('Verlauf')}>Verlauf</Text></Pressable>
       </View>
 
-      {activeTab === 'Spiele' ? <Gameday gameday={gameday} gamedayCount={gamedayCount} onChange={setGameday} /> : <Text style={styles.placeholder}>{activeTab}</Text>}
+      {activeTab === 'Spiele' ? <Gameday gameday={gameday} gamedayCount={gamedayCount} games={gameday !== null ? gamesByGameday[gameday] ?? null : null} onChange={setGameday} /> : <Text style={styles.placeholder}>{activeTab}</Text>}
     </View>
   );
 };
