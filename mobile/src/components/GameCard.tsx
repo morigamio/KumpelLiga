@@ -39,10 +39,10 @@ const GameCard = ({game, index}: Props) => {
   ];
 
   return (
-    <View style={[styles.card, WOBBLES[index % WOBBLES.length]]}>
+    <View style={[styles.card, WOBBLES[index % WOBBLES.length], game.isFinished && styles.finished]}>
       <View style={styles.top}>
-        <Text style={styles.when}>{formatKickoff(game.matchTime)}</Text>
-        {isLive && (
+        {/* While the game runs, "Live" takes the place of the kickoff; the right side stays free for tags like 2x. */}
+        {isLive ? (
           <View style={styles.liveMark}>
             {/* A slightly lopsided blob, like a dot pressed on with a felt pen. */}
             <Svg width={12} height={12} viewBox="0 0 12 12">
@@ -50,6 +50,8 @@ const GameCard = ({game, index}: Props) => {
             </Svg>
             <Text style={styles.live}>Live</Text>
           </View>
+        ) : (
+          <Text style={styles.when}>{formatKickoff(game.matchTime)}{game.isFinished && ' · Beendet'}</Text>
         )}
       </View>
 
@@ -83,6 +85,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fffdf8',
     borderWidth: 2,
     borderColor: '#26262b',
+  },
+  // Past games fade back a little, so the open ones stand out.
+  finished: {
+    opacity: 0.55,
   },
   top: {
     flexDirection: 'row',
