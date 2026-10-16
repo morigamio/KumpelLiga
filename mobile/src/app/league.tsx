@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
-import Svg, {Ellipse} from 'react-native-svg';
 import {router, useLocalSearchParams} from 'expo-router';
 import PaperLines from '../components/sub/PaperLines';
 import SketchFrame from '../components/sub/SketchFrame';
@@ -9,6 +8,7 @@ import {getLeague, League} from '../api/leagues';
 import {Game, getCurrentGameday, getGamedayCount, getGamesByGameday} from '../api/games';
 import {Bet, changeBet, deleteBet, getMyBets, placeBet, Prediction} from '../api/bets';
 import HandText from '../components/sub/HandText';
+import OptionsDots from '../components/sub/OptionsDots';
 
 const LeagueScreen = () => {
   const {id} = useLocalSearchParams<{id: string}>();
@@ -87,11 +87,7 @@ const LeagueScreen = () => {
           <HandText style={styles.backText}>‹ Meine Ligen</HandText>
         </Pressable>
         <Pressable style={styles.options}>
-          <Svg width={28} height={10} viewBox="0 0 28 10" fill="#26262b">
-            <Ellipse cx={4} cy={5.5} rx={3.2} ry={3} />
-            <Ellipse cx={14} cy={4.8} rx={3} ry={3.2} />
-            <Ellipse cx={24} cy={5.3} rx={3.2} ry={3.1} />
-          </Svg>
+          <OptionsDots />
         </Pressable>
       </View>
 

@@ -1,10 +1,11 @@
 import {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import Svg, {Path} from 'react-native-svg';
 import {Game} from '../api/games';
 import {Bet, Prediction} from '../api/bets';
 import HandText from './sub/HandText';
 import SketchRing from './sub/SketchRing';
+import Smiley from './sub/Smiley';
+import LiveDot from './sub/LiveDot';
 
 type Props = {
   game: Game;
@@ -38,28 +39,6 @@ const BIG_WIN = 10;
 
 const GREEN = '#2f6f4f';
 const RED = '#b8322a';
-
-// The hand-drawn smileys from the result cards in the design sheet.
-const Smiley = ({mood}: {mood: 'happy' | 'sad' | 'starry'}) => {
-  const color = mood === 'sad' ? RED : GREEN;
-  if (mood === 'starry') {
-    return (
-      <Svg width={26} height={26} viewBox="0 0 22 22" fill="none" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-        <Path d="M11 1.5 C 17.5 1.5, 20.5 6, 20.5 11 C 20.5 16.5, 16.5 20.5, 11 20.5 C 5 20.5, 1.5 16.5, 1.5 11 C 1.5 5.5, 5.5 1.5, 12 2" />
-        <Path d="M7 5.8 L 7.8 8.2 L 10.2 9 L 7.8 9.8 L 7 12.2 L 6.2 9.8 L 3.8 9 L 6.2 8.2 Z" fill={color} />
-        <Path d="M15 5.8 L 15.8 8.2 L 18.2 9 L 15.8 9.8 L 15 12.2 L 14.2 9.8 L 11.8 9 L 14.2 8.2 Z" fill={color} />
-        <Path d="M6 13.5 L 16 13.5 C 14.5 17.8, 7.5 17.8, 6 13.5 Z" />
-      </Svg>
-    );
-  }
-  return (
-    <Svg width={22} height={22} viewBox="0 0 22 22" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round">
-      <Path d="M11 2 C 17 2, 20 6, 20 11 C 20 16, 16 20, 11 20 C 5 20, 2 16, 2 11 C 2 6, 6 2, 12 2.5" />
-      <Path d="M8 8.5 L 8 9.5 M14 8.3 L 14 9.3" />
-      <Path d={mood === 'happy' ? 'M6.5 13 C 9 16.5, 13.5 16.5, 15.5 12.8' : 'M6.5 15.5 C 9 12.5, 13 12.5, 15.5 15.8'} />
-    </Svg>
-  );
-};
 
 // One game: kickoff, both teams with "vs" or the score, and the three odds.
 const GameCard = ({game, index, bet, onPick}: Props) => {
@@ -100,10 +79,7 @@ const GameCard = ({game, index, bet, onPick}: Props) => {
         {/* While the game runs, "Live" takes the place of the kickoff; the right side stays free for tags like 2x. */}
         {isLive ? (
           <View style={styles.liveMark}>
-            {/* A slightly lopsided blob, like a dot pressed on with a felt pen. */}
-            <Svg width={12} height={12} viewBox="0 0 12 12">
-              <Path d="M6 1.2 C 9.1 1, 11 3.4, 10.8 6.3 C 10.6 9.2, 8.2 11, 5.6 10.8 C 2.9 10.6, 1.1 8.5, 1.3 5.7 C 1.5 3, 3.4 1.4, 6 1.2" fill="#b8322a" />
-            </Svg>
+            <LiveDot />
             <HandText style={styles.live}>Live</HandText>
           </View>
         ) : (

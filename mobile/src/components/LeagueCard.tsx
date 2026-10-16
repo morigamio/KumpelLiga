@@ -1,9 +1,9 @@
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import Svg, {Path} from 'react-native-svg';
 import {League} from '../api/leagues';
 import BuddyIcon from './sub/BuddyIcon';
 import SketchArrow from './sub/SketchArrow';
 import HandText from './sub/HandText';
+import Crown from './sub/Crown';
 
 type Props = {
   league: League;
@@ -25,17 +25,7 @@ const LeagueCard = ({league, myName, index, onPress}: Props) => {
 
   return (
     <Pressable style={[styles.card, WOBBLES[index % WOBBLES.length]]} onPress={onPress}>
-      {isMine && (
-        <Svg style={styles.crown} width={30} height={20} viewBox="0 0 30 20" fill="none">
-          <Path
-            d="M4 17 L 3 5 L 10 11 L 15 2 L 20 11 L 27 4 L 26 17 C 19 18, 11 18, 4 17"
-            stroke="#2b4fb3"
-            strokeWidth={2.2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </Svg>
-      )}
+      {isMine && <Crown style={styles.crown} />}
       <View style={styles.crest}>
         <HandText style={styles.crestLetter}>{league.name.charAt(0).toUpperCase()}</HandText>
       </View>
