@@ -8,6 +8,7 @@ import Gameday from '../components/Gameday';
 import {getLeague, League} from '../api/leagues';
 import {Game, getCurrentGameday, getGamedayCount, getGamesByGameday} from '../api/games';
 import {Bet, changeBet, deleteBet, getMyBets, placeBet, Prediction} from '../api/bets';
+import HandText from '../components/sub/HandText';
 
 const LeagueScreen = () => {
   const {id} = useLocalSearchParams<{id: string}>();
@@ -83,7 +84,7 @@ const LeagueScreen = () => {
 
       <View style={styles.topRow}>
         <Pressable style={styles.back} onPress={() => router.back()}>
-          <Text style={styles.backText}>‹ Meine Ligen</Text>
+          <HandText style={styles.backText}>‹ Meine Ligen</HandText>
         </Pressable>
         <Pressable style={styles.options}>
           <Svg width={28} height={10} viewBox="0 0 28 10" fill="#26262b">
@@ -96,15 +97,15 @@ const LeagueScreen = () => {
 
       <View style={styles.titleRow}>
         <View style={styles.crest}>
-          <Text style={styles.crestLetter}>{league ? league.name.charAt(0).toUpperCase() : ''}</Text>
+          <HandText style={styles.crestLetter}>{league ? league.name.charAt(0).toUpperCase() : ''}</HandText>
         </View>
-        <Text style={styles.name} numberOfLines={2}>{league ? league.name : 'Lädt…'}</Text>
+        <HandText style={styles.name} numberOfLines={2}>{league ? league.name : 'Lädt…'}</HandText>
       </View>
 
       <View style={styles.tabs}>
-        <Pressable style={styles.tab} onPress={() => changeView('Spiele')}>{activeTab === 'Spiele' && <SketchFrame />}<Text style={tabTextStyle('Spiele')}>Spiele</Text></Pressable>
-        <Pressable style={styles.tab} onPress={() => changeView('Tabelle')}>{activeTab === 'Tabelle' && <SketchFrame />}<Text style={tabTextStyle('Tabelle')}>Tabelle</Text></Pressable>
-        <Pressable style={styles.tab} onPress={() => changeView('Verlauf')}>{activeTab === 'Verlauf' && <SketchFrame />}<Text style={tabTextStyle('Verlauf')}>Verlauf</Text></Pressable>
+        <Pressable style={styles.tab} onPress={() => changeView('Spiele')}>{activeTab === 'Spiele' && <SketchFrame />}<HandText style={tabTextStyle('Spiele')}>Spiele</HandText></Pressable>
+        <Pressable style={styles.tab} onPress={() => changeView('Tabelle')}>{activeTab === 'Tabelle' && <SketchFrame />}<HandText style={tabTextStyle('Tabelle')}>Tabelle</HandText></Pressable>
+        <Pressable style={styles.tab} onPress={() => changeView('Verlauf')}>{activeTab === 'Verlauf' && <SketchFrame />}<HandText style={tabTextStyle('Verlauf')}>Verlauf</HandText></Pressable>
       </View>
 
       {activeTab !== 'Spiele' ? (
@@ -112,7 +113,7 @@ const LeagueScreen = () => {
       ) : gameday === null || gamedayCount === null ? (
         // Without gameday and gameday count there is nothing to switch between: one centered hint instead of the whole tab.
         <View style={styles.loading}>
-          <Text style={styles.loadingText}>Lade Spieldaten…</Text>
+          <HandText style={styles.loadingText}>Lade Spieldaten…</HandText>
         </View>
       ) : (
         <Gameday gameday={gameday} gamedayCount={gamedayCount} games={gamesByGameday[gameday] ?? null} myBetsByGame={myBetsByGame} onPick={pick} onChange={setGameday} />
@@ -139,7 +140,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   backText: {
-    fontFamily: 'Caveat_700Bold',
     fontSize: 23,
     color: '#26262b',
   },
@@ -169,13 +169,11 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 24,
   },
   crestLetter: {
-    fontFamily: 'Caveat_700Bold',
     fontSize: 30,
     color: '#2f6f4f',
   },
   name: {
     flex: 1,
-    fontFamily: 'Caveat_700Bold',
     fontSize: 32,
     color: '#26262b',
   },
@@ -195,7 +193,6 @@ const styles = StyleSheet.create({
     // and cuts off its right edge.
     alignSelf: 'stretch',
     textAlign: 'center',
-    fontFamily: 'Caveat_700Bold',
     fontSize: 25,
     color: '#9a978d',
   },
@@ -211,7 +208,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingText: {
-    fontFamily: 'Caveat_700Bold',
     fontSize: 24,
     color: '#5a5850',
   },

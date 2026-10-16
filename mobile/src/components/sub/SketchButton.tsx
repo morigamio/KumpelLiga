@@ -1,4 +1,5 @@
 import {Pressable, StyleSheet, Text} from 'react-native';
+import HandText from './HandText';
 
 type Props = {
   title: string;
@@ -15,7 +16,7 @@ const SketchButton = ({title, onPress, variant = 'primary', disabled = false}: P
       style={[styles.button, isPrimary ? styles.primary : styles.secondary, disabled && styles.disabled]}
       disabled={disabled}
       onPress={onPress}>
-      <Text style={[styles.text, isPrimary && styles.primaryText]}>{title}</Text>
+      <HandText style={[styles.text, isPrimary && styles.primaryText]}>{title}</HandText>
     </Pressable>
   );
 };
@@ -47,7 +48,6 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 30,
   },
   text: {
-    fontFamily: 'Caveat_700Bold',
     fontSize: 30,
     color: '#26262b',
   },

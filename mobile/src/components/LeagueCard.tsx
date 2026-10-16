@@ -3,6 +3,7 @@ import Svg, {Path} from 'react-native-svg';
 import {League} from '../api/leagues';
 import BuddyIcon from './sub/BuddyIcon';
 import SketchArrow from './sub/SketchArrow';
+import HandText from './sub/HandText';
 
 type Props = {
   league: League;
@@ -36,7 +37,7 @@ const LeagueCard = ({league, myName, index, onPress}: Props) => {
         </Svg>
       )}
       <View style={styles.crest}>
-        <Text style={styles.crestLetter}>{league.name.charAt(0).toUpperCase()}</Text>
+        <HandText style={styles.crestLetter}>{league.name.charAt(0).toUpperCase()}</HandText>
       </View>
       <Text style={styles.name} numberOfLines={1}>{league.name}</Text>
       <View style={styles.members}>
@@ -79,7 +80,6 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
   },
   crestLetter: {
-    fontFamily: 'Caveat_700Bold',
     fontSize: 26,
     color: '#2f6f4f',
   },

@@ -7,6 +7,7 @@ import SketchField from '../components/sub/SketchField';
 import SketchButton from '../components/sub/SketchButton';
 import {login, register} from '../api/auth';
 import {getToken, saveToken} from '../api/client';
+import HandText from '../components/sub/HandText';
 
 const LoginScreen = () => {
   const [name, setName] = useState('');
@@ -63,15 +64,15 @@ const LoginScreen = () => {
 
         <BuddiesDoodle/>
 
-        <Text style={styles.title}>
+        <HandText style={styles.title}>
           Kumpel<Text style={styles.titleAccent}>Liga</Text>
-        </Text>
-        <Text style={styles.slogan}>Für Kumpels und Kumpelinen.</Text>
+        </HandText>
+        <HandText weight="medium" style={styles.slogan}>Für Kumpels und Kumpelinen.</HandText>
 
         <SketchField placeholder="Benutzername" value={name} onChangeText={setName} />
         <SketchField placeholder="Passwort" secure value={password} onChangeText={setPassword} />
 
-        {error !== '' && <Text style={styles.error}>{error}</Text>}
+        {error !== '' && <HandText style={styles.error}>{error}</HandText>}
 
         <View style={styles.spacer} />
 
@@ -94,7 +95,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
   },
   title: {
-    fontFamily: 'Caveat_700Bold',
     fontSize: 58,
     color: '#26262b',
     textAlign: 'center',
@@ -103,7 +103,6 @@ const styles = StyleSheet.create({
     color: '#2f6f4f',
   },
   slogan: {
-    fontFamily: 'Caveat_500Medium',
     fontSize: 24,
     color: '#4a4943',
     textAlign: 'center',
@@ -111,7 +110,6 @@ const styles = StyleSheet.create({
   },
   error: {
     marginTop: 14,
-    fontFamily: 'Caveat_700Bold',
     fontSize: 22,
     color: '#b8322a',
     textAlign: 'center',

@@ -3,6 +3,7 @@ import SketchArrow from './sub/SketchArrow';
 import GameCard from './GameCard';
 import {Game} from '../api/games';
 import {Bet, Prediction} from '../api/bets';
+import HandText from './sub/HandText';
 
 type Props = {
   gameday: number;
@@ -25,7 +26,7 @@ const Gameday = ({gameday, gamedayCount, games, myBetsByGame, onPick, onChange}:
         <Pressable style={[styles.arrow, !canGoBack && styles.disabled]} disabled={!canGoBack} onPress={() => onChange(gameday - 1)}>
           <SketchArrow direction="left" />
         </Pressable>
-        <Text style={styles.title}>{gameday}. Spieltag</Text>
+        <HandText style={styles.title}>{gameday}. Spieltag</HandText>
         <Pressable style={[styles.arrow, !canGoForward && styles.disabled]} disabled={!canGoForward} onPress={() => onChange(gameday + 1)}>
           <SketchArrow direction="right" />
         </Pressable>
@@ -63,7 +64,6 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
     textAlign: 'center',
-    fontFamily: 'Caveat_700Bold',
     fontSize: 26,
     color: '#26262b',
   },

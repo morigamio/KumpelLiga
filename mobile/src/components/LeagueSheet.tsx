@@ -3,6 +3,7 @@ import {KeyboardAvoidingView, Modal, Pressable, StyleSheet, Text, View} from 're
 import SketchField from './sub/SketchField';
 import SketchButton from './sub/SketchButton';
 import {createLeague, joinLeague} from '../api/leagues';
+import HandText from './sub/HandText';
 
 export type SheetMode = 'join' | 'create';
 
@@ -49,10 +50,10 @@ const LeagueSheet = ({mode, onClose, onDone}: Props) => {
       <KeyboardAvoidingView style={styles.backdrop} behavior="padding">
         <Pressable style={styles.outside} onPress={onClose} />
         <View style={styles.sheet}>
-          <Text style={styles.title}>{TEXTS[mode].title}</Text>
+          <HandText style={styles.title}>{TEXTS[mode].title}</HandText>
           <SketchField placeholder="Liga-Name" value={name} onChangeText={setName} />
           <SketchField placeholder="Liga-Passwort" secure value={password} onChangeText={setPassword} />
-          {error !== '' && <Text style={styles.error}>{error}</Text>}
+          {error !== '' && <HandText style={styles.error}>{error}</HandText>}
           <SketchButton title={busy ? 'Moment…' : TEXTS[mode].button} disabled={busy} onPress={submit} />
           <SketchButton title="Abbrechen" variant="secondary" disabled={busy} onPress={onClose} />
         </View>
@@ -84,13 +85,11 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 18,
   },
   title: {
-    fontFamily: 'Caveat_700Bold',
     fontSize: 36,
     color: '#26262b',
   },
   error: {
     marginTop: 14,
-    fontFamily: 'Caveat_700Bold',
     fontSize: 22,
     color: '#b8322a',
     textAlign: 'center',

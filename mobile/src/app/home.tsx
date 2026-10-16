@@ -9,6 +9,7 @@ import SketchButton from '../components/sub/SketchButton';
 import {getMyName} from '../api/account';
 import {getMyLeagues, League} from '../api/leagues';
 import {deleteToken, NotLoggedInError} from '../api/client';
+import HandText from '../components/sub/HandText';
 
 const HomeScreen = () => {
   const [myName, setMyName] = useState('');
@@ -78,13 +79,13 @@ const HomeScreen = () => {
         <PaperLines />
 
         <View style={styles.header}>
-          <Text style={styles.title} numberOfLines={1}>{myName ? `Hallo, ${myName}!` : 'Hallo!'}</Text>
+          <HandText style={styles.title} numberOfLines={1}>{myName ? `Hallo, ${myName}!` : 'Hallo!'}</HandText>
           <LogoutButton onPress={logout} />
         </View>
 
-        <Text style={styles.heading}>
+        <HandText style={styles.heading}>
           Meine Ligen <Text style={styles.count}>({leagues.length})</Text>
-        </Text>
+        </HandText>
 
         {leagues.map((league, index) => (
           <LeagueCard
@@ -99,7 +100,7 @@ const HomeScreen = () => {
         {loaded && leagues.length === 0 && error === '' && (
           <Text style={styles.empty}>Du bist noch in keiner Liga. Tritt einer bei oder gründe eine!</Text>
         )}
-        {error !== '' && <Text style={styles.error}>{error}</Text>}
+        {error !== '' && <HandText style={styles.error}>{error}</HandText>}
 
         <View style={styles.spacer} />
 
@@ -132,13 +133,11 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    fontFamily: 'Caveat_700Bold',
     fontSize: 44,
     color: '#26262b',
   },
   heading: {
     marginTop: 24,
-    fontFamily: 'Caveat_700Bold',
     fontSize: 32,
     color: '#26262b',
   },
@@ -154,7 +153,6 @@ const styles = StyleSheet.create({
   },
   error: {
     marginTop: 14,
-    fontFamily: 'Caveat_700Bold',
     fontSize: 22,
     color: '#b8322a',
   },

@@ -3,6 +3,8 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
 import {Game} from '../api/games';
 import {Bet, Prediction} from '../api/bets';
+import HandText from './sub/HandText';
+import SketchRing from './sub/SketchRing';
 
 type Props = {
   game: Game;
@@ -31,6 +33,34 @@ const formatKickoff = (matchTime: string) => {
 // German decimal comma, like the web app.
 const formatOdds = (odds: number) => odds.toFixed(2).replace('.', ',');
 
+// From this many points on (2x included), the smiley gets star eyes.
+const BIG_WIN = 10;
+
+const GREEN = '#2f6f4f';
+const RED = '#b8322a';
+
+// The hand-drawn smileys from the result cards in the design sheet.
+const Smiley = ({mood}: {mood: 'happy' | 'sad' | 'starry'}) => {
+  const color = mood === 'sad' ? RED : GREEN;
+  if (mood === 'starry') {
+    return (
+      <Svg width={26} height={26} viewBox="0 0 22 22" fill="none" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+        <Path d="M11 1.5 C 17.5 1.5, 20.5 6, 20.5 11 C 20.5 16.5, 16.5 20.5, 11 20.5 C 5 20.5, 1.5 16.5, 1.5 11 C 1.5 5.5, 5.5 1.5, 12 2" />
+        <Path d="M7 5.8 L 7.8 8.2 L 10.2 9 L 7.8 9.8 L 7 12.2 L 6.2 9.8 L 3.8 9 L 6.2 8.2 Z" fill={color} />
+        <Path d="M15 5.8 L 15.8 8.2 L 18.2 9 L 15.8 9.8 L 15 12.2 L 14.2 9.8 L 11.8 9 L 14.2 8.2 Z" fill={color} />
+        <Path d="M6 13.5 L 16 13.5 C 14.5 17.8, 7.5 17.8, 6 13.5 Z" />
+      </Svg>
+    );
+  }
+  return (
+    <Svg width={22} height={22} viewBox="0 0 22 22" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round">
+      <Path d="M11 2 C 17 2, 20 6, 20 11 C 20 16, 16 20, 11 20 C 5 20, 2 16, 2 11 C 2 6, 6 2, 12 2.5" />
+      <Path d="M8 8.5 L 8 9.5 M14 8.3 L 14 9.3" />
+      <Path d={mood === 'happy' ? 'M6.5 13 C 9 16.5, 13.5 16.5, 15.5 12.8' : 'M6.5 15.5 C 9 12.5, 13 12.5, 15.5 15.8'} />
+    </Svg>
+  );
+};
+
 // One game: kickoff, both teams with "vs" or the score, and the three odds.
 const GameCard = ({game, index, bet, onPick}: Props) => {
   // True while a bet request is running, so a second tap can't send a second request.
@@ -38,6 +68,16 @@ const GameCard = ({game, index, bet, onPick}: Props) => {
   const hasStarted = new Date(game.matchTime).getTime() <= Date.now();
   const isLive = hasStarted && !game.isFinished;
   const hasOdds = game.oddsHome > 0 || game.oddsDraw > 0 || game.oddsAway > 0;
+
+  // Once my bet is settled, the team I picked gets circled: green if I won, red if I lost. A draw pick has no team to circle.
+  const isSettled = game.isFinished && bet !== undefined && bet.winnings !== null;
+  const ringColor = isSettled && bet!.winnings! > 0 ? GREEN : RED;
+
+  // Points line under the score: "+3,70", for a won 2x bet the odds with "2x" in front ("+2x1,85"), "+0" when lost.
+  const won = isSettled && bet!.winnings! > 0;
+  const pickedOdds = bet?.prediction === 'homeTeam' ? game.oddsHome : bet?.prediction === 'awayTeam' ? game.oddsAway : game.oddsDraw;
+  const points = !won ? '+0' : bet!.isDouble ? `+2x${formatOdds(pickedOdds)}` : `+${formatOdds(bet!.winnings!)}`;
+  const mood = !won ? 'sad' : bet!.winnings! >= BIG_WIN ? 'starry' : 'happy';
 
   const outcomes: {prediction: Prediction; odds: number}[] = [
     {prediction: 'homeTeam', odds: game.oddsHome},
@@ -64,7 +104,7 @@ const GameCard = ({game, index, bet, onPick}: Props) => {
             <Svg width={12} height={12} viewBox="0 0 12 12">
               <Path d="M6 1.2 C 9.1 1, 11 3.4, 10.8 6.3 C 10.6 9.2, 8.2 11, 5.6 10.8 C 2.9 10.6, 1.1 8.5, 1.3 5.7 C 1.5 3, 3.4 1.4, 6 1.2" fill="#b8322a" />
             </Svg>
-            <Text style={styles.live}>Live</Text>
+            <HandText style={styles.live}>Live</HandText>
           </View>
         ) : (
           <Text style={styles.when}>{formatKickoff(game.matchTime)}{game.isFinished && ' · Beendet'}</Text>
@@ -72,12 +112,27 @@ const GameCard = ({game, index, bet, onPick}: Props) => {
       </View>
 
       <View style={styles.teams}>
-        <Text style={[styles.team, styles.home]} numberOfLines={2}>{game.homeTeam}</Text>
+        <View style={[styles.side, styles.home]}>
+          {isSettled && bet!.prediction === 'homeTeam'
+            ? <SketchRing color={ringColor} tilt={-3}><Text style={styles.team} numberOfLines={2}>{game.homeTeam}</Text></SketchRing>
+            : <Text style={styles.team} numberOfLines={2}>{game.homeTeam}</Text>}
+        </View>
         {hasStarted
-          ? <Text style={styles.score}>{game.goalsHomeTeam} : {game.goalsAwayTeam}</Text>
-          : <Text style={styles.vs}>vs</Text>}
-        <Text style={[styles.team, styles.away]} numberOfLines={2}>{game.awayTeam}</Text>
+          ? <HandText style={styles.score}>{game.goalsHomeTeam} : {game.goalsAwayTeam}</HandText>
+          : <HandText style={styles.vs}>vs</HandText>}
+        <View style={[styles.side, styles.away]}>
+          {isSettled && bet!.prediction === 'awayTeam'
+            ? <SketchRing color={ringColor} tilt={2}><Text style={[styles.team, styles.awayText]} numberOfLines={2}>{game.awayTeam}</Text></SketchRing>
+            : <Text style={[styles.team, styles.awayText]} numberOfLines={2}>{game.awayTeam}</Text>}
+        </View>
       </View>
+
+      {isSettled && (
+        <View style={styles.result}>
+          <HandText style={[styles.points, {color: won ? GREEN : RED}]}>{points}</HandText>
+          <Smiley mood={mood} />
+        </View>
+      )}
 
       {/* Once the game is over there is nothing left to bet on. */}
       {game.isFinished ? null : hasOdds ? (
@@ -127,7 +182,6 @@ const styles = StyleSheet.create({
   live: {
     // Wider than the word needs, same Android Caveat clipping as the score.
     minWidth: 40,
-    fontFamily: 'Caveat_700Bold',
     fontSize: 18,
     color: '#b8322a',
   },
@@ -137,20 +191,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  team: {
+  side: {
     flex: 1,
+  },
+  team: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 16,
     color: '#26262b',
   },
   home: {
-    textAlign: 'left',
+    alignItems: 'flex-start',
   },
   away: {
+    alignItems: 'flex-end',
+  },
+  awayText: {
     textAlign: 'right',
   },
   vs: {
-    fontFamily: 'Caveat_700Bold',
     fontSize: 22,
     color: '#9a978d',
   },
@@ -158,9 +216,18 @@ const styles = StyleSheet.create({
     // Wider than the digits need and centered: Android measures Caveat too narrow and cuts off its right edge.
     minWidth: 72,
     textAlign: 'center',
-    fontFamily: 'Caveat_700Bold',
     fontSize: 30,
     color: '#26262b',
+  },
+  result: {
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  points: {
+    fontSize: 28,
   },
   odds: {
     marginTop: 12,
