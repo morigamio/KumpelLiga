@@ -7,6 +7,8 @@ import dev.morigamio.kumpelliga.odds.spi.OddsDataClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +51,8 @@ public class OddsService {
                     log.error("Can not find game with homeTeam: %s and awayTeam: %s".formatted(data.homeTeam(), data.awayTeam()));
                     continue;
                 }
+                // odds are frozen at kickoff: the API also delivers live odds, which must not overwrite the ones people bet on
+                if (!optGame.get().getMatchTime().isAfter(LocalDateTime.now(ZoneId.of("Europe/Berlin")))) continue;
                 Odds odd = oddsPersistence.findByGameId(optGame.get().getId()).orElse(new Odds());
                 odd.setGame(optGame.get());
                 odd.setOddsHome(data.oddsHome());
