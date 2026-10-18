@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 @AllArgsConstructor
@@ -27,4 +28,9 @@ public class Game {
     private LocalDateTime matchTime;
     private int gameDay;
     private boolean isFinished;
+
+    // match times are stored as German local time, so "now" has to be German time as well
+    public boolean hasStarted() {
+        return !matchTime.isAfter(LocalDateTime.now(ZoneId.of("Europe/Berlin")));
+    }
 }

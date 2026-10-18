@@ -8,8 +8,6 @@ import dev.morigamio.kumpelliga.participant.ParticipantService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +35,9 @@ public class BetService {
 
         Game game = gameService.getGameById(gameId).orElseThrow(GameNotBettableException::new);
 
+        // betting closes at kickoff
+        if (game.hasStarted()) throw new GameHasStartedException();
+
         // check for a bet from this participant for this game
         boolean alreadyExists = betRepository.existsByParticipantIdAndGameId(participant.getId(), gameId);
         if (alreadyExists) throw new BetAlreadyExistsException();
@@ -49,7 +50,7 @@ public class BetService {
 
     @Transactional
     public Bet updateBet(String name, Long betId, String prediction) {
-        Bet bet = validateBetOwner(name, betId);
+        Bet bet = validateEditableBet(name, betId);
 
         // update bet according to new values
         bet.setPrediction(prediction);
@@ -59,7 +60,7 @@ public class BetService {
 
     @Transactional
     public List<Bet> updateBetToDouble(String name, Long betId) {
-        Bet bet = validateBetOwner(name, betId);
+        Bet bet = validateEditableBet(name, betId);
         int gameDay = bet.getGame().getGameDay();
         Participant participant = bet.getParticipant();
 
@@ -89,7 +90,7 @@ public class BetService {
 
     @Transactional
     public void deleteBet(String name, Long betId) {
-        Bet bet = validateBetOwner(name, betId);
+        Bet bet = validateEditableBet(name, betId);
         betRepository.deleteById(bet.getId());
     }
 
@@ -115,9 +116,16 @@ public class BetService {
         return bet;
     }
 
+    // only the owner may change a bet, and only until the game kicks off
+    private Bet validateEditableBet(String name, Long betId) {
+        Bet bet = validateBetOwner(name, betId);
+        if (bet.getGame().hasStarted()) throw new GameHasStartedException();
+        return bet;
+    }
+
     private boolean isDoubleAlreadyUsed(List<Bet> gameDayBets) {
         return gameDayBets.stream()
-                .anyMatch(b -> b.isDouble() && b.getGame().getMatchTime().isBefore(LocalDateTime.now(ZoneId.of("Europe/Berlin"))));
+                .anyMatch(b -> b.isDouble() && b.getGame().hasStarted());
     }
 
     public List<Bet> getPaidBetsByLeagueId(long leagueId) {

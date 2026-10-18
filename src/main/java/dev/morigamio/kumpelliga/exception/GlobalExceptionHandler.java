@@ -81,6 +81,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Double bet was already used by this participant for this gameday.");
     }
 
+    @ExceptionHandler(GameHasStartedException.class)
+    public ResponseEntity<String> handleGameHasStarted() {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Game has already started, bets can no longer be changed.");
+    }
+
     @ExceptionHandler(LeagueAlreadyExistsException.class)
     public ResponseEntity<String> handleLeagueAlreadyExists(LeagueAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
