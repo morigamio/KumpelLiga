@@ -12,13 +12,18 @@ type Props = {
   games: Game[] | null;
   myBetsByGame: Record<number, Bet>;
   onPick: (game: Game, prediction: Prediction) => Promise<void>;
+  onDouble: (game: Game) => Promise<void>;
   onChange: (gameday: number) => void;
 };
 
 // One Gameday: a switcher row to step between gamedays, then all games to that gameday as card components.
-const Gameday = ({gameday, gamedayCount, games, myBetsByGame, onPick, onChange}: Props) => {
+const Gameday = ({gameday, gamedayCount, games, myBetsByGame, onPick, onDouble, onChange}: Props) => {
   const canGoBack = gameday > 1;
   const canGoForward = gameday < gamedayCount;
+
+  // My 2x is used up once the game carrying it has kicked off. Derived on every render, so it can't go stale.
+  const isDoubleUsed = (games ?? []).some(game =>
+    myBetsByGame[game.id]?.isDouble && new Date(game.matchTime).getTime() <= Date.now());
 
   return (
     <View style={styles.gameday}>
@@ -35,7 +40,7 @@ const Gameday = ({gameday, gamedayCount, games, myBetsByGame, onPick, onChange}:
       <ScrollView contentContainerStyle={styles.games}>
         {games === null
           ? <Text style={styles.loading}>Lädt…</Text>
-          : games.map((game, index) => <GameCard key={game.id} game={game} index={index} bet={myBetsByGame[game.id]} onPick={onPick} />)}
+          : games.map((game, index) => <GameCard key={game.id} game={game} index={index} bet={myBetsByGame[game.id]} isDoubleUsed={isDoubleUsed} onPick={onPick} onDouble={onDouble} />)}
       </ScrollView>
     </View>
   );

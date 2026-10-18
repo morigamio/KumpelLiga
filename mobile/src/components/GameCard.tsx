@@ -6,13 +6,18 @@ import HandText from './sub/HandText';
 import SketchRing from './sub/SketchRing';
 import Smiley from './sub/Smiley';
 import LiveDot from './sub/LiveDot';
+import DoubleTag from './sub/DoubleTag';
+import Highlighter from './sub/Highlighter';
 
 type Props = {
   game: Game;
   index: number;
   // My bet on this game, if I placed one.
   bet: Bet | undefined;
+  // True once the game carrying my 2x of this gameday has kicked off: then 2x can't move anymore.
+  isDoubleUsed: boolean;
   onPick: (game: Game, prediction: Prediction) => Promise<void>;
+  onDouble: (game: Game) => Promise<void>;
 };
 
 // Slightly different corners per card, like the league cards on Home.
@@ -41,12 +46,18 @@ const GREEN = '#2f6f4f';
 const RED = '#b8322a';
 
 // One game: kickoff, both teams with "vs" or the score, and the three odds.
-const GameCard = ({game, index, bet, onPick}: Props) => {
+const GameCard = ({game, index, bet, isDoubleUsed, onPick, onDouble}: Props) => {
   // True while a bet request is running, so a second tap can't send a second request.
   const [busy, setBusy] = useState(false);
   const hasStarted = new Date(game.matchTime).getTime() <= Date.now();
   const isLive = hasStarted && !game.isFinished;
   const hasOdds = game.oddsHome > 0 || game.oddsDraw > 0 || game.oddsAway > 0;
+
+  // The game that got my 2x keeps its marked tag, even after kickoff.
+  const isDouble = bet?.isDouble ?? false;
+  // Once 2x can't change anymore, the tag fades like a finished card: my 2x from kickoff on,
+  // all other tags as soon as the gameday's 2x is used up. Finished cards fade as a whole already.
+  const doubleFaded = !game.isFinished && (isDouble ? hasStarted : isDoubleUsed);
 
   // Once my bet is settled, the team I picked gets circled: green if I won, red if I lost. A draw pick has no team to circle.
   const isSettled = game.isFinished && bet !== undefined && bet.winnings !== null;
@@ -64,14 +75,18 @@ const GameCard = ({game, index, bet, onPick}: Props) => {
     {prediction: 'awayTeam', odds: game.oddsAway},
   ];
 
-  const pick = async (prediction: Prediction) => {
+  // Runs one bet request at a time: odds and 2x tag stay blocked until it is done.
+  const run = async (request: () => Promise<void>) => {
     setBusy(true);
     try {
-      await onPick(game, prediction);
+      await request();
     } finally {
       setBusy(false);
     }
   };
+
+  // 2x needs a bet on a game that hasn't started, and only while the gameday's 2x isn't used up.
+  const canTapDouble = bet !== undefined && !hasStarted && !isDoubleUsed && !busy;
 
   return (
     <View style={[styles.card, WOBBLES[index % WOBBLES.length], game.isFinished && styles.finished]}>
@@ -85,6 +100,11 @@ const GameCard = ({game, index, bet, onPick}: Props) => {
         ) : (
           <Text style={styles.when}>{formatKickoff(game.matchTime)}{game.isFinished && ' · Beendet'}</Text>
         )}
+        <DoubleTag
+          marked={isDouble}
+          onPress={canTapDouble ? () => run(() => onDouble(game)) : undefined}
+          style={doubleFaded && styles.finished}
+        />
       </View>
 
       <View style={styles.teams}>
@@ -115,9 +135,9 @@ const GameCard = ({game, index, bet, onPick}: Props) => {
         <View style={[styles.odds, hasStarted && styles.oddsClosed]}>
           {outcomes.map(outcome => (
             // Betting closes at kickoff.
-            <Pressable key={outcome.prediction} style={styles.option} disabled={hasStarted || busy} onPress={() => pick(outcome.prediction)}>
-              {/* My pick gets a light green highlighter patch behind the odds, as in the design sheet. */}
-              {bet?.prediction === outcome.prediction && <View style={styles.highlighter} />}
+            <Pressable key={outcome.prediction} style={styles.option} disabled={hasStarted || busy} onPress={() => run(() => onPick(game, outcome.prediction))}>
+              {/* My pick gets a light green highlighter swipe behind the odds. */}
+              {bet?.prediction === outcome.prediction && <Highlighter color="rgba(186, 224, 140, 0.75)" style={styles.highlighter} />}
               <Text style={styles.optionOdds}>{formatOdds(outcome.odds)}</Text>
             </Pressable>
           ))}
@@ -143,6 +163,7 @@ const styles = StyleSheet.create({
   },
   top: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
   when: {
@@ -224,17 +245,11 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   highlighter: {
-    position: 'absolute',
     left: 5,
     right: 4,
-    top: 7,
-    bottom: 6,
-    backgroundColor: 'rgba(186, 224, 140, 0.75)',
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 3,
-    borderBottomLeftRadius: 8,
-    transform: [{rotate: '-2deg'}],
+    top: 2,
+    bottom: 1,
+    transform: [{rotate: '-0.5deg'}],
   },
   optionOdds: {
     fontFamily: 'Nunito_700Bold',

@@ -6,7 +6,7 @@ import SketchFrame from '../components/sub/SketchFrame';
 import Gameday from '../components/Gameday';
 import {getLeague, League} from '../api/leagues';
 import {Game, getCurrentGameday, getGamedayCount, getGamesByGameday} from '../api/games';
-import {Bet, changeBet, deleteBet, getMyBets, placeBet, Prediction} from '../api/bets';
+import {Bet, changeBet, deleteBet, doubleBet, getMyBets, placeBet, Prediction, undoubleBet} from '../api/bets';
 import HandText from '../components/sub/HandText';
 import OptionsDots from '../components/sub/OptionsDots';
 
@@ -71,6 +71,21 @@ const LeagueScreen = () => {
     }
   };
 
+  // Tapping the 2x tag: sets 2x on this game's bet, or removes it if it is already there.
+  // The server answers with all my bets of that gameday, so the 2x that moved away is updated too.
+  const toggleDouble = async (game: Game) => {
+    const existing = myBetsByGame[game.id];
+    if (!existing) {
+      return;
+    }
+    try {
+      const bets = existing.isDouble ? await undoubleBet(existing.id) : await doubleBet(existing.id);
+      setMyBetsByGame(current => ({...current, ...Object.fromEntries(bets.map(bet => [bet.gameId, bet]))}));
+    } catch {
+      Alert.alert('Das hat nicht geklappt', 'Dein 2x konnte nicht gespeichert werden. Versuch es nochmal.');
+    }
+  };
+
   const changeView = (view: string) => {
     setActiveTab(view);
   };
@@ -112,7 +127,7 @@ const LeagueScreen = () => {
           <HandText style={styles.loadingText}>Lade Spieldaten…</HandText>
         </View>
       ) : (
-        <Gameday gameday={gameday} gamedayCount={gamedayCount} games={gamesByGameday[gameday] ?? null} myBetsByGame={myBetsByGame} onPick={pick} onChange={setGameday} />
+        <Gameday gameday={gameday} gamedayCount={gamedayCount} games={gamesByGameday[gameday] ?? null} myBetsByGame={myBetsByGame} onPick={pick} onDouble={toggleDouble} onChange={setGameday} />
       )}
     </View>
   );
