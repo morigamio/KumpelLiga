@@ -8,6 +8,7 @@ import dev.morigamio.kumpelliga.exception.ResourceAlreadyExistsException;
 import dev.morigamio.kumpelliga.exception.ResourceNotFoundException;
 import dev.morigamio.kumpelliga.participant.Participant;
 import dev.morigamio.kumpelliga.participant.ParticipantRepository;
+import dev.morigamio.kumpelliga.participant.ParticipantService;
 import dev.morigamio.kumpelliga.participant.Status;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,11 +23,13 @@ public class LeagueService {
     private final AccountRepository accountRepository;
     private final LeagueRepository leagueRepository;
     private final ParticipantRepository participantRepository;
+    private final ParticipantService participantService;
 
-    public LeagueService(LeagueRepository leagueRepository, AccountRepository accountRepository, ParticipantRepository participantRepository) {
+    public LeagueService(LeagueRepository leagueRepository, AccountRepository accountRepository, ParticipantRepository participantRepository, ParticipantService participantService) {
         this.leagueRepository = leagueRepository;
         this.accountRepository = accountRepository;
         this.participantRepository = participantRepository;
+        this.participantService = participantService;
     }
 
     public League createLeague(String name, String admin, String password) {
@@ -49,8 +52,13 @@ public class LeagueService {
         return leagueRepository.findByParticipantsAccountName(accountName);
     }
 
-    public Optional<League> getLeagueByLeagueId(long leagueId) {
-        return leagueRepository.findById(leagueId);
+    public League getLeagueByLeagueId(long leagueId) {
+        return leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId));
+    }
+
+    public List<Participant> getRankingByLeagueId(long leagueId) {
+        getLeagueByLeagueId(leagueId); // 404 if the league doesn't exist
+        return participantService.rankingByLeagueId(leagueId);
     }
 
     @Transactional
@@ -69,7 +77,8 @@ public class LeagueService {
         }
     }
 
-    public void deleteLeagueById(Long leagueId) {
+    public void deleteLeagueById(long leagueId) {
+        getLeagueByLeagueId(leagueId); // 404 if the league doesn't exist
         leagueRepository.deleteById(leagueId);
     }
 }

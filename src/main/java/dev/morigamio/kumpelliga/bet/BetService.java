@@ -103,7 +103,19 @@ public class BetService {
         return unpaidBetsByGameId;
     }
 
-    public List<Bet> getBetsByParticipant(Participant participant) {
+    // only the owner of a participant may see its bets, open ones included
+    public List<Bet> getBetsByParticipantId(String name, long participantId) {
+        Participant participant = participantService.findById(participantId)
+                .orElseThrow(() -> new ResourceNotFoundException(Participant.class, participantId));
+        if (!name.equals(participant.getAccount().getName())) {
+            throw new NotResourceOwnerException(Participant.class, participantId, name);
+        }
+        return betRepository.findByParticipantId(participantId);
+    }
+
+    // the participant name equals the account name, so the token alone tells us whose bets these are
+    public List<Bet> getMyBetsByLeagueId(String name, long leagueId) {
+        Participant participant = participantService.findByNameAndLeagueId(name, leagueId).orElseThrow(NotParticipantException::new);
         return betRepository.findByParticipantId(participant.getId());
     }
 
@@ -128,7 +140,9 @@ public class BetService {
                 .anyMatch(b -> b.isDouble() && b.getGame().hasStarted());
     }
 
-    public List<Bet> getPaidBetsByLeagueId(long leagueId) {
+    // settled bets of a league are visible to its members only
+    public List<Bet> getPaidBetsByLeagueId(String name, long leagueId) {
+        if (!participantService.existsByNameAndLeagueId(name, leagueId)) throw new NotParticipantException();
         return betRepository.findByParticipant_League_IdAndIsPaidTrue(leagueId);
     }
 }
