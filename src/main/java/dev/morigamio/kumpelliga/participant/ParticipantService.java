@@ -1,6 +1,8 @@
 package dev.morigamio.kumpelliga.participant;
 
+import dev.morigamio.kumpelliga.exception.ResourceAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,15 @@ public class ParticipantService {
 
     public ParticipantService(ParticipantRepository participantRepository) {
         this.participantRepository = participantRepository;
+    }
+
+    // an account can join a league only once (unique constraint on account + league)
+    public Participant addParticipant(Participant participant) {
+        try {
+            return participantRepository.saveAndFlush(participant);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResourceAlreadyExistsException(Participant.class, participant.getName());
+        }
     }
 
     public Optional<Participant> findByNameAndLeagueId(String name, long leagueId) {
