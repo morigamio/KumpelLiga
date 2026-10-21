@@ -91,7 +91,7 @@ public class BetService {
     @Transactional
     public void deleteBet(String name, Long betId) {
         Bet bet = validateEditableBet(name, betId);
-        betRepository.deleteById(bet.getId());
+        betRepository.delete(bet);
     }
 
     public Map<Long, List<Bet>> getUnpaidBetsByGameIds() {
@@ -123,7 +123,7 @@ public class BetService {
         Bet bet = betRepository.findById(betId).orElseThrow(() -> new ResourceNotFoundException(Bet.class, betId));
         String betOwner = bet.getParticipant().getAccount().getName();
         if (!name.equals(betOwner)) {
-            throw new NotResourceOwnerException(Bet.class, betId, betOwner);
+            throw new NotResourceOwnerException(Bet.class, betId, name);
         }
         return bet;
     }

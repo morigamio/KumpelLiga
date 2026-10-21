@@ -60,8 +60,8 @@ public class LeagueController {
     }
 
     @DeleteMapping("/leagues/{leagueId}")
-    public ResponseEntity<Void> deleteLeagueById(@PathVariable String leagueId) {
-        leagueService.deleteLeagueById(Long.parseLong(leagueId));
+    public ResponseEntity<Void> deleteLeagueById(@PathVariable String leagueId, Principal principal) {
+        leagueService.deleteLeagueById(Long.parseLong(leagueId), principal.getName());
         return ResponseEntity.noContent().build();
     }
 
@@ -90,8 +90,8 @@ public class LeagueController {
     }
 
     @DeleteMapping("/participants/{participantId}")
-    public ResponseEntity<Void> removeParticipantById(@PathVariable String participantId) {
-        participantService.removeParticipantById(Long.parseLong(participantId));
+    public ResponseEntity<Void> removeParticipantById(@PathVariable String participantId, Principal principal) {
+        participantService.removeParticipantById(Long.parseLong(participantId), principal.getName());
         return ResponseEntity.noContent().build();
     }
 

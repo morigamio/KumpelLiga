@@ -1,6 +1,8 @@
 package dev.morigamio.kumpelliga.participant;
 
+import dev.morigamio.kumpelliga.exception.NotResourceOwnerException;
 import dev.morigamio.kumpelliga.exception.ResourceAlreadyExistsException;
+import dev.morigamio.kumpelliga.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
@@ -39,8 +41,14 @@ public class ParticipantService {
         return participantRepository.findById(participantId);
     }
 
-    public void removeParticipantById(long participantId) {
-        participantRepository.deleteById(participantId);
+    // only the account behind a participant may remove it (= leave the league)
+    public void removeParticipantById(long participantId, String accountName) {
+        Participant participant = findById(participantId)
+                .orElseThrow(() -> new ResourceNotFoundException(Participant.class, participantId));
+        if (!accountName.equals(participant.getAccount().getName())) {
+            throw new NotResourceOwnerException(Participant.class, participantId, accountName);
+        }
+        participantRepository.delete(participant);
     }
 
     public List<Participant> rankingByLeagueId(long leagueId) {

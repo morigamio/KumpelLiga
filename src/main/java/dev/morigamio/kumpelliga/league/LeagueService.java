@@ -4,6 +4,7 @@ import dev.morigamio.kumpelliga.account.Account;
 import dev.morigamio.kumpelliga.account.AccountService;
 import dev.morigamio.kumpelliga.exception.InvalidLeaguePasswordException;
 import dev.morigamio.kumpelliga.exception.LeagueAlreadyExistsException;
+import dev.morigamio.kumpelliga.exception.NotResourceOwnerException;
 import dev.morigamio.kumpelliga.exception.ResourceNotFoundException;
 import dev.morigamio.kumpelliga.participant.Participant;
 import dev.morigamio.kumpelliga.participant.ParticipantService;
@@ -65,8 +66,12 @@ public class LeagueService {
         return participantService.addParticipant(new Participant(account, league, Status.APPROVED));
     }
 
-    public void deleteLeagueById(long leagueId) {
-        getLeagueByLeagueId(leagueId); // 404 if the league doesn't exist
-        leagueRepository.deleteById(leagueId);
+    // only the admin of a league may delete it
+    public void deleteLeagueById(long leagueId, String accountName) {
+        League league = getLeagueByLeagueId(leagueId); // 404 if the league doesn't exist
+        if (!accountName.equals(league.getAdmin().getName())) {
+            throw new NotResourceOwnerException(League.class, leagueId, accountName);
+        }
+        leagueRepository.delete(league);
     }
 }
