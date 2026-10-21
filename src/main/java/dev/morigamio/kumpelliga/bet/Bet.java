@@ -40,4 +40,9 @@ public class Bet {
         this.prediction = prediction;
         this.isPaid = false;
     }
+
+    // a bet belongs to whoever owns its participant
+    public boolean isOwnedBy(String accountName) {
+        return participant.isOwnedBy(accountName);
+    }
 }

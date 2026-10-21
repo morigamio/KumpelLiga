@@ -107,9 +107,7 @@ public class BetService {
     public List<Bet> getBetsByParticipantId(String name, long participantId) {
         Participant participant = participantService.findById(participantId)
                 .orElseThrow(() -> new ResourceNotFoundException(Participant.class, participantId));
-        if (!name.equals(participant.getAccount().getName())) {
-            throw new NotResourceOwnerException(Participant.class, participantId, name);
-        }
+        if (!participant.isOwnedBy(name)) throw new NotResourceOwnerException(Participant.class, participantId, name);
         return betRepository.findByParticipantId(participantId);
     }
 
@@ -121,10 +119,7 @@ public class BetService {
 
     private Bet validateBetOwner(String name, Long betId) {
         Bet bet = betRepository.findById(betId).orElseThrow(() -> new ResourceNotFoundException(Bet.class, betId));
-        String betOwner = bet.getParticipant().getAccount().getName();
-        if (!name.equals(betOwner)) {
-            throw new NotResourceOwnerException(Bet.class, betId, name);
-        }
+        if (!bet.isOwnedBy(name)) throw new NotResourceOwnerException(Bet.class, betId, name);
         return bet;
     }
 
@@ -142,7 +137,8 @@ public class BetService {
 
     // settled bets of a league are visible to its members only
     public List<Bet> getPaidBetsByLeagueId(String name, long leagueId) {
-        if (!participantService.existsByNameAndLeagueId(name, leagueId)) throw new NotParticipantException();
+        boolean isLeagueParticipant = participantService.existsByNameAndLeagueId(name, leagueId);
+        if (!isLeagueParticipant) throw new NotParticipantException();
         return betRepository.findByParticipant_League_IdAndIsPaidTrue(leagueId);
     }
 }

@@ -2,6 +2,7 @@ package dev.morigamio.kumpelliga.league;
 
 import dev.morigamio.kumpelliga.account.Account;
 import dev.morigamio.kumpelliga.account.AccountService;
+import dev.morigamio.kumpelliga.exception.AdminCannotLeaveLeagueException;
 import dev.morigamio.kumpelliga.exception.InvalidLeaguePasswordException;
 import dev.morigamio.kumpelliga.exception.LeagueAlreadyExistsException;
 import dev.morigamio.kumpelliga.exception.NotResourceOwnerException;
@@ -66,12 +67,21 @@ public class LeagueService {
         return participantService.addParticipant(new Participant(account, league, Status.APPROVED));
     }
 
+    // only the account behind a participant may remove it (= leave the league); the admin can never leave, only delete the league by calling deleteLeagueById
+    public void removeParticipantById(long participantId, String accountName) {
+        Participant participant = participantService.findById(participantId)
+                .orElseThrow(() -> new ResourceNotFoundException(Participant.class, participantId));
+        if (!participant.isOwnedBy(accountName)) throw new NotResourceOwnerException(Participant.class, participantId, accountName);
+        boolean isAdmin = accountName.equals(participant.getLeague().getAdmin().getName());
+        if (isAdmin) throw new AdminCannotLeaveLeagueException();
+        participantService.removeParticipant(participant);
+    }
+
     // only the admin of a league may delete it
     public void deleteLeagueById(long leagueId, String accountName) {
         League league = getLeagueByLeagueId(leagueId); // 404 if the league doesn't exist
-        if (!accountName.equals(league.getAdmin().getName())) {
-            throw new NotResourceOwnerException(League.class, leagueId, accountName);
-        }
+        boolean isAdmin = accountName.equals(league.getAdmin().getName());
+        if (!isAdmin) throw new NotResourceOwnerException(League.class, leagueId, accountName);
         leagueRepository.delete(league);
     }
 }

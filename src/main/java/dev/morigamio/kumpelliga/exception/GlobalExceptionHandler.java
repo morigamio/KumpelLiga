@@ -86,6 +86,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Game has already started, bets can no longer be changed.");
     }
 
+    @ExceptionHandler(AdminCannotLeaveLeagueException.class)
+    public ResponseEntity<String> handleAdminCannotLeaveLeague() {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("The admin can't leave their own league, only delete it.");
+    }
+
     @ExceptionHandler(LeagueAlreadyExistsException.class)
     public ResponseEntity<String> handleLeagueAlreadyExists(LeagueAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

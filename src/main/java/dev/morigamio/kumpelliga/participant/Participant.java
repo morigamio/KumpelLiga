@@ -52,6 +52,10 @@ public class Participant {
         this.highestWin = BigDecimal.valueOf(0);
     }
 
+    public boolean isOwnedBy(String accountName) {
+        return account.getName().equals(accountName);
+    }
+
     public void addPoints(BigDecimal winnings) {
         this.highestWin = highestWin.max(winnings);
         this.balance = this.balance.add(winnings);

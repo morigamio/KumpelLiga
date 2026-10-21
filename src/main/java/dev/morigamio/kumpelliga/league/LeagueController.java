@@ -7,7 +7,6 @@ import dev.morigamio.kumpelliga.league.dto.CreateLeagueDTO;
 import dev.morigamio.kumpelliga.league.dto.JoinLeagueDTO;
 import dev.morigamio.kumpelliga.league.dto.ReadLeagueDTO;
 import dev.morigamio.kumpelliga.participant.Participant;
-import dev.morigamio.kumpelliga.participant.ParticipantService;
 import dev.morigamio.kumpelliga.participant.ReadParticipantDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +19,10 @@ import java.util.List;
 public class LeagueController {
 
     private final LeagueService leagueService;
-    private final ParticipantService participantService;
     private final BetService betService;
 
-    public LeagueController(LeagueService leagueService, ParticipantService participantService, BetService betService) {
+    public LeagueController(LeagueService leagueService, BetService betService) {
         this.leagueService = leagueService;
-        this.participantService = participantService;
         this.betService = betService;
     }
 
@@ -91,7 +88,7 @@ public class LeagueController {
 
     @DeleteMapping("/participants/{participantId}")
     public ResponseEntity<Void> removeParticipantById(@PathVariable String participantId, Principal principal) {
-        participantService.removeParticipantById(Long.parseLong(participantId), principal.getName());
+        leagueService.removeParticipantById(Long.parseLong(participantId), principal.getName());
         return ResponseEntity.noContent().build();
     }
 
