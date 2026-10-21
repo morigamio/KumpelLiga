@@ -25,6 +25,18 @@ public class BetController {
         return new ResponseEntity<>(betsByParticipant.stream().map(ReadBetDTO::from).toList(), HttpStatus.OK);
     }
 
+    @GetMapping("/leagues/{leagueId}/bets")
+    public ResponseEntity<List<ReadBetDTO>> getPaidBetsByLeagueId(@PathVariable String leagueId, Principal principal) {
+        List<Bet> paidBetsByLeagueId = betService.getPaidBetsByLeagueId(principal.getName(), Long.parseLong(leagueId));
+        return new ResponseEntity<>(paidBetsByLeagueId.stream().map(ReadBetDTO::from).toList(), HttpStatus.OK);
+    }
+
+    @GetMapping("/leagues/{leagueId}/bets/mine")
+    public ResponseEntity<List<ReadBetDTO>> getMyBetsByLeagueId(@PathVariable String leagueId, Principal principal) {
+        List<Bet> myBets = betService.getMyBetsByLeagueId(principal.getName(), Long.parseLong(leagueId));
+        return new ResponseEntity<>(myBets.stream().map(ReadBetDTO::from).toList(), HttpStatus.OK);
+    }
+
     @PostMapping("/leagues/{leagueId}/games/{gameId}/bets")
     public ResponseEntity<ReadBetDTO> createBet(@RequestBody CreateBetDTO data, @PathVariable String leagueId, @PathVariable String gameId, Principal principal) {
         Bet bet = betService.registerBet(

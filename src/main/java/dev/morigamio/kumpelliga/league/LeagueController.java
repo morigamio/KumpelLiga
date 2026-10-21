@@ -1,8 +1,5 @@
 package dev.morigamio.kumpelliga.league;
 
-import dev.morigamio.kumpelliga.bet.Bet;
-import dev.morigamio.kumpelliga.bet.BetService;
-import dev.morigamio.kumpelliga.bet.dto.ReadBetDTO;
 import dev.morigamio.kumpelliga.league.dto.CreateLeagueDTO;
 import dev.morigamio.kumpelliga.league.dto.JoinLeagueDTO;
 import dev.morigamio.kumpelliga.league.dto.ReadLeagueDTO;
@@ -19,11 +16,9 @@ import java.util.List;
 public class LeagueController {
 
     private final LeagueService leagueService;
-    private final BetService betService;
 
-    public LeagueController(LeagueService leagueService, BetService betService) {
+    public LeagueController(LeagueService leagueService) {
         this.leagueService = leagueService;
-        this.betService = betService;
     }
 
     @PostMapping("/leagues")
@@ -66,18 +61,6 @@ public class LeagueController {
     public ResponseEntity<List<ReadParticipantDTO>> getParticipantsByLeagueId(@PathVariable String leagueId) {
         League league = leagueService.getLeagueByLeagueId(Long.parseLong(leagueId));
         return new ResponseEntity<>(league.getParticipants().stream().map(ReadParticipantDTO::from).toList(), HttpStatus.OK);
-    }
-
-    @GetMapping("/leagues/{leagueId}/bets")
-    public ResponseEntity<List<ReadBetDTO>> getPaidBetsByLeagueId(@PathVariable String leagueId, Principal principal) {
-        List<Bet> paidBetsByLeagueId = betService.getPaidBetsByLeagueId(principal.getName(), Long.parseLong(leagueId));
-        return new ResponseEntity<>(paidBetsByLeagueId.stream().map(ReadBetDTO::from).toList(), HttpStatus.OK);
-    }
-
-    @GetMapping("/leagues/{leagueId}/bets/mine")
-    public ResponseEntity<List<ReadBetDTO>> getMyBetsByLeagueId(@PathVariable String leagueId, Principal principal) {
-        List<Bet> myBets = betService.getMyBetsByLeagueId(principal.getName(), Long.parseLong(leagueId));
-        return new ResponseEntity<>(myBets.stream().map(ReadBetDTO::from).toList(), HttpStatus.OK);
     }
 
     @PostMapping("/leagues/{leagueId}/participants")
