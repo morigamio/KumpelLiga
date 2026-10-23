@@ -1,16 +1,12 @@
 package dev.morigamio.kumpelliga.league;
 
 import dev.morigamio.kumpelliga.account.Account;
-import dev.morigamio.kumpelliga.participant.Participant;
-import dev.morigamio.kumpelliga.participant.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -38,11 +34,6 @@ public class League {
         this.password = password;
         this.participants = new ArrayList<>();
         this.participants.add(new Participant(admin, this, Status.APPROVED)); // admin of the league is also participant
-    }
-
-    public League (String name, String password, Account admin, BigDecimal startBalance, Set<Participant> participants){
-        this();
-        this.participants.addAll(participants);
     }
 
     public boolean hasParticipant(long participantId){

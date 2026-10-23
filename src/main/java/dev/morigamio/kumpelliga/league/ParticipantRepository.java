@@ -1,4 +1,4 @@
-package dev.morigamio.kumpelliga.participant;
+package dev.morigamio.kumpelliga.league;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;

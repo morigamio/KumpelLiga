@@ -1,4 +1,4 @@
-package dev.morigamio.kumpelliga.participant;
+package dev.morigamio.kumpelliga.league;
 
 import lombok.Getter;
 

@@ -1,7 +1,6 @@
 package dev.morigamio.kumpelliga.league.dto;
 
 import dev.morigamio.kumpelliga.league.League;
-import dev.morigamio.kumpelliga.participant.ReadParticipantDTO;
 
 import java.util.List;
 

@@ -3,8 +3,8 @@ package dev.morigamio.kumpelliga.bet;
 import dev.morigamio.kumpelliga.exception.*;
 import dev.morigamio.kumpelliga.game.Game;
 import dev.morigamio.kumpelliga.game.GameService;
-import dev.morigamio.kumpelliga.participant.Participant;
-import dev.morigamio.kumpelliga.participant.ParticipantService;
+import dev.morigamio.kumpelliga.league.Participant;
+import dev.morigamio.kumpelliga.league.ParticipantService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

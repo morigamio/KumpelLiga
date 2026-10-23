@@ -1,7 +1,6 @@
-package dev.morigamio.kumpelliga.participant;
+package dev.morigamio.kumpelliga.league;
 
 import dev.morigamio.kumpelliga.account.Account;
-import dev.morigamio.kumpelliga.league.League;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,6 +48,10 @@ public class Participant {
 
     public boolean isOwnedBy(String accountName) {
         return account.getName().equals(accountName);
+    }
+
+    public boolean isParticipant(long leagueId){
+        return league.getId().equals(leagueId);
     }
 
     public void payoutBet(BigDecimal winnings) {

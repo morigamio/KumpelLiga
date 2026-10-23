@@ -1,6 +1,6 @@
 package dev.morigamio.kumpelliga.bet;
 
-import dev.morigamio.kumpelliga.participant.Participant;
+import dev.morigamio.kumpelliga.league.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

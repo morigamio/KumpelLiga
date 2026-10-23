@@ -1,4 +1,6 @@
-package dev.morigamio.kumpelliga.participant;
+package dev.morigamio.kumpelliga.league.dto;
+
+import dev.morigamio.kumpelliga.league.Participant;
 
 import java.math.BigDecimal;
 import java.util.Collection;

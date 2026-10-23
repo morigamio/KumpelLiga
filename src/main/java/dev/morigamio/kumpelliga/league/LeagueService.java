@@ -7,9 +7,6 @@ import dev.morigamio.kumpelliga.exception.InvalidLeaguePasswordException;
 import dev.morigamio.kumpelliga.exception.LeagueAlreadyExistsException;
 import dev.morigamio.kumpelliga.exception.NotResourceOwnerException;
 import dev.morigamio.kumpelliga.exception.ResourceNotFoundException;
-import dev.morigamio.kumpelliga.participant.Participant;
-import dev.morigamio.kumpelliga.participant.ParticipantService;
-import dev.morigamio.kumpelliga.participant.Status;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

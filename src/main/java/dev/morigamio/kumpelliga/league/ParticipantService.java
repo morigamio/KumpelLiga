@@ -1,4 +1,4 @@
-package dev.morigamio.kumpelliga.participant;
+package dev.morigamio.kumpelliga.league;
 
 import dev.morigamio.kumpelliga.exception.ResourceAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;

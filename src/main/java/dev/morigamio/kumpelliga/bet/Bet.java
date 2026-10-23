@@ -1,7 +1,7 @@
 package dev.morigamio.kumpelliga.bet;
 
 import dev.morigamio.kumpelliga.game.Game;
-import dev.morigamio.kumpelliga.participant.Participant;
+import dev.morigamio.kumpelliga.league.Participant;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
