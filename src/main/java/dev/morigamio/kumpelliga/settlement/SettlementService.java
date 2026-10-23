@@ -44,7 +44,7 @@ public class SettlementService {
 
                 for (Bet bet : entry.getValue()) {
                     BigDecimal winnings = calculateWinnings(bet, odds);
-                    bet.getParticipant().addPoints(winnings);
+                    bet.getParticipant().payoutBet(winnings);
                     bet.setPaid(true);
                     bet.setWinnings(winnings);
                 }

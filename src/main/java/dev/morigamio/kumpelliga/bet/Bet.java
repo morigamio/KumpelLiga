@@ -9,6 +9,8 @@ import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 
@@ -26,6 +28,7 @@ public class Bet {
     private Game game;// one bet out of many is for one game
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Participant participant; // one bet out of many has only one owner
 
     private String prediction;

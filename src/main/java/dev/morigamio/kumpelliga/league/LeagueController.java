@@ -57,12 +57,6 @@ public class LeagueController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/leagues/{leagueId}/participants")
-    public ResponseEntity<List<ReadParticipantDTO>> getParticipantsByLeagueId(@PathVariable String leagueId) {
-        League league = leagueService.getLeagueByLeagueId(Long.parseLong(leagueId));
-        return new ResponseEntity<>(league.getParticipants().stream().map(ReadParticipantDTO::from).toList(), HttpStatus.OK);
-    }
-
     @PostMapping("/leagues/{leagueId}/participants")
     public ResponseEntity<ReadParticipantDTO> joinLeagueById(@PathVariable String leagueId, @RequestBody JoinLeagueDTO data, Principal principal) {
         Participant participant = leagueService.joinLeague(Long.parseLong(leagueId), principal.getName(), data.password());
