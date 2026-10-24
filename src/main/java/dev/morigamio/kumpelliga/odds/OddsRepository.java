@@ -7,6 +7,6 @@ import java.util.Optional;
 
 @SuppressWarnings("NullableProblems")
 @Repository
-public interface OddsRepository extends JpaRepository<Odds, Long> {
+interface OddsRepository extends JpaRepository<Odds, Long> {
     Optional<Odds> findByGameId(Long gameId);
 }

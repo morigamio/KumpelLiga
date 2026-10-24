@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BetRepository extends JpaRepository<Bet,Long> {
+interface BetRepository extends JpaRepository<Bet,Long> {
     boolean existsByParticipantIdAndGameId(Long participantId, Long gameId);
     List<Bet> findByIsPaidFalse();
     List<Bet> findByParticipantId(Long id);

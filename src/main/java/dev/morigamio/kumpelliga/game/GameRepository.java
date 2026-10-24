@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface GameRepository extends JpaRepository<Game, Long> {
+interface GameRepository extends JpaRepository<Game, Long> {
     Optional<Game> findByHomeTeamAndAwayTeam(String homeTeam, String awayTeam);
 
     List<Game> findByGameDay(int gameDay);
