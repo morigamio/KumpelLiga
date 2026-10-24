@@ -24,9 +24,7 @@ class GamePersistence {
 
     @Transactional
     public void storeGames(List<Game> games) {
-        for (Game game : games) {
-            gameRepository.save(game);
-        }
+        gameRepository.saveAll(games);
     }
 
     public List<Game> findAll() {
