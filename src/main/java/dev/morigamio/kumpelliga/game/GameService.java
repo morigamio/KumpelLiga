@@ -17,7 +17,7 @@ public class GameService {
     private final GameDataClient gameDataClient;
     private final GamePersistence gamePersistence;
 
-    public GameService(GameDataClient gameDataClient, GamePersistence gamePersistence) {
+    GameService(GameDataClient gameDataClient, GamePersistence gamePersistence) {
         this.gameDataClient = gameDataClient;
         this.gamePersistence = gamePersistence;
     }
@@ -80,6 +80,16 @@ public class GameService {
         }
     }
 
+    public void synChangedGames(){
+        List<GameDay> gameDays = gamePersistence.findAllGameDays();
+        for (GameDay gameDay : gameDays) {
+            boolean gameDataUpToDate = isGameDataUpToDate(gameDay.getGameDay());
+            if (!gameDataUpToDate) {
+                syncGamesByGameDay(gameDay.getGameDay());
+            }
+        }
+    }
+
     public void syncGamesByGameDay(int gameDay) {
         try {
             List<GameData> gameData = gameDataClient.retrieveGameData(gameDay);
@@ -116,10 +126,6 @@ public class GameService {
                 .getUpdateTimeStamp();
         LocalDateTime newTimeStamp = gameDataClient.retrieveUpdateTimeStamp(gameDay);
         return oldTimeStamp.equals(newTimeStamp);
-    }
-
-    public List<GameDay> getAllGameDays(){
-        return gamePersistence.findAllGameDays();
     }
 
     /** The gameday of the earliest unfinished game; once the season is over, the last gameday. */
