@@ -7,12 +7,12 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StartupSync {
+class StartupSync {
 
     private final GameService gameService;
     private final OddsService oddsService;
 
-    public StartupSync(GameService gameService, OddsService oddsService) {
+    StartupSync(GameService gameService, OddsService oddsService) {
         this.gameService = gameService;
         this.oddsService = oddsService;
     }
