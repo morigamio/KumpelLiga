@@ -18,15 +18,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class WebSecurityConfig {
 
     private final AuthEntryPointJwt unauthorizedHandler;
-    private final JwtAuthFilter jwtAuthFilter;
 
-    WebSecurityConfig(AuthEntryPointJwt unauthorizedHandler, JwtAuthFilter jwtAuthFilter) {
+    WebSecurityConfig(AuthEntryPointJwt unauthorizedHandler) {
         this.unauthorizedHandler = unauthorizedHandler;
-        this.jwtAuthFilter = jwtAuthFilter;
     }
 
+    // the filter comes in as a method parameter, not via the constructor: the filter needs AccountService,
+    // which needs the PasswordEncoder defined in this class, so constructor injection would form a bean cycle
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
