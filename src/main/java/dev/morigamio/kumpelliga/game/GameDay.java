@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-public class GameDay {
+class GameDay {
     @Id
     private int gameDay;
     private LocalDateTime updateTimeStamp;
