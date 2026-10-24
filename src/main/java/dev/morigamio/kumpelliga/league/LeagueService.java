@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class LeagueService {
+class LeagueService {
 
     private final LeagueRepository leagueRepository;
     private final AccountService accountService;
     private final ParticipantService participantService;
 
-    public LeagueService(LeagueRepository leagueRepository, AccountService accountService, ParticipantService participantService) {
+    LeagueService(LeagueRepository leagueRepository, AccountService accountService, ParticipantService participantService) {
         this.leagueRepository = leagueRepository;
         this.accountService = accountService;
         this.participantService = participantService;
@@ -61,7 +61,7 @@ public class LeagueService {
             throw new InvalidLeaguePasswordException();
         }
         Account account = accountService.getAccountByName(accountName); // user is logged in, account is guaranteed to exist
-        return participantService.addParticipant(new Participant(account, league, Status.APPROVED));
+        return participantService.addParticipant(new Participant(account, league));
     }
 
     // only the account behind a participant may remove it (= leave the league); the admin can never leave, only delete the league by calling deleteLeagueById

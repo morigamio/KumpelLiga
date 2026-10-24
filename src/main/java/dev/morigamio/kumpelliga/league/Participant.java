@@ -2,9 +2,7 @@ package dev.morigamio.kumpelliga.league;
 
 import dev.morigamio.kumpelliga.account.Account;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -14,8 +12,6 @@ import java.math.RoundingMode;
 @Table(uniqueConstraints = @UniqueConstraint(
         columnNames = {"account_id", "league_id"}
 ))
-@NoArgsConstructor
-@AllArgsConstructor
 public class Participant {
 
     @Id
@@ -30,18 +26,22 @@ public class Participant {
     private League league;
     private String leagueName; // convenience
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     private BigDecimal balance;
-    private String status;
     private BigDecimal highestWin;
     private int noPaidBets;
 
-    public Participant(Account account, League league, Status status) {
+    protected Participant(){}
+
+    protected Participant(Account account, League league) {
         this.account = account;
         this.name = account.getName();
         this.league = league;
         this.leagueName = league.getName();
         this.balance = BigDecimal.valueOf(0);
-        this.status = status.getLabel();
+        this.status = Status.APPROVED;
         this.highestWin = BigDecimal.valueOf(0);
         this.noPaidBets = 0;
     }
@@ -63,5 +63,14 @@ public class Participant {
     public BigDecimal avgWinRate() {
         if (noPaidBets != 0) return balance.divide(BigDecimal.valueOf(noPaidBets), 2, RoundingMode.HALF_UP);
         return BigDecimal.valueOf(0);
+    }
+
+    public void approve(){
+        status = Status.APPROVED;
+    }
+
+    @Getter
+    enum Status {
+        PENDING, APPROVED, DENIED;
     }
 }
