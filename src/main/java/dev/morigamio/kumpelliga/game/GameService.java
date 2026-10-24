@@ -80,7 +80,7 @@ public class GameService {
         }
     }
 
-    public void synChangedGames(){
+    public void syncChangedGames(){
         List<GameDay> gameDays = gamePersistence.findAllGameDays();
         for (GameDay gameDay : gameDays) {
             boolean gameDataUpToDate = isGameDataUpToDate(gameDay.getGameDay());

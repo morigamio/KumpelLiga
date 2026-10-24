@@ -20,7 +20,7 @@ class CronJobService {
 
     @Scheduled(cron = "${sync.cron.liveTracking}")
     void syncResultsAndCalculate() {
-        gameService.synChangedGames();
+        gameService.syncChangedGames();
         settlementService.calculatePayout();
     }
 
