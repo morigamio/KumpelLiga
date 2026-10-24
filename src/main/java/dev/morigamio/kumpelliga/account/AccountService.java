@@ -2,6 +2,7 @@ package dev.morigamio.kumpelliga.account;
 
 import dev.morigamio.kumpelliga.exception.ResourceAlreadyExistsException;
 import jakarta.transaction.Transactional;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,7 @@ public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder encoder;
 
-    public AccountService(AccountRepository accountRepository, PasswordEncoder encoder) {
+    AccountService(AccountRepository accountRepository, PasswordEncoder encoder) {
         this.accountRepository = accountRepository;
         this.encoder = encoder;
     }
@@ -38,6 +39,7 @@ public class AccountService implements UserDetailsService {
     }
 
     @Override
+    @NullMarked
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountRepository.findByName(username).orElseThrow(() -> new UsernameNotFoundException("Invalid username or password"));
         return new User(account.getName(), account.getPassword(), Collections.emptyList());
