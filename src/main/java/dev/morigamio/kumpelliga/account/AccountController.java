@@ -17,13 +17,13 @@ public class AccountController {
     private AccountService accountService;
 
     @GetMapping("/account")
-    public ResponseEntity<ReadAccountDTO> getAccountDetails(Principal principal) {
+    ResponseEntity<ReadAccountDTO> getAccountDetails(Principal principal) {
         Account account = accountService.getAccountByName(principal.getName());
         return new ResponseEntity<>(ReadAccountDTO.from(account), HttpStatus.OK);
     }
 
     @PostMapping("/account")
-    public ResponseEntity<ReadAccountDTO> registerUser(@RequestBody CreateAccountDTO user) {
+    ResponseEntity<ReadAccountDTO> registerUser(@RequestBody CreateAccountDTO user) {
         Account account = accountService.create(
                 user.name(),
                 user.password());
@@ -31,12 +31,12 @@ public class AccountController {
     }
 
     @PatchMapping("/account")
-    public ReadAccountDTO changeAccountDetails(@RequestBody ChangeAccountDTO data, Principal principal) {
+    ReadAccountDTO changeAccountDetails(@RequestBody ChangeAccountDTO data, Principal principal) {
         return null; // implement later
     }
 
     @DeleteMapping("/account")
-    public ReadAccountDTO delete(Principal principal) {
+    ReadAccountDTO delete(Principal principal) {
         return null;
     }
 }

@@ -19,7 +19,7 @@ public class AuthenticationController {
     private JwtUtils jwtUtils;
 
     @PostMapping("/session")
-    public String authenticateUser(@RequestBody CredentialsDTO credentials) {
+    String authenticateUser(@RequestBody CredentialsDTO credentials) {
         Authentication authentication = authenticationManager.authenticate(
                 new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
                         credentials.name(),
@@ -32,7 +32,7 @@ public class AuthenticationController {
     }
 
     @DeleteMapping("/session")
-    public void logout(){
+    void logout(){
 
     }
 }

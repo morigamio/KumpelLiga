@@ -28,7 +28,7 @@ public class GameController {
      * All games, or only those of one matchday when ?gameDay=N is given (used for live polling).
      */
     @GetMapping("/games")
-    public ResponseEntity<List<GameDTO>> getGames(@RequestParam(required = false) Integer gameDay) {
+    ResponseEntity<List<GameDTO>> getGames(@RequestParam(required = false) Integer gameDay) {
         List<Game> games = gameDay == null ? gameService.getGames() : gameService.getGamesByGameDay(gameDay);
         Map<Long, Odds> oddsByGameIds = oddsService.getOddsByGameIds();
         List<GameDTO> result = new ArrayList<>();
@@ -45,12 +45,12 @@ public class GameController {
     }
 
     @GetMapping("/gamedays/current")
-    public ResponseEntity<Integer> getCurrentGameDay() {
+    ResponseEntity<Integer> getCurrentGameDay() {
         return new ResponseEntity<>(gameService.getCurrentGameDay(), HttpStatus.OK);
     }
 
     @GetMapping("/gamedays/count")
-    public ResponseEntity<Integer> getGameDayCount() {
+    ResponseEntity<Integer> getGameDayCount() {
         return new ResponseEntity<>(gameService.getGameDayCount(), HttpStatus.OK);
     }
 }
