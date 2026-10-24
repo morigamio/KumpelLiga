@@ -5,6 +5,7 @@ import dev.morigamio.kumpelliga.game.spi.OddsDataClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+    import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ public class OddsService {
     private final OddsPersistence oddsPersistence;
     private final GameService gameService;
 
-    public OddsService(OddsDataClient oddsDataClient, OddsPersistence oddsPersistence, GameService gameService) {
+    OddsService(OddsDataClient oddsDataClient, OddsPersistence oddsPersistence, GameService gameService) {
         this.oddsDataClient = oddsDataClient;
         this.oddsPersistence = oddsPersistence;
         this.gameService = gameService;
@@ -35,6 +36,17 @@ public class OddsService {
 
     public Optional<Odds> getOddsByGameId(Long gameId) {
         return oddsPersistence.findByGameId(gameId);
+    }
+
+    // the odds that pay out if this prediction wins; empty for an unknown prediction
+    public Optional<BigDecimal> getOddsForPrediction(Long gameId, String prediction) {
+        Odds odds = oddsPersistence.findByGameId(gameId).orElseThrow();
+        return switch (prediction) {
+            case GameConstants.HOME_TEAM -> Optional.of(BigDecimal.valueOf(odds.getOddsHome()));
+            case GameConstants.AWAY_TEAM -> Optional.of(BigDecimal.valueOf(odds.getOddsAway()));
+            case GameConstants.DRAW -> Optional.of(BigDecimal.valueOf(odds.getOddsDraw()));
+            default -> Optional.empty();
+        };
     }
 
     public void syncOdds() {

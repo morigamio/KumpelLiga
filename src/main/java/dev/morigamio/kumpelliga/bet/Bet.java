@@ -7,8 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -16,9 +14,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
-public class Bet {
+class Bet {
 
     @Id
     @GeneratedValue
@@ -37,7 +33,10 @@ public class Bet {
     private boolean isDouble;
     private BigDecimal winnings;
 
-    public Bet(Game game, Participant participant, String prediction) {
+    protected Bet() {
+    }
+
+    protected Bet(Game game, Participant participant, String prediction) {
         this.game = game;
         this.participant = participant;
         this.prediction = prediction;
@@ -47,5 +46,20 @@ public class Bet {
     // a bet belongs to whoever owns its participant
     public boolean isOwnedBy(String accountName) {
         return participant.isOwnedBy(accountName);
+    }
+
+    public void payout(BigDecimal winnings) {
+        if (!game.isFinished()) return;
+        participant.payoutBet(winnings);
+        this.isPaid = true;
+        this.winnings = winnings;
+    }
+
+    void setPrediction(String prediction) {
+        this.prediction = prediction;
+    }
+
+    void setDouble(boolean aDouble) {
+        isDouble = aDouble;
     }
 }

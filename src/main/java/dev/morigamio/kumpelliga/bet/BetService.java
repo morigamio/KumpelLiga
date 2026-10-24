@@ -3,27 +3,33 @@ package dev.morigamio.kumpelliga.bet;
 import dev.morigamio.kumpelliga.exception.*;
 import dev.morigamio.kumpelliga.game.Game;
 import dev.morigamio.kumpelliga.game.GameService;
+import dev.morigamio.kumpelliga.game.OddsService;
 import dev.morigamio.kumpelliga.league.Participant;
 import dev.morigamio.kumpelliga.league.ParticipantService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class BetService {
 
     private final ParticipantService participantService;
     private final BetRepository betRepository;
     private final GameService gameService;
+    private final OddsService oddsService;
 
-    public BetService(ParticipantService participantService, BetRepository betRepository, GameService gameService) {
+    BetService(ParticipantService participantService, BetRepository betRepository, GameService gameService, OddsService oddsService) {
         this.participantService = participantService;
         this.betRepository = betRepository;
         this.gameService = gameService;
+        this.oddsService = oddsService;
     }
 
     @Transactional
@@ -94,7 +100,7 @@ public class BetService {
         betRepository.delete(bet);
     }
 
-    public Map<Long, List<Bet>> getUnpaidBetsByGameIds() {
+    private Map<Long, List<Bet>> getUnpaidBetsByGameIds() {
         Map<Long, List<Bet>> unpaidBetsByGameId = new HashMap<>();
         List<Bet> bets = betRepository.findByIsPaidFalse();
         for (Bet bet : bets) {
@@ -140,5 +146,36 @@ public class BetService {
         boolean isLeagueParticipant = participantService.existsByNameAndLeagueId(name, leagueId);
         if (!isLeagueParticipant) throw new NotParticipantException();
         return betRepository.findByParticipant_League_IdAndIsPaidTrue(leagueId);
+    }
+
+    // pays out every unpaid bet whose game is finished; called by the cron job after each results sync
+    @Transactional
+    public void payoutBets() {
+        try {
+            for (List<Bet> gameBets : getUnpaidBetsByGameIds().values()) {
+                Game game = gameBets.get(0).getGame();
+                if (!game.isFinished()) continue;
+
+                for (Bet bet : gameBets) {
+                    bet.payout(calculateWinnings(bet));
+                }
+                log.info("Winnings paid out for game %s vs. %s".formatted(game.getHomeTeam(), game.getAwayTeam()));
+            }
+        } catch (Exception e) {
+            log.error("payoutBets: ", e);
+        }
+    }
+
+    private BigDecimal calculateWinnings(Bet bet) {
+        String prediction = bet.getPrediction();
+        Game game = bet.getGame();
+        if (!prediction.equals(game.getWinner())) return BigDecimal.ZERO;
+
+        BigDecimal winnings = oddsService.getOddsForPrediction(game.getId(), prediction)
+                .orElseGet(() -> {
+                    log.error("Prediction by participant %s does not match a valid outcome, %s".formatted(bet.getParticipant().getName(), prediction));
+                    return BigDecimal.ZERO;
+                });
+        return bet.isDouble() ? winnings.multiply(BigDecimal.valueOf(2)) : winnings;
     }
 }
