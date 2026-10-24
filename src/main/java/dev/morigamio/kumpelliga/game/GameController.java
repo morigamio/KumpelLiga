@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class GameController {
+class GameController {
 
     GameService gameService;
     OddsService oddsService;
 
-    public GameController(GameService gameService, OddsService oddsService) {
+    GameController(GameService gameService, OddsService oddsService) {
         this.gameService = gameService;
         this.oddsService = oddsService;
     }

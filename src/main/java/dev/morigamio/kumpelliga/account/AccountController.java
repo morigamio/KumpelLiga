@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-public class AccountController {
+class AccountController {
 
     @Autowired
     private AccountService accountService;
