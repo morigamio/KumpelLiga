@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class OddsPersistence {
+class OddsPersistence {
 
     private final OddsRepository oddsRepository;
 
-    public OddsPersistence(OddsRepository oddsRepository) {
+    OddsPersistence(OddsRepository oddsRepository) {
         this.oddsRepository = oddsRepository;
     }
 

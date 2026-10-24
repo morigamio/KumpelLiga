@@ -12,12 +12,12 @@ import java.util.Optional;
  * would not be triggered by internal methods calls.
  */
 @Repository
-public class GamePersistence {
+class GamePersistence {
 
     private final GameRepository gameRepository;
     private final GameDayRepository gameDayRepository;
 
-    public GamePersistence(GameRepository gameRepository, GameDayRepository gameDayRepository) {
+    GamePersistence(GameRepository gameRepository, GameDayRepository gameDayRepository) {
         this.gameRepository = gameRepository;
         this.gameDayRepository = gameDayRepository;
     }
