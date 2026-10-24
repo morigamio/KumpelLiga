@@ -14,7 +14,7 @@ import java.util.Optional;
 public class ParticipantService {
     private final ParticipantRepository participantRepository;
 
-    public ParticipantService(ParticipantRepository participantRepository) {
+    ParticipantService(ParticipantRepository participantRepository) {
         this.participantRepository = participantRepository;
     }
 

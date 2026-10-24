@@ -50,7 +50,7 @@ class Bet {
 
     public void payout(BigDecimal winnings) {
         if (!game.isFinished()) return;
-        participant.payoutBet(winnings);
+        this.participant.payoutBet(winnings);
         this.isPaid = true;
         this.winnings = winnings;
     }
