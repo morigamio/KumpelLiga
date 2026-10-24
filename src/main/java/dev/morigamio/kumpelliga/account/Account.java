@@ -1,14 +1,10 @@
 package dev.morigamio.kumpelliga.account;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
 public class Account {
 
     @Id
@@ -18,4 +14,11 @@ public class Account {
     @Column(unique = true)
     private String name;
     private String password;
+
+    protected Account() {}
+
+    protected Account(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
 }

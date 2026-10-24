@@ -1,17 +1,13 @@
 package dev.morigamio.kumpelliga.game;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class Game {
@@ -28,6 +24,8 @@ public class Game {
     private LocalDateTime matchTime;
     private int gameDay;
     private boolean isFinished;
+
+    protected Game() {}
 
     // match times are stored as German local time, so "now" has to be German time as well
     public boolean hasStarted() {

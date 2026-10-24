@@ -30,7 +30,7 @@ public class AccountService implements UserDetailsService {
     @Transactional
     public Account create(String name, String password) {
         try {
-            Account account = new Account(null, name, encoder.encode(password));
+            Account account = new Account(name, encoder.encode(password));
             return accountRepository.saveAndFlush(account);
         } catch (DataIntegrityViolationException e) {
             throw new ResourceAlreadyExistsException(Account.class, name);
