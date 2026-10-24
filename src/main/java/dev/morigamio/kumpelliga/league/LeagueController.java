@@ -1,9 +1,5 @@
 package dev.morigamio.kumpelliga.league;
 
-import dev.morigamio.kumpelliga.league.dto.CreateLeagueDTO;
-import dev.morigamio.kumpelliga.league.dto.JoinLeagueDTO;
-import dev.morigamio.kumpelliga.league.dto.ReadLeagueDTO;
-import dev.morigamio.kumpelliga.league.dto.ReadParticipantDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

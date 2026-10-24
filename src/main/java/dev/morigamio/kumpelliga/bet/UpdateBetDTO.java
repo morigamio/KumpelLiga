@@ -1,10 +1,10 @@
-package dev.morigamio.kumpelliga.bet.dto;
+package dev.morigamio.kumpelliga.bet;
 
 import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 
-public record UpdateBetDTO(
+record UpdateBetDTO(
         String prediction,
         @Positive BigDecimal stake
 ) {}

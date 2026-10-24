@@ -1,8 +1,5 @@
 package dev.morigamio.kumpelliga.bet;
 
-import dev.morigamio.kumpelliga.bet.dto.CreateBetDTO;
-import dev.morigamio.kumpelliga.bet.dto.ReadBetDTO;
-import dev.morigamio.kumpelliga.bet.dto.UpdateBetDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

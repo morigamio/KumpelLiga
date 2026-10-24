@@ -1,8 +1,5 @@
 package dev.morigamio.kumpelliga.account;
 
-import dev.morigamio.kumpelliga.account.dto.ReadAccountDTO;
-import dev.morigamio.kumpelliga.account.dto.ChangeAccountDTO;
-import dev.morigamio.kumpelliga.account.dto.CreateAccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

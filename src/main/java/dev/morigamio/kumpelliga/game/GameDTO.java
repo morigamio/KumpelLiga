@@ -4,7 +4,7 @@ import dev.morigamio.kumpelliga.odds.Odds;
 
 import java.time.LocalDateTime;
 
-public record GameDTO (Long id, String homeTeam, String awayTeam, int gameDay, double oddsHome, double oddsAway, double oddsDraw, int goalsHomeTeam, int goalsAwayTeam, String winner, boolean isFinished, LocalDateTime matchTime) {
+record GameDTO (Long id, String homeTeam, String awayTeam, int gameDay, double oddsHome, double oddsAway, double oddsDraw, int goalsHomeTeam, int goalsAwayTeam, String winner, boolean isFinished, LocalDateTime matchTime) {
 
     public static GameDTO from(Game game) {
         return new GameDTO(

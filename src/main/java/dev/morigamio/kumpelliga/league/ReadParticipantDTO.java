@@ -1,12 +1,10 @@
-package dev.morigamio.kumpelliga.league.dto;
-
-import dev.morigamio.kumpelliga.league.Participant;
+package dev.morigamio.kumpelliga.league;
 
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
-public record ReadParticipantDTO(Long id, String name, String status, BigDecimal balance, BigDecimal avgWinRate, BigDecimal highestWin) {
+record ReadParticipantDTO(Long id, String name, String status, BigDecimal balance, BigDecimal avgWinRate, BigDecimal highestWin) {
 
     public static ReadParticipantDTO from(Participant participant) {
         return new ReadParticipantDTO(

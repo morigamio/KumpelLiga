@@ -1,8 +1,6 @@
-package dev.morigamio.kumpelliga.account.dto;
+package dev.morigamio.kumpelliga.account;
 
-import dev.morigamio.kumpelliga.account.Account;
-
-public record ReadAccountDTO(long id, String name) {
+record ReadAccountDTO(long id, String name) {
 
     public static ReadAccountDTO from(Account account) {
         return new ReadAccountDTO(

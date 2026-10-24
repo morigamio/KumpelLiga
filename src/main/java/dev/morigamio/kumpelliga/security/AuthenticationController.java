@@ -1,6 +1,5 @@
 package dev.morigamio.kumpelliga.security;
 
-import dev.morigamio.kumpelliga.security.dto.CredentialsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
