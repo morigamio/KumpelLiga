@@ -19,7 +19,7 @@ import java.util.List;
 
 @Component
 @ConditionalOnProperty(name = "gamedata.provider", havingValue = "openLigaDb")
-public class OpenLigaDbClient implements GameDataClient {
+class OpenLigaDbClient implements GameDataClient {
     private static final HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
     private static final String GAME_DATA_URL = "https://api.openligadb.de/getmatchdata/bl1/2026";
     private static final String TIME_STAMP_URL = "https://api.openligadb.de/getlastchangedate/bl1/2026/%d";

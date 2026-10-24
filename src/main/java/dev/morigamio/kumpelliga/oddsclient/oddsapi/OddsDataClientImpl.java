@@ -23,7 +23,7 @@ import java.util.Map;
 @Service
 @Component
 @ConditionalOnProperty(name = "odds.provider", havingValue = "oddsApi")
-public class OddsDataClientImpl implements OddsDataClient {
+class OddsDataClientImpl implements OddsDataClient {
 
     private static final HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
     private static final String URL = "https://api.the-odds-api.com/v4/sports/soccer_germany_bundesliga/odds/?apiKey=%s&regions=eu&markets=h2h&oddsFormat=decimal";
