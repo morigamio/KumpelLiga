@@ -12,11 +12,11 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-public class LeagueController {
+class LeagueController {
 
     private final LeagueService leagueService;
 
-    public LeagueController(LeagueService leagueService) {
+    LeagueController(LeagueService leagueService) {
         this.leagueService = leagueService;
     }
 
