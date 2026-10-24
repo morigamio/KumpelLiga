@@ -1,11 +1,8 @@
 package dev.morigamio.kumpelliga.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.security.core.AuthenticationException;
@@ -47,16 +44,6 @@ public class GlobalExceptionHandler {
     }
 
     // ---- 401 Unauthorized ----
-    @ExceptionHandler(PrincipalAccountNotFoundException.class)
-    public ResponseEntity<Void> handlePrincipalAccountNotFound(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        SecurityContextHolder.clearContext();
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-
     // Failed login / bad or missing credentials (e.g. BadCredentialsException from
     // authenticate()): an expected outcome, not a server error. Generic 401, no body,
     // so we don't reveal whether the username or the password was wrong.
