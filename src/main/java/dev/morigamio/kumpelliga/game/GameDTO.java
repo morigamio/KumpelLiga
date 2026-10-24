@@ -1,7 +1,5 @@
 package dev.morigamio.kumpelliga.game;
 
-import dev.morigamio.kumpelliga.odds.Odds;
-
 import java.time.LocalDateTime;
 
 record GameDTO (Long id, String homeTeam, String awayTeam, int gameDay, double oddsHome, double oddsAway, double oddsDraw, int goalsHomeTeam, int goalsAwayTeam, String winner, boolean isFinished, LocalDateTime matchTime) {

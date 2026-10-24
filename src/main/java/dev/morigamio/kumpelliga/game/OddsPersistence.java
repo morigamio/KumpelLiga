@@ -1,4 +1,4 @@
-package dev.morigamio.kumpelliga.odds;
+package dev.morigamio.kumpelliga.game;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;

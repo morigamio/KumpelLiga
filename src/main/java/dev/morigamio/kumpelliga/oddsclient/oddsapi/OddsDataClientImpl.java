@@ -1,7 +1,7 @@
 package dev.morigamio.kumpelliga.oddsclient.oddsapi;
 
-import dev.morigamio.kumpelliga.odds.spi.OddsData;
-import dev.morigamio.kumpelliga.odds.spi.OddsDataClient;
+import dev.morigamio.kumpelliga.game.spi.OddsData;
+import dev.morigamio.kumpelliga.game.spi.OddsDataClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;

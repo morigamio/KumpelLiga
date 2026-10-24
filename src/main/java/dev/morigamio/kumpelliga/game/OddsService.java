@@ -1,9 +1,7 @@
-package dev.morigamio.kumpelliga.odds;
+package dev.morigamio.kumpelliga.game;
 
-import dev.morigamio.kumpelliga.game.Game;
-import dev.morigamio.kumpelliga.game.GameService;
-import dev.morigamio.kumpelliga.odds.spi.OddsData;
-import dev.morigamio.kumpelliga.odds.spi.OddsDataClient;
+import dev.morigamio.kumpelliga.game.spi.OddsData;
+import dev.morigamio.kumpelliga.game.spi.OddsDataClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

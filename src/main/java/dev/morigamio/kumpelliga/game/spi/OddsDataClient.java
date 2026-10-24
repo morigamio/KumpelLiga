@@ -1,4 +1,4 @@
-package dev.morigamio.kumpelliga.odds.spi;
+package dev.morigamio.kumpelliga.game.spi;
 
 import java.util.List;
 

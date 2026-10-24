@@ -2,7 +2,7 @@ package dev.morigamio.kumpelliga.cron;
 
 import dev.morigamio.kumpelliga.game.GameDay;
 import dev.morigamio.kumpelliga.game.GameService;
-import dev.morigamio.kumpelliga.odds.OddsService;
+import dev.morigamio.kumpelliga.game.OddsService;
 import dev.morigamio.kumpelliga.settlement.SettlementService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package dev.morigamio.kumpelliga.startup;
 
 import dev.morigamio.kumpelliga.game.GameService;
-import dev.morigamio.kumpelliga.odds.OddsService;
+import dev.morigamio.kumpelliga.game.OddsService;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
