@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,10 +21,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     public static final String BEARER = "Bearer ";
 
-    @Autowired
-    private JwtUtils jwtUtils;
-    @Autowired
-    private AccountService accountService;
+    private final JwtUtils jwtUtils;
+    private final AccountService accountService;
+
+    JwtAuthFilter(JwtUtils jwtUtils, AccountService accountService) {
+        this.jwtUtils = jwtUtils;
+        this.accountService = accountService;
+    }
 
 
     @Override

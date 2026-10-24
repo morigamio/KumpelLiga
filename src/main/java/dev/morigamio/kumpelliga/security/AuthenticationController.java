@@ -1,6 +1,5 @@
 package dev.morigamio.kumpelliga.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,10 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 class AuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
+
+    AuthenticationController(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
+    }
 
     @PostMapping("/session")
     String authenticateUser(@RequestBody CredentialsDTO credentials) {

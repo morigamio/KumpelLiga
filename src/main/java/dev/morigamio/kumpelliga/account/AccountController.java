@@ -1,6 +1,5 @@
 package dev.morigamio.kumpelliga.account;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +9,11 @@ import java.security.Principal;
 @RestController
 class AccountController {
 
-    @Autowired
-    private AccountService accountService;
+    private final AccountService accountService;
+
+    AccountController(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @GetMapping("/account")
     ResponseEntity<ReadAccountDTO> getAccountDetails(Principal principal) {
