@@ -5,6 +5,7 @@ import dev.morigamio.kumpelliga.account.AccountService;
 import dev.morigamio.kumpelliga.exception.AdminCannotLeaveLeagueException;
 import dev.morigamio.kumpelliga.exception.InvalidLeaguePasswordException;
 import dev.morigamio.kumpelliga.exception.LeagueAlreadyExistsException;
+import dev.morigamio.kumpelliga.exception.NotParticipantException;
 import dev.morigamio.kumpelliga.exception.NotResourceOwnerException;
 import dev.morigamio.kumpelliga.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
@@ -41,22 +42,27 @@ class LeagueService {
         return leagueRepository.findByNameContainingIgnoreCase(leagueName);
     }
 
-    public List<League> getLeaguesByAccountName(String accountName) {
+    public List<League> getMyLeagues(String accountName) {
         return leagueRepository.findByParticipantsAccountName(accountName);
     }
 
-    public League getLeagueByLeagueId(long leagueId) {
-        return leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId));
+    // a league with its participants is visible to its members only
+    public League getLeagueByLeagueId(long leagueId, String accountName) {
+        League league = findLeagueById(leagueId);
+        boolean isParticipant = participantService.existsByNameAndLeagueId(accountName, leagueId);
+        if (!isParticipant) throw new NotParticipantException();
+        return league;
     }
 
-    public List<Participant> getRankingByLeagueId(long leagueId) {
-        getLeagueByLeagueId(leagueId); // 404 if the league doesn't exist
+    // the ranking is visible to the league's members only
+    public List<Participant> getRankingByLeagueId(long leagueId, String accountName) {
+        getLeagueByLeagueId(leagueId, accountName);
         return participantService.rankingByLeagueId(leagueId);
     }
 
     @Transactional
     public Participant joinLeague(long leagueId, String accountName, String password) {
-        League league = getLeagueByLeagueId(leagueId);
+        League league = findLeagueById(leagueId); // no member check: whoever joins is not a member yet
         if (!password.equals(league.getPassword())) {
             throw new InvalidLeaguePasswordException();
         }
@@ -76,9 +82,14 @@ class LeagueService {
 
     // only the admin of a league may delete it
     public void deleteLeagueById(long leagueId, String accountName) {
-        League league = getLeagueByLeagueId(leagueId); // 404 if the league doesn't exist
+        League league = findLeagueById(leagueId);
         boolean isAdmin = accountName.equals(league.getAdmin().getName());
         if (!isAdmin) throw new NotResourceOwnerException(League.class, leagueId, accountName);
         leagueRepository.delete(league);
+    }
+
+    // 404 if the league doesn't exist
+    private League findLeagueById(long leagueId) {
+        return leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId));
     }
 }

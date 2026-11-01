@@ -12,12 +12,13 @@ async function initHome(){
 async function loadLeagues(){
   $('myLeagues').innerHTML = '<div class="empty"><span class="spinner"></span></div>';
 
-  const all = await api('GET','/leagues');
-  if (!all.ok){ $('myLeagues').innerHTML = '<div class="empty">Could not load leagues.</div>'; return; }
+  // the server returns only the leagues I take part in (known from the token)
+  const myLeagues = await api('GET','/account/leagues');
+  if (!myLeagues.ok){ $('myLeagues').innerHTML = '<div class="empty">Could not load leagues.</div>'; return; }
 
-  // "my leagues" = leagues where a participant carries my name
+  // pick my own participant out of each league (it carries my name)
   const mine = [];
-  for (const lg of all.data){
+  for (const lg of myLeagues.data){
     const mp = (lg.participants||[]).find(p => p.name === ME);
     if (mp) mine.push({league: lg, myParticipant: mp});
   }

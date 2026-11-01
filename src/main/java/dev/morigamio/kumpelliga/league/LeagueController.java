@@ -23,21 +23,21 @@ class LeagueController {
     }
 
     @GetMapping("/leagues")
-    ResponseEntity<List<ReadLeagueDTO>> getLeagues(@RequestParam(required = false) String name) {
+    ResponseEntity<List<ReadLeagueSummaryDTO>> getLeagues(@RequestParam(required = false) String name) {
         if (name == null || name.isBlank()) {
-            return new ResponseEntity<>(leagueService.getAllLeagues().stream().map(ReadLeagueDTO::from).toList(), HttpStatus.OK);
+            return new ResponseEntity<>(leagueService.getAllLeagues().stream().map(ReadLeagueSummaryDTO::from).toList(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(leagueService.getLeaguesByName(name).stream().map(ReadLeagueDTO::from).toList(), HttpStatus.OK);
+        return new ResponseEntity<>(leagueService.getLeaguesByName(name).stream().map(ReadLeagueSummaryDTO::from).toList(), HttpStatus.OK);
     }
 
     @GetMapping("/account/leagues")
-    ResponseEntity<List<ReadLeagueDTO>> getLeaguesToName(Principal principal) {
-        return new ResponseEntity<>(leagueService.getLeaguesByAccountName(principal.getName()).stream().map(ReadLeagueDTO::from).toList(), HttpStatus.OK);
+    ResponseEntity<List<ReadLeagueDTO>> getMyLeagues(Principal principal) {
+        return new ResponseEntity<>(leagueService.getMyLeagues(principal.getName()).stream().map(ReadLeagueDTO::from).toList(), HttpStatus.OK);
     }
 
     @GetMapping("/leagues/{leagueId}")
-    ResponseEntity<ReadLeagueDTO> getLeagueById(@PathVariable String leagueId) {
-        League league = leagueService.getLeagueByLeagueId(Long.parseLong(leagueId));
+    ResponseEntity<ReadLeagueDTO> getLeagueById(@PathVariable String leagueId, Principal principal) {
+        League league = leagueService.getLeagueByLeagueId(Long.parseLong(leagueId), principal.getName());
         return new ResponseEntity<>(ReadLeagueDTO.from(league), HttpStatus.OK);
     }
 
@@ -65,8 +65,8 @@ class LeagueController {
     }
 
     @GetMapping("/leagues/{leagueId}/ranking")
-    ResponseEntity<List<ReadParticipantDTO>> getLeagueRanking(@PathVariable String leagueId) {
-        List<Participant> participantsRankedByBalance = leagueService.getRankingByLeagueId(Long.parseLong(leagueId));
+    ResponseEntity<List<ReadParticipantDTO>> getLeagueRanking(@PathVariable String leagueId, Principal principal) {
+        List<Participant> participantsRankedByBalance = leagueService.getRankingByLeagueId(Long.parseLong(leagueId), principal.getName());
         return new ResponseEntity<>(participantsRankedByBalance.stream().map(ReadParticipantDTO::from).toList(), HttpStatus.OK);
     }
 }
