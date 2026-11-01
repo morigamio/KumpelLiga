@@ -34,7 +34,35 @@ class LeagueService {
         return leagueRepository.save(league);
     }
 
-    public List<League> getAllLeagues() {
+    @Transactional
+    public Participant joinLeague(long leagueId, String accountName, String password) {
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId)); // no member check: whoever joins is not a member yet
+        if (!password.equals(league.getPassword())) {
+            throw new InvalidLeaguePasswordException();
+        }
+        Account account = accountService.getAccountByName(accountName); // user is logged in, account is guaranteed to exist
+        return participantService.addParticipant(new Participant(account, league));
+    }
+
+    // only the account behind a participant may remove it (= leave the league); the admin can never leave, only delete the league by calling deleteLeague
+    public void leaveLeague(long participantId, String accountName) {
+        Participant participant = participantService.findById(participantId)
+                .orElseThrow(() -> new ResourceNotFoundException(Participant.class, participantId));
+        if (!participant.isOwnedBy(accountName)) throw new NotResourceOwnerException(Participant.class, participantId, accountName);
+        boolean isAdmin = accountName.equals(participant.getLeague().getAdmin().getName());
+        if (isAdmin) throw new AdminCannotLeaveLeagueException();
+        participantService.removeParticipant(participant);
+    }
+
+    // only the admin of a league may delete it
+    public void deleteLeague(long leagueId, String accountName) {
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId));
+        boolean isAdmin = accountName.equals(league.getAdmin().getName());
+        if (!isAdmin) throw new NotResourceOwnerException(League.class, leagueId, accountName);
+        leagueRepository.delete(league);
+    }
+
+    public List<League> getLeagues() {
         return leagueRepository.findAll();
     }
 
@@ -47,7 +75,7 @@ class LeagueService {
     }
 
     // a league with its participants is visible to its members only
-    public League getLeagueByLeagueId(long leagueId, String accountName) {
+    public League getLeague(long leagueId, String accountName) {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId));
         boolean isParticipant = participantService.existsByNameAndLeagueId(accountName, leagueId);
         if (!isParticipant) throw new NotParticipantException();
@@ -55,36 +83,8 @@ class LeagueService {
     }
 
     // the ranking is visible to the league's members only
-    public List<Participant> getRankingByLeagueId(long leagueId, String accountName) {
-        getLeagueByLeagueId(leagueId, accountName);
+    public List<Participant> getRanking(long leagueId, String accountName) {
+        getLeague(leagueId, accountName);
         return participantService.rankingByLeagueId(leagueId);
-    }
-
-    @Transactional
-    public Participant joinLeague(long leagueId, String accountName, String password) {
-        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId)); // no member check: whoever joins is not a member yet
-        if (!password.equals(league.getPassword())) {
-            throw new InvalidLeaguePasswordException();
-        }
-        Account account = accountService.getAccountByName(accountName); // user is logged in, account is guaranteed to exist
-        return participantService.addParticipant(new Participant(account, league));
-    }
-
-    // only the account behind a participant may remove it (= leave the league); the admin can never leave, only delete the league by calling deleteLeagueById
-    public void removeParticipantById(long participantId, String accountName) {
-        Participant participant = participantService.findById(participantId)
-                .orElseThrow(() -> new ResourceNotFoundException(Participant.class, participantId));
-        if (!participant.isOwnedBy(accountName)) throw new NotResourceOwnerException(Participant.class, participantId, accountName);
-        boolean isAdmin = accountName.equals(participant.getLeague().getAdmin().getName());
-        if (isAdmin) throw new AdminCannotLeaveLeagueException();
-        participantService.removeParticipant(participant);
-    }
-
-    // only the admin of a league may delete it
-    public void deleteLeagueById(long leagueId, String accountName) {
-        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId));
-        boolean isAdmin = accountName.equals(league.getAdmin().getName());
-        if (!isAdmin) throw new NotResourceOwnerException(League.class, leagueId, accountName);
-        leagueRepository.delete(league);
     }
 }
