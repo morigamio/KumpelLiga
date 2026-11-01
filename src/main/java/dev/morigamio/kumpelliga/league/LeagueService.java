@@ -48,7 +48,7 @@ class LeagueService {
 
     // a league with its participants is visible to its members only
     public League getLeagueByLeagueId(long leagueId, String accountName) {
-        League league = findLeagueById(leagueId);
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId));
         boolean isParticipant = participantService.existsByNameAndLeagueId(accountName, leagueId);
         if (!isParticipant) throw new NotParticipantException();
         return league;
@@ -62,7 +62,7 @@ class LeagueService {
 
     @Transactional
     public Participant joinLeague(long leagueId, String accountName, String password) {
-        League league = findLeagueById(leagueId); // no member check: whoever joins is not a member yet
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId)); // no member check: whoever joins is not a member yet
         if (!password.equals(league.getPassword())) {
             throw new InvalidLeaguePasswordException();
         }
@@ -82,14 +82,9 @@ class LeagueService {
 
     // only the admin of a league may delete it
     public void deleteLeagueById(long leagueId, String accountName) {
-        League league = findLeagueById(leagueId);
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId));
         boolean isAdmin = accountName.equals(league.getAdmin().getName());
         if (!isAdmin) throw new NotResourceOwnerException(League.class, leagueId, accountName);
         leagueRepository.delete(league);
-    }
-
-    // 404 if the league doesn't exist
-    private League findLeagueById(long leagueId) {
-        return leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId));
     }
 }
