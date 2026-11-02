@@ -28,10 +28,10 @@ public class ParticipantService {
     }
 
     public Optional<Participant> findByNameAndLeagueId(String name, long leagueId) {
-        return participantRepository.findByNameAndLeagueId(name,leagueId);
+        return participantRepository.findByNameAndLeagueId(name, leagueId);
     }
 
-    public boolean existsByNameAndLeagueId(String name, long leagueId){
+    public boolean existsByNameAndLeagueId(String name, long leagueId) {
         return participantRepository.existsByNameAndLeagueId(name, leagueId);
     }
 
