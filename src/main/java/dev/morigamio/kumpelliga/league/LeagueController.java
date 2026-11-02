@@ -22,6 +22,24 @@ class LeagueController {
         return new ResponseEntity<>(ReadLeagueDTO.from(league), HttpStatus.CREATED);
     }
 
+    @PostMapping("/leagues/{leagueId}/participants")
+    ResponseEntity<ReadParticipantDTO> joinLeague(@PathVariable String leagueId, @RequestBody JoinLeagueDTO data, Principal principal) {
+        Participant participant = leagueService.joinLeague(Long.parseLong(leagueId), principal.getName(), data.password());
+        return new ResponseEntity<>(ReadParticipantDTO.from(participant), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/participants/{participantId}")
+    ResponseEntity<Void> leaveLeague(@PathVariable String participantId, Principal principal) {
+        leagueService.leaveLeague(Long.parseLong(participantId), principal.getName());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/leagues/{leagueId}")
+    ResponseEntity<Void> deleteLeague(@PathVariable String leagueId, Principal principal) {
+        leagueService.deleteLeague(Long.parseLong(leagueId), principal.getName());
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/leagues")
     ResponseEntity<List<ReadLeagueSummaryDTO>> getLeagues(@RequestParam(required = false) String name) {
         if (name == null || name.isBlank()) {
@@ -41,31 +59,8 @@ class LeagueController {
         return new ResponseEntity<>(ReadLeagueDTO.from(league), HttpStatus.OK);
     }
 
-    @PatchMapping("/leagues/{leagueId}")
-    League changeLeagueSettings(@PathVariable String leagueId) {
-        return null;
-    }
-
-    @DeleteMapping("/leagues/{leagueId}")
-    ResponseEntity<Void> deleteLeague(@PathVariable String leagueId, Principal principal) {
-        leagueService.deleteLeague(Long.parseLong(leagueId), principal.getName());
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/leagues/{leagueId}/participants")
-    ResponseEntity<ReadParticipantDTO> joinLeague(@PathVariable String leagueId, @RequestBody JoinLeagueDTO data, Principal principal) {
-        Participant participant = leagueService.joinLeague(Long.parseLong(leagueId), principal.getName(), data.password());
-        return new ResponseEntity<>(ReadParticipantDTO.from(participant), HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/participants/{participantId}")
-    ResponseEntity<Void> leaveLeague(@PathVariable String participantId, Principal principal) {
-        leagueService.leaveLeague(Long.parseLong(participantId), principal.getName());
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping("/leagues/{leagueId}/ranking")
-    ResponseEntity<List<ReadParticipantDTO>> getLeagueRanking(@PathVariable String leagueId, Principal principal) {
+    ResponseEntity<List<ReadParticipantDTO>> getRanking(@PathVariable String leagueId, Principal principal) {
         List<Participant> participantsRankedByBalance = leagueService.getRanking(Long.parseLong(leagueId), principal.getName());
         return new ResponseEntity<>(participantsRankedByBalance.stream().map(ReadParticipantDTO::from).toList(), HttpStatus.OK);
     }
