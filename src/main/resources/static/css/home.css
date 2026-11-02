@@ -28,3 +28,16 @@
 .join-grid .col{border:1px solid var(--border);border-radius:13px;padding:16px}
 .join-grid h3{margin:0 0 2px;font-size:15px;font-weight:800}
 .join-grid .hint{font-size:12.5px;color:var(--muted);margin-bottom:4px}
+
+.league-item .li-name{overflow-wrap:anywhere}
+
+/* phones */
+@media (max-width:600px){
+  .hero{gap:14px}
+  .hero .big-avatar{width:52px;height:52px;border-radius:16px;font-size:22px}
+  .hero .who .name{font-size:20px;overflow-wrap:anywhere}
+  .league-item{padding:12px;gap:10px}
+  .league-item .crest{width:38px;height:38px;font-size:15px}
+  .join-grid{gap:14px}
+  .join-grid .col{padding:14px}
+}

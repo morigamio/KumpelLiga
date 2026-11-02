@@ -96,6 +96,20 @@ function labelFor(g, pred){
   return pred==='homeTeam' ? g.homeTeam : pred==='awayTeam' ? g.awayTeam : 'Draw';
 }
 
+/* Shrinks the font of team names whose longest word doesn't fit its column (e.g. "Mönchengladbach" on phones),
+   so names never break inside a word. Needs the cards in the DOM; called from syncDayUi (games.js). */
+const TEAM_FONT_MIN = 10;
+function fitTeamNames(){
+  document.querySelectorAll('.game .team').forEach(el => {
+    el.style.fontSize = '';   // start from the stylesheet size, so names grow back after a resize
+    let size = parseFloat(getComputedStyle(el).fontSize);
+    while (el.scrollWidth > el.clientWidth && size > TEAM_FONT_MIN){
+      size -= 0.5;
+      el.style.fontSize = size + 'px';
+    }
+  });
+}
+
 /* Re-render every card currently in the slider from cur.games / cur.betsByGame, keeping scroll position. */
 function rerenderAllCards(){
   const byId = {};

@@ -66,6 +66,7 @@ function fillSlides(){
 
 function syncDayUi(){
   fillSlides();
+  fitTeamNames();   // before measuring: smaller names can change the card height
   const track = $('track'), slide = track.children[cur.dayIndex];
   if (slide) track.style.height = slide.offsetHeight + 'px';   // row is as tall as the tallest slide otherwise
   $('dayLabel').textContent = 'Matchday ' + cur.days[cur.dayIndex];

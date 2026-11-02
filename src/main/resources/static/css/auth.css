@@ -10,3 +10,9 @@
 .segmented button{flex:1;background:none;color:var(--muted);border-radius:9px;padding:9px;font-weight:700}
 .segmented button.active{background:#fff;color:var(--text);box-shadow:var(--shadow)}
 .auth-card .submit{width:100%;margin-top:20px;padding:13px}
+
+/* phones */
+@media (max-width:600px){
+  .auth-page{padding:16px 12px}
+  .auth-card{padding:26px 20px 22px}
+}

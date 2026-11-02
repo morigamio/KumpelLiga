@@ -65,3 +65,25 @@ table.rank tr.me{background:var(--accent-soft)}
 .rk.g2{background:#e9e9ee;color:#6b6b76}
 .rk.g3{background:#f0dcc9;color:#98603a}
 .status-tag{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+
+/* long league names wrap instead of pushing the gear off screen */
+.league-head .grow{min-width:0}
+.league-head h1{overflow-wrap:anywhere}
+/* the ranking scrolls sideways as a last resort instead of widening the page */
+kl-ranking{display:block;overflow-x:auto}
+
+/* phones */
+@media (max-width:600px){
+  .league-head{gap:12px}
+  .league-head .crest{width:44px;height:44px;border-radius:13px;font-size:18px}
+  .league-head h1{font-size:19px}
+  .day-label{font-size:15px}
+  .slider-head .nav button{width:34px;height:34px}
+  table.rank{font-size:14px}
+  table.rank th{padding:7px 5px;font-size:10.5px;letter-spacing:.3px}
+  table.rank th.r{white-space:normal}   /* "Highest win" may break into two lines */
+  table.rank td{padding:9px 5px}
+  table.rank th.r,table.rank td.r{padding-left:7px;padding-right:7px}
+  table.rank td:nth-child(2){overflow-wrap:anywhere}
+  .rk{width:24px;height:24px;font-size:12px}
+}
