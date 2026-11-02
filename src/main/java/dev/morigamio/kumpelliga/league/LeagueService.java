@@ -36,15 +36,15 @@ class LeagueService {
 
     @Transactional
     public Participant joinLeague(long leagueId, String accountName, String password) {
-        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId)); // no member check: whoever joins is not a member yet
+        League league = leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId));
         if (!password.equals(league.getPassword())) {
             throw new InvalidLeaguePasswordException();
         }
-        Account account = accountService.getAccountByName(accountName); // user is logged in, account is guaranteed to exist
+        Account account = accountService.getAccountByName(accountName);
         return participantService.addParticipant(new Participant(account, league));
     }
 
-    // only the account behind a participant may remove it (= leave the league); the admin can never leave, only delete the league by calling deleteLeague
+    // the admin can never leave, only delete the league by calling deleteLeague
     public void leaveLeague(long participantId, String accountName) {
         Participant participant = participantService.findById(participantId)
                 .orElseThrow(() -> new ResourceNotFoundException(Participant.class, participantId));
@@ -74,7 +74,7 @@ class LeagueService {
         return leagueRepository.findByParticipantsAccountName(accountName);
     }
 
-    // a league with its participants is visible to its members only
+    // a specific league is visible to its members only
     public League getLeague(long leagueId, String accountName) {
         League league = leagueRepository.findById(leagueId).orElseThrow(() -> new ResourceNotFoundException(League.class, leagueId));
         boolean isParticipant = participantService.existsByNameAndLeagueId(accountName, leagueId);
@@ -82,7 +82,7 @@ class LeagueService {
         return league;
     }
 
-    // the ranking is visible to the league's members only
+    // the ranking for a specific league is visible to its members only
     public List<Participant> getRanking(long leagueId, String accountName) {
         getLeague(leagueId, accountName);
         return participantService.rankingByLeagueId(leagueId);
