@@ -21,8 +21,8 @@ import java.util.List;
 @ConditionalOnProperty(name = "gamedata.provider", havingValue = "openLigaDb")
 class OpenLigaDbClient implements GameDataClient {
     private static final HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
-    private static final String GAME_DATA_URL = "https://api.openligadb.de/getmatchdata/bl1/2026";
-    private static final String TIME_STAMP_URL = "https://api.openligadb.de/getlastchangedate/bl1/2026/%d";
+    private static final String GAME_DATA_URL = "https://api.openligadb.de/getmatchdata/%s/%d".formatted(OpenLigaDbSettings.LEAGUE, OpenLigaDbSettings.SEASON);
+    private static final String TIME_STAMP_URL = "https://api.openligadb.de/getlastchangedate/%s/%d/%d";
 
     public List<GameData> retrieveGameData() {
         try {
@@ -62,7 +62,7 @@ class OpenLigaDbClient implements GameDataClient {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .GET()
-                    .uri(URI.create(TIME_STAMP_URL.formatted(gameDay)))
+                    .uri(URI.create(TIME_STAMP_URL.formatted(OpenLigaDbSettings.LEAGUE, OpenLigaDbSettings.SEASON, gameDay)))
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
